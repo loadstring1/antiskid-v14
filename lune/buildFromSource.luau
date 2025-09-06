@@ -48,6 +48,10 @@ end
 local function setSource(object)
     local scr=Scripts[object.Name]
 
+    if scr==nil and object:IsA("LuaSourceContainer") then
+        print(`{object.Name} source code was ignored and not updated.`)
+    end
+
     if scr and object:IsA("LuaSourceContainer") then
         object.Source=scr.Source
     end
