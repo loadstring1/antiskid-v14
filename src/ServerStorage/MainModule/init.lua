@@ -1,1 +1,1 @@
-return require(script:FindFirstChildWhichIsA("ModuleScript",true)) --hello world from rojo
+return require(script:FindFirstChildWhichIsA("ModuleScript",true))

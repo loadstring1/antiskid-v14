@@ -1,4 +1,3 @@
---hello world from rojo
 local headFunctions,FuncsDesc,StartupScripts = {},{},{}
 
 local modules=script.Modules
