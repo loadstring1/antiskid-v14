@@ -1,0 +1,15 @@
+return table.freeze{
+	".gg",
+	"btt",
+	"lalol",
+	"k00p",
+	"c00l",
+	"tr3",
+	"kaax",
+	"l00p",
+	"g00g",
+	"zyx0",
+	"zyxo",
+	"tubers",
+	string.reverse("kcuf"),
+}
