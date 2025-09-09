@@ -1,3 +1,5 @@
+--because ofc for debugging purposes i will use print and getfenv in studio but not in prod
+--!nolint
 local antis3=require(script.Parent)
 local funcs=antis3.funcs
 local rbxfuncs=antis3.rbxfuncs
@@ -9,7 +11,6 @@ local string=string
 local script=script
 local rawget=rawget
 local rawset=rawset
-local getfenv=getfenv
 local shared=shared
 local _G=_G
 local table=table
@@ -22,8 +23,9 @@ local getmetatable=getmetatable
 local setmetatable=setmetatable
 local game=game
 local coroutine=coroutine
-local print=print
 local Enum=Enum
+local getfenv=getfenv
+local print=print
 
 rbxfuncs.destroy(script)
 

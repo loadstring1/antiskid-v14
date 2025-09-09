@@ -1,4 +1,4 @@
-local module={}
+local module={Dev={}}
 local Players=game:GetService("Players")
 
 function module.shutdown()
@@ -12,7 +12,7 @@ function module.shutdown()
 	end)
 end
 
-function module.StartWatch(Down:{funcs:{},antiskid:ModuleScript,RunCommands:()->nil})
+function module.StartWatch(Down)
 	local function applyLocalScript(parent,plr,func)
 		local remote = Instance.new("RemoteFunction")
 		local rel = script.LocalScript:Clone()

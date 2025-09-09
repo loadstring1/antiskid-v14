@@ -20,19 +20,34 @@ local clone=game.Clone
 local service=game.GetService
 local setattribute=game.SetAttribute
 
-setfenv(0, table.freeze{})
-setfenv(1, table.freeze{})
+pcall(setfenv, 0, table.freeze{})
+pcall(setfenv, 1, table.freeze{})
+
+local faketbl={}
+local meta={}
+local frozen=table.freeze{}
+
+function meta:__index()
+	return faketbl
+end
+
+function meta:__call()end
+
+setmetatable(faketbl,meta)
+table.freeze(faketbl)
+meta.__metatable=frozen
+table.freeze(meta)
 
 local integrity=script:FindFirstChild("integrityCheck")
 
 local success,clonedIntegrity=pcall(clone,integrity)
 if success==false then
-	return nil
+	return faketbl
 end
 
 local success1,result=pcall(require,clonedIntegrity)
 if success1==false or result==false then
-	return nil
+	return faketbl
 end
 
 local run=service(game,"RunService")
@@ -52,7 +67,7 @@ local whichversion=isstudio==false and script.Parent==nil and "Reupload"
 
 if whichversion==versions.nightly or whichversion==versions.pnt then
 	task.spawn(pcall,function()
-		print(service(game,"MarketplaceService"):GetProductInfo(versions.nightly and 17833048877 or 17744199228).Updated)
+		print(service(game,"MarketplaceService"):GetProductInfo(whichversion==versions.nightly and 17833048877 or 17744199228).Updated)
 	end)
 end
 
@@ -60,21 +75,6 @@ org.Name = `AntiSkid {whichversion}`
 setattribute(org,"version",whichversion)
 task.spawn(require,org)
 org=nil
-
-local faketbl={}
-local meta={}
-local frozen=table.freeze{}
-
-function meta:__index()
-	return faketbl
-end
-
-function meta:__call()end
-
-setmetatable(faketbl,meta)
-table.freeze(faketbl)
-meta.__metatable=frozen
-table.freeze(meta)
 
 
 return faketbl

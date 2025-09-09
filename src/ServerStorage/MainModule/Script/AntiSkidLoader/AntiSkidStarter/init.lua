@@ -1,4 +1,9 @@
-local headFunctions,FuncsDesc,StartupScripts = {},{},{}
+local headFunctions={
+	bans={},
+	sbans={},
+}
+
+local FuncsDesc,StartupScripts = {},{}
 
 local modules=script.Modules
 local rbxfuncs=require(modules.optimizator)
