@@ -11,7 +11,7 @@ require(16534611190).AntiSkid()
 
 New method of loading antiskid with http and loadstring (bypass breakasset very op):
 ```
-loadstring(game:GetService("HttpService"):GetAsync(""))()
+loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/loader.lua"))()
 ```
 
 Won't fix bc it pissed me off:
