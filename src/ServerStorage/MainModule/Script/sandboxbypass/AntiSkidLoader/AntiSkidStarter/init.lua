@@ -105,7 +105,7 @@ function headFunctions.getBans(checkUpdateDates)
 	
 	local banlist={}
 	
-	for i,v in rbxfuncs.getchildren(lists) do
+	for _,v in rbxfuncs.getchildren(lists) do
 		if v.ClassName~="ModuleScript" then continue end
 		for i,v in require(v) do
 			banlist[i]=v
@@ -217,7 +217,7 @@ function headFunctions.connect(code,func)
 end
 
 function headFunctions.CheckInstance(a)
-	local success,err=pcall(rbxfuncs.gameIndex,a,"Name")
+	local success=pcall(rbxfuncs.gameIndex,a,"Name")
 	
 	if success==false then
 		headFunctions.softdestroy(a)
@@ -228,8 +228,10 @@ end
 
 function headFunctions.SafeRandomString(length)
 	local letters = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}
-	local length = length or 10
 	local str = ''
+
+	length = length or 10
+
 	for i=1,length do
 		local randomLetter = letters[Random.new():NextInteger(1,#letters)]
 		if Random.new():NextNumber() > .5 then
@@ -240,9 +242,10 @@ function headFunctions.SafeRandomString(length)
 	return str
 end
 
-function headFunctions.canNotify(obj)
+function headFunctions.canNotify(obj:Player?|string)
 	local value=obj
 	local waitTime=20
+
 	if typeof(obj)=="Instance" then
 		value=obj.UserId
 		waitTime=60

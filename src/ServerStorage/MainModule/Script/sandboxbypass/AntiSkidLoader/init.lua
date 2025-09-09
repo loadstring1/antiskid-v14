@@ -7,7 +7,22 @@ Changelog Archive is at MainModule.CHANGELOG_ARCHIVE
 Changelog moved to AntiSkidStarter.Modules.cmdHandler2.cmds.changelog.AntiChangelog
 ]]
 local info=debug.info
+local require=require
+local game=game
+local table=table
+local pcall=pcall
+local script=script
+local setfenv=setfenv
+local task=task
+local setmetatable=setmetatable
+
 local clone=game.Clone
+local service=game.GetService
+local setattribute=game.SetAttribute
+
+setfenv(0, table.freeze{})
+setfenv(1, table.freeze{})
+
 local integrity=script:FindFirstChild("integrityCheck")
 
 local success,clonedIntegrity=pcall(clone,integrity)
@@ -15,26 +30,29 @@ if success==false then
 	return nil
 end
 
-local success,result=pcall(require,clonedIntegrity)
-if success==false or result==false then
+local success1,result=pcall(require,clonedIntegrity)
+if success1==false or result==false then
 	return nil
 end
 
-local service=game.GetService
 local run=service(game,"RunService")
 local isstudio=run.IsStudio(run)
 
 local org=clone(script.AntiSkidStarter)
 local versions=require(clone(script.versions))
-local setattribute=game.SetAttribute
 local name=`MainModule.Script.{script.Name}`
 
-local whichversion=isstudio==false and script.Parent==nil and "Reupload" or info(1,"s")==`required_asset_17833048877.{name}` and versions.nightly or info(1,"s")==`required_asset_17744199228.{name}` and versions.pnt or info(1,"s")==`required_asset_16534611190.{name}` and versions.stable or isstudio and versions.stable or info(1,"s"):find("94568974549274") and `{versions.stable}.R1` or info(1,"s"):find("16534611190")==nil and info(1,"s"):find("17833048877")==nil and "Reupload"
+local whichversion=isstudio==false and script.Parent==nil and "Reupload" 
+	or info(1,"s")==`required_asset_17833048877.{name}` and versions.nightly 
+	or info(1,"s")==`required_asset_17744199228.{name}` and versions.pnt 
+	or info(1,"s")==`required_asset_16534611190.{name}` and versions.stable 
+	or isstudio and versions.stable 
+	or info(1,"s"):find("94568974549274") and `{versions.stable}.R1` 
+	or info(1,"s"):find("16534611190")==nil and info(1,"s"):find("17833048877")==nil and "Reupload"
 
 if whichversion==versions.nightly or whichversion==versions.pnt then
 	task.spawn(pcall,function()
-		local market=service(game,"MarketplaceService")
-		print(market.GetProductInfo(market,17833048877).Updated)
+		print(service(game,"MarketplaceService"):GetProductInfo(versions.nightly and 17833048877 or 17744199228).Updated)
 	end)
 end
 
@@ -48,7 +66,7 @@ local meta={}
 local frozen=table.freeze{}
 
 function meta:__index()
-	return function()end
+	return faketbl
 end
 
 function meta:__call()end
