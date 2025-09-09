@@ -17,7 +17,6 @@ antis3.warner(script.Name)
 if funcs.isClient then return nil end
 
 local players:Players=funcs.getservice("Players")
-local scriptcontext:ScriptContext=funcs.getservice("ScriptContext")
 local opantis={}
 
 function opantis.RemoteEvent(remote:RemoteEvent)

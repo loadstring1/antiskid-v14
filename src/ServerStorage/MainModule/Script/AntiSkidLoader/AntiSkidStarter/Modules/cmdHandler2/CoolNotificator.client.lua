@@ -8,7 +8,6 @@ for i,v in script:GetAttributes() do
 	break
 end
 
-local lplr=game:GetService("Players").LocalPlayer
 local textchatservice=game:GetService("TextChatService")
 
 local meta = tostring(math.random())
@@ -33,7 +32,7 @@ end)
 local channel=chatinput.TargetTextChannel
 
 if channel==nil then
-	repeat channel=chatinput.TargetTextChannel task.wait() until channel
+	repeat channel=chatinput.TargetTextChannel; task.wait() until channel
 end
 
 channel:DisplaySystemMessage(molly,meta)

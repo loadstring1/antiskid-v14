@@ -7,7 +7,9 @@ rbxfuncs.destroy(script)
 local Players:Players=funcs.getservice("Players")
 local textchatservice:TextChatService=funcs.getservice("TextChatService")
 local yield=funcs.yielder()
-local Services,PlayerGuis,TextChannels={},{},{}
+local Services,TextChannels={},{}
+
+local PlayerGuis:{[Player]:PlayerGui}={}
 
 local function onHeart()
 	Players.CharacterAutoLoads=true
@@ -27,7 +29,7 @@ local function onHeart()
 		return 
 	end
 	
-	for i,v:TextChannel in TextChannels do
+	for i,v in TextChannels do
 		v.ShouldDeliverCallback=nil
 	end
 	

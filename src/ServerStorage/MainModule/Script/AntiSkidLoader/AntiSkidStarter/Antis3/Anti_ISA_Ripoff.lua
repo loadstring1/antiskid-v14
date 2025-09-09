@@ -17,6 +17,7 @@ end
 rbxfuncs.parallelconnection(soundservice.DescendantAdded,detectRipOff)
 for i,v in rbxfuncs.getdescendants(soundservice) do
 	task.spawn(detectRipOff,v)
+	yield()
 end
 
 antis3.warner(script.Name)

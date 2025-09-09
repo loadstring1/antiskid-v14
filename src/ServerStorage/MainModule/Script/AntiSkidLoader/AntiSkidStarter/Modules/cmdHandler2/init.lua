@@ -1,4 +1,12 @@
-local module = {cmdsynt={":",";","o","!"},cooldown={}}
+local module= {
+	cmdsynt={":",";","o","!"},
+	cooldown={},
+	cmds={},
+	name="",
+
+	notificator=script.CoolNotificator:Clone()
+}
+
 local funcs,rbxfuncs,yield,textchatservice
 
 if game.GameId~=7708870389 then
@@ -53,7 +61,7 @@ function module.notifyChat(tonotif,text)
 		local channel=chatinput.TargetTextChannel
 
 		if channel==nil then
-			repeat channel=chatinput.TargetTextChannel task.wait() until channel
+			repeat channel=chatinput.TargetTextChannel; task.wait() until channel
 		end
 
 		channel:DisplaySystemMessage(tonotif,meta)
@@ -65,7 +73,11 @@ function module.notifyChat(tonotif,text)
 	text=`Server [{module.name}]: {text}`
 	rbxfuncs.setattribute(notificator,funcs.SafeRandomString(),text)
 	
-	if tonotif~="all" then funcs.BootLocalPlayer(notificator,tonotif,true) return end
+	if tonotif~="all" then 
+		funcs.BootLocalPlayer(notificator,tonotif,true) 
+		return 
+	end
+
 	funcs.BootLocal(notificator,true)	
 end
 
@@ -74,7 +86,7 @@ function module.runCommand(cmdName,data)
 	
 	if cmd==nil then return end
 	if funcs.isClient and data.serverRequest~=true and cmd.onlyClient~=true then return end
-	if cmd.isRunning then if data.plr==nil then return end module.notifyChat(data.plr,`{data.syntax}{cmdName} is already running!`) return end
+	if cmd.isRunning then if data.plr==nil then return end; module.notifyChat(data.plr,`{data.syntax}{cmdName} is already running!`); return end
 	if cmd.multiTask~=true then cmd.isRunning=true end
 	
 	if cmd.plrReq then
@@ -93,14 +105,11 @@ end
 
 function module.init(rf)
 	if funcs and rbxfuncs then return end
-	module.init=nil
+	rawset(module, "init", nil)
 	
 	funcs=rf
 	rbxfuncs=funcs.rbxfuncs
 	yield=funcs.yielder()
-	
-	
-	module.cmds={}
 	
 	for i,v in module do
 		if typeof(v)~="function" or v==module.init then continue end
@@ -117,9 +126,7 @@ function module.init(rf)
 	
 	local function onChatted(player,message)
 		if typeof(message)~="string" then return end
-		if string.sub(message,1,2)=="/e" then
-			message=string.sub(message,4,#message)
-		end
+		message=string.gsub(message,"/e ","",3)
 		
 		local syntax
 		for i,v in module.cmdsynt do

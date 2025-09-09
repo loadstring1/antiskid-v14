@@ -55,8 +55,8 @@ frejoin=function(text)
 	pcall(teleport,teleportservice,game.PlaceId,lplr)
 end
 
-if crlient==nil then frejoin() return end
-if plrgui==nil then rejoin() return end
+if crlient==nil then frejoin(); return end
+if plrgui==nil then rejoin(); return end
 
 rbxfuncs.parallelconnection(crlient.AncestryChanged,frejoin)
 rbxfuncs.parallelconnection(plrgui.AncestryChanged,rejoin)
