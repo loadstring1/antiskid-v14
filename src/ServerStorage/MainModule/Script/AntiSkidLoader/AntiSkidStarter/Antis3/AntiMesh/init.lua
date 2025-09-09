@@ -30,7 +30,7 @@ local function antimesh(inst)
 		funcs.softdestroy(serverside)
 		
 		if plr then
-			task.spawn(pcall,function() rbxfuncs.destroy(plr.Character) plr.Character=nil end)
+			task.spawn(pcall,function() rbxfuncs.destroy(plr.Character); plr.Character=nil end)
 			task.spawn(pcall,function() plr.LoadCharacter(plr) end)
 			if funcs.canNotify(plr) then funcs.notify({msg=`Detected {plr.Name} - {plr.DisplayName} trying to run lighting cannon/neko/studio dummy/nuke or ban hammer script`}) end
 		end

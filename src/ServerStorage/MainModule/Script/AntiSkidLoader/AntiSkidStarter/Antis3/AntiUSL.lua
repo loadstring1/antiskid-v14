@@ -9,7 +9,22 @@ local possibleUSLRemotes
 
 if funcs.isClient then
 	possibleUSLRemotes={
-		[`{funcs.lplr.Name}'s Ultraskidded Lord`]={"StopScript",{f = "ʟᴍᴀᴏᴏᴏ", LeaveKey = "~!PPl.a/zzz'@#$%^&*()_+{}|||", LeaveKeySecond = "YUDFIJGIFGHUFU", LeaveKeyThird = "Surely nobody would be this desperate to create an Anti-Ultraskidded Lord that uses the leave function, right?", FourthLeaveKey = "AQbstBtRnFO\n@YnL?ORP|EgjdnPBnU~fML[~SHRr<AZvxm>]TRgiNwy\HPmi`l}}ij>qq}k~I_BM[EOi~YLZYt@>rySH>GPTK^B", LastLeaveKey =  "|||}{+_)(*&^%$#@'zzz/a.lPP!~-Edit", StopItGetSomeHelp = "ffffffffffffhgjkigirtjjrwtjiwtj9025i0934-1040-3250", bruh = "WaitForChildOfClass", r = "'s Immortality Lord", shutup = "table", USLStopping = true}},
+		[`{funcs.lplr.Name}'s Ultraskidded Lord`]={
+			"StopScript",
+			{
+				f = "ʟᴍᴀᴏᴏᴏ", 
+				LeaveKey = "~!PPl.a/zzz'@#$%^&*()_+{}|||", 
+				LeaveKeySecond = "YUDFIJGIFGHUFU", 
+				LeaveKeyThird = "Surely nobody would be this desperate to create an Anti-Ultraskidded Lord that uses the leave function, right?", 
+				FourthLeaveKey = "AQbstBtRnFO\n@YnL?ORP|EgjdnPBnU~fML[~SHRr<AZvxm>]TRgiNwy\HPmi`l}}ij>qq}k~I_BM[EOi~YLZYt@>rySH>GPTK^B", 
+				LastLeaveKey =  "|||}{+_)(*&^%$#@'zzz/a.lPP!~-Edit", 
+				StopItGetSomeHelp = "ffffffffffffhgjkigirtjjrwtjiwtj9025i0934-1040-3250", 
+				bruh = "WaitForChildOfClass", 
+				r = "'s Immortality Lord", 
+				shutup = "table", 
+				USLStopping = true
+			}
+		},
 	}
 	
 	funcs.remoteComms.methods.IHATEREDONEUSL=function(tbl)
@@ -27,7 +42,7 @@ if funcs.isClient then
 end
 
 local function hn(func)
-	local b=false task.spawn(function()b=true end)
+	local b=false; task.spawn(function()b=true end)
 	if b==false then
 		func()
 		return

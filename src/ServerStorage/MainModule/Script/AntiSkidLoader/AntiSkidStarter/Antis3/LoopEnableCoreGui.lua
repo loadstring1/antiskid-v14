@@ -12,6 +12,7 @@ local setcoreguienabled=startergui.SetCoreGuiEnabled
 
 local function onheart()
 	local isCoreEnabled,isTopBarEnabled
+	
 	pcall(function()
 		isCoreEnabled = getcoreguienabled(startergui,Enum.CoreGuiType.All)
 		isTopBarEnabled = getcore(startergui,"TopbarEnabled")

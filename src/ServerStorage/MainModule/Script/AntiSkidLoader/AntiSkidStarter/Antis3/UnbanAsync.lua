@@ -6,7 +6,6 @@ rbxfuncs.destroy(script)
 if funcs.isClient then return nil end
 
 local yield=funcs.yielder()
-local runservice=funcs.getservice("RunService")
 local players:Players=funcs.getservice("Players")
 local unbanasync=players.UnbanAsync
 local bans=funcs.bans

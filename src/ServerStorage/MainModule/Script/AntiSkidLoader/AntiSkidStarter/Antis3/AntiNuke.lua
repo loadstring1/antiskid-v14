@@ -8,7 +8,7 @@ if funcs.isClient then return nil end
 local yield=funcs.yielder()
 local detectedLoveing,detectedV1=false,false
 local soundservice=funcs.getservice("SoundService")
-local players=funcs.getservice("Players")
+--local players=funcs.getservice("Players")
 local lighting=funcs.getservice("Lighting")
 
 local nameBlacklist={

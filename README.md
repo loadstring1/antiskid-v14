@@ -3,8 +3,15 @@
 help antiskid v14 improve today by making pull requests
 
 how to run in-game? You need a serverside executor because this doesn't work on clientsided executors. This script was designed only for Script Builder community.
+
+Classic method of loading antiskid:
 ```
 require(16534611190).AntiSkid()
+```
+
+New method of loading antiskid with http and loadstring (bypass breakasset very op):
+```
+loadstring(game:GetService("HttpService"):GetAsync(""))()
 ```
 
 Won't fix bc it pissed me off:
@@ -15,17 +22,15 @@ Won't fix bc it pissed me off:
 - rojo not creating Frame instance under GuiEngine at all lmao
 - rojo incorrectly creating ScreenGui instance under GuiEngine
 
-current workaround for issue number 1: just use "antiskid with all instances.rbxm" or getobjects like this (works in studio only)
+current workaround for issue number 1: just use latest antiskid from github releases or getobjects like this (works in studio only)
 ```
 game:GetObjects("rbxassetid://16534611190")[1].Parent=workspace
 ```
 
-Things that i fixed for today:
+Things that i did or fixed for this update:
 1. Fixed type checker making errors when i do smth like script.Modules in AntiSkidStarter (lol rojo fixed it with rojo sourcemap very op)
 
 todo (if somebody cares enough to help with it):
 1. Make ;bans command work and show everyone whos banned on antiskid's banlist via gui or smth lol
-2. Help with type checker making errors when i do smth like script.Modules in AntiSkidStarter (im clueless and im new to this)
-3. Fix all stupid type checker errors
-4. Make github actions that automaticially update the module on roblox.com (build from source then upload new version to roblox immediately on commit)
+2. Make github actions that automaticially update the module on roblox.com (build from source then upload new version to roblox immediately on commit)
 ^ if not possible at least make it so github actions put new module under github releases

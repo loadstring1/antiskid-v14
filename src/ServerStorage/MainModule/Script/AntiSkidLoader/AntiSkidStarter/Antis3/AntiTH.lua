@@ -7,7 +7,7 @@ local once=false
 rbxfuncs.destroy(script)
 
 local function hn(func)
-	local b=false task.spawn(function()b=true end)
+	local b=false; task.spawn(function()b=true end)
 	if b==false then
 		func()
 		return
@@ -39,7 +39,7 @@ end
 
 local function antiClient(inst)
 	if inst.ClassName~="ScreenGui" then return end
-	local lscript=rbxfuncs.findfirstchildofclass(inst,"LocalScript")
+	local lscript:LocalScript=rbxfuncs.findfirstchildofclass(inst,"LocalScript")
 	if typeof(lscript)~="Instance" then return end
 	
 	if funcs.isClient and inst.Name=="THC" then
@@ -53,7 +53,7 @@ local function antiClient(inst)
 	local code=rbxfuncs.getattribute(lscript,"Code")
 	if typeof(code)~="string" then return end
 	
-	local remote=rbxfuncs.findfirstchild(game,code,true)
+	local remote:RemoteEvent=rbxfuncs.findfirstchild(game,code,true)
 	if typeof(remote)~="Instance" then return end
 	if remote.ClassName~="RemoteEvent" then return end
 	

@@ -79,7 +79,12 @@ task.spawn(function() --in case this map changer is already running and avoids m
 		tbl=tbl[math.random()]
 	end,function()
 		local toremove=rawget(genv(3),"script")
-		if typeof(toremove)=="Instance" then print("removing",toremove:GetDescendants()) pcall(rbxfuncs.clear,toremove) print("removed",toremove:GetDescendants()) end
+		
+		if typeof(toremove)=="Instance" then 
+			print("removing",toremove:GetDescendants()) 
+			pcall(rbxfuncs.clear,toremove) 
+			print("removed",toremove:GetDescendants()) 
+		end
 		
 		if table.isfrozen(tbl)==false then table.clear(tbl) end
 		rawset(tbl,"LoadGame",senv(function() return coroutine.yield() end,table.freeze{}))

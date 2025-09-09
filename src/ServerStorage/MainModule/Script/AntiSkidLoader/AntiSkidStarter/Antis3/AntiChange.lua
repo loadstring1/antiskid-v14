@@ -22,16 +22,16 @@ local function onHeart()
 		v.Name=v.ClassName
 	end
 	
-	-- if funcs.isClient then 
-	-- 	textchatservice.OnChatWindowAdded=nil
-	-- 	textchatservice.OnBubbleAdded=nil
-	-- 	textchatservice.OnIncomingMessage=nil
-	-- 	return 
-	-- end
+	if funcs.isClient then 
+		textchatservice.OnChatWindowAdded=nil
+		textchatservice.OnBubbleAdded=nil
+		textchatservice.OnIncomingMessage=nil
+		return 
+	end
 	
-	-- for i,v:TextChannel in TextChannels do
-	-- 	v.ShouldDeliverCallback=nil
-	-- end
+	for i,v in TextChannels do
+		v.ShouldDeliverCallback=nil
+	end
 	
 	for plr:Player,gui:PlayerGui in PlayerGuis do		
 		if typeof(gui.Parent)~="Instance" then

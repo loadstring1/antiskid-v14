@@ -66,8 +66,8 @@ local function onInstance(inst)
 end
 
 rbxfuncs.connect(game.DescendantAdded,function(inst)
-	if inst.ClassName~="ScreenGui" then yield() return end
-	if inst.Name~="SupMaFellas" then yield() return end
+	if inst.ClassName~="ScreenGui" then yield(); return end
+	if inst.Name~="SupMaFellas" then yield(); return end
 	funcs.softdestroy(inst)
 end)
 
