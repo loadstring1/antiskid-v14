@@ -26,6 +26,10 @@ legacy legend (wont use this legend anymore because its outdated):
 
 Date format: DD:MM:YYYY
 
+09.09.2025 (DD:MM:YYYY) V14.4.11 patch
+- Bypass breakasset method that stupid owners of skidded require executors misuse for their own adventage
+- Hello world from my new github repo btw!!!
+
 02.09.2025 (DD:MM:YYYY) V14.4.10 newantis
 - Added anti author
 - g/gexe has new alias g/fse since its literally just fse
