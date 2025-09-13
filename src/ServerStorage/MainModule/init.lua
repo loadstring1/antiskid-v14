@@ -25,7 +25,6 @@ if success==false then
             props.Anchored=i.Anchored
             props.CFrame=i.CFrame
         elseif i:IsA("GuiObject") then
-            props.Position=i.Position
             props.BackgroundColor3=i.BackgroundColor3
             props.Size=i.Size
             props.Active=i.Active
