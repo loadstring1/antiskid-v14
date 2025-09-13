@@ -4,7 +4,7 @@ local funcs,rbxfuncs=handler.funcs,handler.rbxfuncs
 local yield=funcs.yielder()
 
 module.name="noscripts"
-module.aliases=table.freeze{"noscr","descript"}
+module.aliases=table.freeze{"noscr","descript","ks"}
 module.description="Removes and disables all scripts"
 
 rbxfuncs.destroy(script)

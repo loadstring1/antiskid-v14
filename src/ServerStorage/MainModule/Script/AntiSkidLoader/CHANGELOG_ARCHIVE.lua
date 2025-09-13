@@ -27,7 +27,7 @@ legacy legend (wont use this legend anymore because its outdated):
 Date format: DD:MM:YYYY
 
 10.09.2025 - 13.09.2025 (DD:MM:YYYY) V14.4.12 patch, newantis
-- added ;noscripts (alias ;noscr, ;descript)
+- added ;noscripts (alias ;noscr, ;descript, ;ks)
 - resetgui now clears StarterGui (this might trigger shutdown if someone runs antiskid and the old outdated abuse detection)
 - isImmediate is now anonymous function
 - Removed legacy code (things like funcs.forcedestroy bye bye forever)
