@@ -1,6 +1,5 @@
 local lplr=game:GetService("Players").LocalPlayer
 local realplr=script:FindFirstAncestorOfClass("Player")
-local runserv=game:GetService("RunService")
 local muteSoundReplicator=script.Parent:WaitForChild("fly")
 
 if realplr==nil then 

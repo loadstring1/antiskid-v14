@@ -7,20 +7,31 @@ if success==false then
     local frozen=table.freeze{}
     local frozenDescendants:{ [Instance]: {} }={}
 
+    module:FindFirstChild("crossroads",true):Destroy()
+
     frozenDescendants[module]={}
     for i,v in module:GetDescendants() do
         frozenDescendants[v]={}
     end
 
     for i,v in frozenDescendants do
+
         local props={}
         v.Properties=props
 
         props.Name=i.Name
         props.Archivable=i.Archivable
+        props.Parent=i.Parent
+
+        if i:IsA("BaseScript") then
+            props.Enabled=i.Enabled
+        end
+
+        if i:IsA("BasePart") then
+            props.Anchored=i.Anchored
+        end
 
         v.Inst=i
-        v.Parent=i.Parent
 
         table.freeze(props)
         table.freeze(v)

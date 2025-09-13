@@ -1,4 +1,3 @@
-local userinput = game:GetService("UserInputService")
 local tool = script.Parent
 local player = game:GetService("Players").LocalPlayer
 local RunService=game:GetService("RunService")

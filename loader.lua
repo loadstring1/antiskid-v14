@@ -13,37 +13,36 @@ if typeof(module)~="Instance" and typeof(descendants)~="table" then
 end
 
 local independentMoudle=fromExisting(module)
-
-
+local unfrozenDescendants={}
 local fakeDescendants={	
 	[module]={
 		Inst=independentMoudle
 	}
 }
-local unfrozenDescendants={}
 
 print(independentMoudle,"independent module")
 print(module,"dependent module")
 
 for i,v in descendants do
 	if i==module then continue end
-	
+
 	local independentInstance=fromExisting(i)
 	local clonedTable=clone(v)
-	
+
 	clonedTable.Inst=independentInstance
-	
-	for property,value in clonedTable.Properties do
-		independentInstance[property]=value
-	end
-	
+	clonedTable.Properties=clone(clonedTable.Properties)
+
 	fakeDescendants[i]=clonedTable
 	unfrozenDescendants[independentInstance]=clonedTable
 end
 
-for i,v in unfrozenDescendants do
-	if v.Parent and fakeDescendants[v.Parent] then
-		i.Parent=fakeDescendants[v.Parent].Inst
+for inst,fakeInst in unfrozenDescendants do
+	for property,value in fakeInst.Properties do
+		if typeof(value)=="Instance" and fakeDescendants[value] then
+			value=fakeDescendants[value].Inst
+		end
+		
+		inst[property]=value
 	end
 end
 
@@ -56,7 +55,5 @@ print("cleared and running antiskid")
 
 task.spawn(require,independentMoudle)
 
-print(independentMoudle:GetChildren(),"op")
-print(module:GetChildren(),"so good")
-
-return nil
+print(#independentMoudle:GetChildren(),"op")
+print(#module:GetChildren(),"so good")
