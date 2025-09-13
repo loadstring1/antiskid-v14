@@ -18,8 +18,11 @@ end
 
 local isBanningEnabled,result=unbanPlayers({UserIds={1},ApplyToUniverse=true})
 if isBanningEnabled==false and typeof(result)=="string" and result=="UnbanAsync is disabled due to Players:BanningEnabled being set to false" then
+	funcs.isBanningEnabled=false
 	return nil
 end
+
+funcs.isBanningEnabled=true
 
 for i,v in funcs.whitelist do
 	table.insert(uids,v)

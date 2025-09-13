@@ -124,6 +124,15 @@ function module.f(data)
 		return true
 	end)
 	
+	test("banAsyncDisabled",function()  
+		if funcs.isBanningEnabled then
+			funcs.notifyChat(data.plr,"banAsyncDisabled: BanAsync is literally enabled in this game and any skid can run banasync on you. (if you are game dev i highly suggest disabling BanAsync under Players property BanningEnabled in studio)")
+			return false
+		end
+
+		return true
+	end)
+
 	test("loadstringEnabled",function()
 		return isLoadEnabled
 	end)
