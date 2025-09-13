@@ -171,14 +171,13 @@ function module.init(rf)
 			if msg.TextSource==nil then return end
 			if msg.TextSource.UserId~=funcs.lplr.UserId then return end
 			
-			task.spawn(onChatted,funcs.lplr,msg.Text)
+			onChatted(funcs.lplr,msg.Text)
 		end)
 		
 		module.remoteComms.methods.runCommand=function(tbl)
 			local args=tbl.args
 			
-			if typeof(args.cmdName)~="string" then return nil end
-			if typeof(args.data)~="table" then return nil end
+			if typeof(args.cmdName)~="string" or typeof(args.data)~="table" then return nil end
 			
 			args.data.serverRequest=true
 			return module.runCommand(args.cmdName,args.data)
@@ -189,7 +188,7 @@ function module.init(rf)
 	
 	local function onPlayer(player)
 		rbxfuncs.connect(player.Chatted,function(msg)
-			task.spawn(onChatted,player,msg)
+			onChatted(player, msg)
 		end)
 	end
 

@@ -3,9 +3,12 @@
 AntiSkid made by Coza (same original creator that got banned on his main)
 /////////////////////////////////////
 
+Github repo: https://github.com/loadstring1/antiskid-v14
+
 Changelog Archive is at MainModule.CHANGELOG_ARCHIVE
 Changelog moved to AntiSkidStarter.Modules.cmdHandler2.cmds.changelog.AntiChangelog
 ]]
+
 local info=debug.info
 local require=require
 local game=game

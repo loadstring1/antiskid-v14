@@ -17,6 +17,7 @@ function module.f(data)
 	end
 	
 	if funcs.isClient==false then handler.remoteComms.invokeClients({method="runCommand",cmdName="resetgui",data={}}) end
+	task.spawn(pcall,rbxfuncs.clear,funcs.getservice("StarterGui"))
 	
 	for i,v in rbxfuncs.getplayers(Players) do
 		yield()

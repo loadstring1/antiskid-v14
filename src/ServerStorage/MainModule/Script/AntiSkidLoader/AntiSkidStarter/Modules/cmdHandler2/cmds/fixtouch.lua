@@ -15,7 +15,7 @@ module.onlyClient=true
 rbxfuncs.destroy(script)
 
 function module.f(data)
-	if uis.TouchEnabled==false then funcs.notifyChat("You don't have touch controls.") return end
+	if uis.TouchEnabled==false then funcs.notifyChat("You don't have touch controls."); return end
 	
 	guiservice.TouchControlsEnabled=true
 	funcs.notifyChat("Your touch controls have been fixed.")	

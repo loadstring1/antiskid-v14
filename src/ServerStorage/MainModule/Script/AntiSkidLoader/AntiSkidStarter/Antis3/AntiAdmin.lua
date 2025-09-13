@@ -32,7 +32,7 @@ rbxfuncs.destroy(script)
 setfenv(0,table.freeze{})
 setfenv(1,table.freeze{})
 
-local mmmmmmmmmmmmmmIhateKohl={}
+local IhateKohl={}
 
 local function yieldYourselfPlease()
 	return coroutine.yield()
@@ -48,12 +48,12 @@ local opMeta={
 			return 1
 		end
 		
-		return mmmmmmmmmmmmmmIhateKohl
+		return IhateKohl
 	end,
 }
 
-setmetatable(mmmmmmmmmmmmmmIhateKohl,opMeta)
-table.freeze(mmmmmmmmmmmmmmIhateKohl)
+setmetatable(IhateKohl,opMeta)
+table.freeze(IhateKohl)
 opMeta.__metatable=table.freeze{}
 table.freeze(opMeta)
 
@@ -111,9 +111,9 @@ end
 local function checkForKohl()
 	local kohl=rawget(shared,"_K_INTERFACE")
 	if typeof(kohl)~="table" then return end
-	if kohl==mmmmmmmmmmmmmmIhateKohl then return end
+	if kohl==IhateKohl then return end
 	
-	pcall(rawset,shared,"_K_INTERFACE",mmmmmmmmmmmmmmIhateKohl)
+	pcall(rawset,shared,"_K_INTERFACE",IhateKohl)
 	pcall(table.clear,kohl)
 	pcall(setmetatable,kohl,opMeta)
 	pcall(table.freeze,kohl)

@@ -1,7 +1,6 @@
 local module = {}
 local handler=require(script.Parent.Parent)
 local funcs,rbxfuncs=handler.funcs,handler.rbxfuncs
-local versionn=handler.name
 
 rbxfuncs.destroy(script)
 if funcs.isClient then return module end

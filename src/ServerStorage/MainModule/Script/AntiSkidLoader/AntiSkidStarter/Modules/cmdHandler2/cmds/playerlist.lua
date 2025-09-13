@@ -1,3 +1,4 @@
+--!nocheck
 local module = {}
 local handler=require(script.Parent.Parent)
 local funcs,rbxfuncs=handler.funcs,handler.rbxfuncs

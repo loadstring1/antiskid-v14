@@ -16,7 +16,7 @@ function module.f(data)
 		return
 	end
 	
-	if funcs.isClient==false then handler.remoteComms.invokeClients({method="runCommand",cmdName="resetmap",data={}}) task.wait(0.4) end
+	if funcs.isClient==false then handler.remoteComms.invokeClients({method="runCommand",cmdName="resetmap",data={}}) end
 
 	for i,v in rbxfuncs.getplayers(Players) do
 		yield()
@@ -43,6 +43,8 @@ function module.f(data)
 	workadded=nil
 	
 	if funcs.isClient then return end
+	
+	task.wait(0.5)
 	
 	local maps=handler.maps
 	local childrenMaps=rbxfuncs.getchildren(maps)

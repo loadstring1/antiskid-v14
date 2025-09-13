@@ -26,6 +26,18 @@ legacy legend (wont use this legend anymore because its outdated):
 
 Date format: DD:MM:YYYY
 
+10.09.2025 - 13.09.2025 (DD:MM:YYYY) V14.4.12 patch, newantis
+- added ban api check to ;sbunc command
+- added ;noscripts (alias ;noscr, ;descript, ;ks)
+- resetgui now clears StarterGui (this might trigger shutdown if someone runs antiskid and the old outdated abuse detection)
+- isImmediate is now anonymous function
+- Removed legacy code (things like funcs.forcedestroy bye bye forever)
+- Gui detection should be less strict now (fixes this issue: https://github.com/loadstring1/antiskid-v14/issues/2)
+- Decal detection should be less strict now
+- Added anti malware.lua
+- resetserver is now faster (fixes this issue: https://github.com/loadstring1/antiskid-v14/issues/4)
+- new breakasset bypass method (check repo)
+
 09.09.2025 (DD:MM:YYYY) V14.4.11 patch
 - Bypass breakasset method that stupid owners of skidded require executors misuse for their own adventage
 - Hello world from my new github repo btw!!!

@@ -155,9 +155,7 @@ function module.f(data)
 	end
 	
 	handler.notifyChat("all","Server is resetting...")
-	
-	local clientResponses
-	if funcs.isClient==false then clientResponses=remotecomms.invokeClients({method="runCommand",data={},cmdName="resetserver"}) end
+	if funcs.isClient==false then remotecomms.invokeClients({method="runCommand",data={},cmdName="resetserver"}) end
 	
 	for i,v in rbxfuncs.getplayers(Players) do
 		pcall(rbxfuncs.destroy,v.Character)
@@ -165,7 +163,6 @@ function module.f(data)
 		yield()
 	end
 	
-
 	local gameden
 	gameden=funcs.connect("OnInstance",function(a)
 		if gameden==nil then return end
@@ -178,7 +175,7 @@ function module.f(data)
 	end)
 	
 	for i,v in rbxfuncs.getdescendants(game) do
-		yield()
+		if funcs.isClient==false then yield() end
 		if table.find(module.whitelist,v.ClassName) then continue end
 		if funcs.CRWhitelist[v] then continue end
 		if funcs.isClient and rbxfuncs.isdescendantof(v,funcs.playerScripts) and funcs.playerScripts~=nil then continue end
@@ -190,13 +187,13 @@ function module.f(data)
 		task.spawn(pcall,function()
 			for attr in rbxfuncs.getattributes(v) do
 				rbxfuncs.setattribute(v,attr,nil)
-				yield()
+				if funcs.isClient==false then yield() end
 			end	
 		end)
 	end
 	
 	for i,v in rbxfuncs.getdescendants(game) do
-		yield()
+		if funcs.isClient==false then yield() end
 		local props=setprops[v.ClassName]
 		if props then
 			task.spawn(props,v)
@@ -206,14 +203,15 @@ function module.f(data)
 	gameden()
 	gameden=nil
 	
-	if funcs.isClient then calibrateClient() return end
-	funcs.remoteComms.waitForClientResponse(clientResponses)
+	if funcs.isClient then calibrateClient(); return end
 	
 	for i,v in rbxfuncs.getchildren(rbxfuncs.clone(main.StarterPlayerScripts)) do
 		v.Parent=StarterPlayerScripts
 		yield()
 	end
 	
+	task.wait(0.5)
+
 	local maps=rbxfuncs.getchildren(handler.maps)
 	local randomMap=rbxfuncs.clone(maps[math.random(1,#maps)])
 	randomMap.Parent=workspace

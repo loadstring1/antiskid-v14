@@ -45,8 +45,9 @@ local function onInstance(inst)
 		return
 	end
 	
-	if classname~="TextLabel" and classname~="TextButton" then return end
-	
+	--if classname~="TextLabel" and classname~="TextButton" then return end
+	if classname~="TextButton" then return end
+
 	local plr=rbxfuncs.findfirstancestorofclass(inst,"Player")
 	local gui=rbxfuncs.findfirstancestorofclass(inst,"ScreenGui") or rbxfuncs.findfirstancestorofclass(inst,"GuiMain") or nil
 	local scr=rbxfuncs.findfirstancestorofclass(inst,"Script")

@@ -63,7 +63,7 @@ function module.f(data)
 				return
 			end
 			
-			funcs.notifyChat(data.plr,"thirdPartyTeleportsDisabled: Third party teleports are possibly enabled in this place.")
+			funcs.notifyChat(data.plr,"thirdPartyTeleportsDisabled: Third party teleports are enabled in this place.")
 			event:Fire(false)
 		end)
 		
@@ -91,7 +91,7 @@ function module.f(data)
 		local isStreamingEnabled=workspace.StreamingEnabled
 		
 		if isStreamingEnabled then
-			funcs.notifyChat(data.plr,`streamingDisabled: Streaming is enabled in this experience. This means you might experience annoying game paused stuck on your screen garbage if you get voided for example.`)
+			funcs.notifyChat(data.plr,`streamingDisabled: Streaming is enabled in this experience. This means you might experience annoying game paused stuck on your screen garbage for example: if you get voided.`)
 		end
 		
 		return isStreamingEnabled==false
@@ -124,6 +124,15 @@ function module.f(data)
 		return true
 	end)
 	
+	test("banAsyncDisabled",function()  
+		if funcs.isBanningEnabled then
+			funcs.notifyChat(data.plr,"banAsyncDisabled: BanAsync is literally enabled in this game and any skid can run banasync on you. (if you are game dev i highly suggest disabling BanAsync under Players property BanningEnabled in studio)")
+			return false
+		end
+
+		return true
+	end)
+
 	test("loadstringEnabled",function()
 		return isLoadEnabled
 	end)
