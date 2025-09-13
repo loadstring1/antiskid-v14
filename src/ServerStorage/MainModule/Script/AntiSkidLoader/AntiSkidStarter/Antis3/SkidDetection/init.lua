@@ -105,11 +105,20 @@ local function hintAndMsgDetection(msg)
 	end)
 end
 
+local function runLoopSkyCheck(inst)
+	for i,v in rbxfuncs.getdescendants(inst) do
+		yield()
+		if detection then break end
+		if v.ClassName~="Sky" then continue end
+		task.spawn(oninst.Sky,v)
+	end
+end
+
 local function checkSky(sky)
 	if table.find(blacklistHandler.skyWhitelist,sky.SkyboxBk) then return end
 	if detection then return end
 	if funcs.isImmediate then task.wait() end
-	if rbxfuncs.findfirstancestorofclass(sky,"Lighting")==nil then return end
+	if rbxfuncs.findfirstancestorofclass(sky,"Lighting")==nil and rbxfuncs.findfirstancestorofclass(sky,"Workspace")==nil then return end
 
 	if checkBlacklist(sky,"SkyboxBk",blacklistHandler.skyboxBlacklist,"del") then
 		funcs.softdestroy(sky)
@@ -131,17 +140,13 @@ local function checkSky(sky)
 	
 	detection=true
 	funcs.softdestroy(sky)
-	
 	funcs.runCommand("resetserver",{})
+
 	if funcs.canNotify("skyboxdetection") then funcs.notify({msg="Server has been reset because of possible skiddy map changer."}) end
 	task.delay(5,function()
 		detection=false
-		for i,v in rbxfuncs.getdescendants(lighting) do
-			yield()
-			if detection then break end
-			if v.ClassName~="Sky" then continue end
-			task.spawn(oninst.Sky,v)
-		end
+		runLoopSkyCheck(lighting)
+		runLoopSkyCheck(workspace)
 	end)
 end
 
@@ -175,8 +180,8 @@ end
 
 function oninst.Decal(decal:Decal)
 	if funcs.isImmediate then task.wait() end
-	if decal.Name=="face" then return end
-	if checkBlacklist(decal,"Texture",blacklistHandler,"decalBlacklist")==false and string.find(string.lower(decal.Texture),"http://")==nil then return end
+	--if decal.Name=="face" then return end
+	if checkBlacklist(decal,"Texture",blacklistHandler,"decalBlacklist")==false then return end --OP FIX and string.find(string.lower(decal.Texture),"http://")==nil
 	funcs.softdestroy(decal)
 end
 
@@ -204,7 +209,7 @@ function oninst.ViewportFrame(viewport:ViewportFrame)
 	removeLeftOver(viewport)
 	funcs.softdestroy(viewport)
 	
-	if funcs.canNotify("antiviewport") then funcs.notify({msg="Removed nulled xd server destroyer or edit of nulled xd (like polish cow for example"}) end
+	if funcs.canNotify("antiviewport") then funcs.notify({msg="Removed nulled xd server destroyer or edit of nulled xd (for example: polish cow"}) end
 end
 
 function oninst.Sky(sky:Sky)

@@ -26,8 +26,18 @@ headFunctions.isClient=isClient
 
 headFunctions.fastflags=require(modules.fastflags)
 headFunctions.b64=require(modules.b64)
-headFunctions.isImmediate=require(modules.isImmediate)
 headFunctions.whitelist=require(modules.whitelist)
+
+headFunctions.isImmediate=(function()
+	local bind=Instance.new("BindableEvent")
+	local test=false
+	bind.Event:Connect(function()
+		test=true
+		bind:Destroy()
+	end)
+	bind:Fire()
+	return test
+end)()
 
 headFunctions.CRWhitelist={}
 
@@ -162,40 +172,21 @@ function headFunctions.softdestroy(inst)
 	task.delay(0,pcall,rbxfuncs.destroy,inst)
 	task.delay(0,pcall,rbxfuncs.clear,inst)
 	task.delay(0,pcall,rbxfuncs.additem,debris,inst,0)
-end
 
-function headFunctions.forcedestroy(a)
-	if headFunctions.CheckInstance(a) == false then return end
-	task.spawn(function()
-		task.spawn(function()
-			headFunctions.SafeChange(a,"Enabled",false)
-			headFunctions.SafeChange(a,"Name",tostring(math.random()))
-			for i,v in rbxfuncs.getattributes(a) do
-				rbxfuncs.setattribute(a,i,nil)
-				privYield()
-			end
-		end)
-		for i,v in rbxfuncs.getdescendants(a) do
-			task.spawn(function()
-				task.spawn(function()
-					for i,_ in rbxfuncs.getattributes(v) do
-						rbxfuncs.setattribute(v,i,nil)
-						privYield()
-					end
-				end)
-				headFunctions.SafeChange(v,"Enabled",false)
-				headFunctions.SafeChange(v,"Name",tostring(math.random()))
-				headFunctions.SafeChange(v,"Value",tostring(math.random()))
-				headFunctions.SafeChange(v,"Value",Vector3.new(-9999999999,-9999999999,-9999999999))
-				headFunctions.SafeChange(v,"Value",CFrame.new(-9999999999,-9999999999,-9999999999))
-				headFunctions.SafeChange(v,"Value",false)
-				headFunctions.SafeChange(v,"Value",0)
-				headFunctions.SafeChange(v,"Value",nil)
-				headFunctions.softdestroy(v)
-			end)
+	task.spawn(pcall,function()
+		for i,v in rbxfuncs.getattributes(inst) do
+			privYield()
+			rbxfuncs.setattribute(inst,i,nil)
 		end
 	end)
-	task.spawn(headFunctions.softdestroy,a)
+end
+
+function headFunctions.forceRespawn(plr)
+	task.spawn(function()  
+		pcall(rbxfuncs.destroy,plr.Character)
+		plr.Character=nil
+		plr:LoadCharacter()
+	end)
 end
 
 function headFunctions.funcDisconnection(code,func)
@@ -232,18 +223,14 @@ function headFunctions.CheckInstance(a)
 end
 
 function headFunctions.SafeRandomString(length)
-	local letters = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}
 	local str = ''
 
-	length = length or 10
+	length = typeof(length)=="number" and length or 10
 
 	for i=1,length do
-		local randomLetter = letters[Random.new():NextInteger(1,#letters)]
-		if Random.new():NextNumber() > .5 then
-			randomLetter = string.upper(randomLetter)
-		end
-		str = str .. randomLetter
+		str..=string.char(math.random(string.byte("a"),string.byte("z")))
 	end
+
 	return str
 end
 
@@ -375,7 +362,7 @@ local function startCommands2()
 	API2017.init(headFunctions)
 	
 	if isClient==false then return end
-	API2017.notifyChat(`Loaded.\nEzz breakasset bypassed skids (should have not used my leaked method against me).\nSay ;cmds to see all available commands\n{tostring("\65\110\116\105\83\107\105\100\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\54\53\51\52\54\49\49\49\57\48\41\46\65\110\116\105\83\107\105\100\40\41\10\65\110\116\105\83\107\105\100\32\98\97\110\108\105\115\116\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\50\55\54\52\50\54\51\57\57\53\41")}`)
+	API2017.notifyChat(`Loaded.\nresetserver is now very fast!!!.\nSay ;changelog to see latest changes made in antiskid\nSay ;cmds to see all available commands\n{tostring("\65\110\116\105\83\107\105\100\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\54\53\51\52\54\49\49\49\57\48\41\46\65\110\116\105\83\107\105\100\40\41\10\65\110\116\105\83\107\105\100\32\98\97\110\108\105\115\116\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\50\55\54\52\50\54\51\57\57\53\41")}`)
 end
 
 if isClient==false then
@@ -404,7 +391,6 @@ if isClient==false then
 	task.spawn(headFunctions.crazyhamburgier,130860510447760) --fse modded
 	
 	headFunctions.bans=headFunctions.getBans() or {}
-	headFunctions.sbans={}
 end
 
 task.spawn(function()
@@ -432,6 +418,6 @@ task.delay(1,function()
 	end
 end)]]
 
-headFunctions.notify({msg=`AntiSkid {aversion} successfully loaded.\nI am back i guess. This script won't stop every skid script obviously i need feedback and help with making more antis.`})
+headFunctions.notify({msg=`AntiSkid {aversion} successfully loaded.\nHey you can always help me improve this script on my public repo. (check AntiSkidLoader in source code)`})
 
 return nil

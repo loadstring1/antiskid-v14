@@ -63,7 +63,7 @@ function module.f(data)
 				return
 			end
 			
-			funcs.notifyChat(data.plr,"thirdPartyTeleportsDisabled: Third party teleports are possibly enabled in this place.")
+			funcs.notifyChat(data.plr,"thirdPartyTeleportsDisabled: Third party teleports are enabled in this place.")
 			event:Fire(false)
 		end)
 		
@@ -91,7 +91,7 @@ function module.f(data)
 		local isStreamingEnabled=workspace.StreamingEnabled
 		
 		if isStreamingEnabled then
-			funcs.notifyChat(data.plr,`streamingDisabled: Streaming is enabled in this experience. This means you might experience annoying game paused stuck on your screen garbage if you get voided for example.`)
+			funcs.notifyChat(data.plr,`streamingDisabled: Streaming is enabled in this experience. This means you might experience annoying game paused stuck on your screen garbage for example: if you get voided.`)
 		end
 		
 		return isStreamingEnabled==false

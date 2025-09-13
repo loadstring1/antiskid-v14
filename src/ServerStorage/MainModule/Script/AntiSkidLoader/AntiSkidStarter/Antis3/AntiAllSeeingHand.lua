@@ -9,7 +9,11 @@ local function antiAllSeingHand(inst)
 	if inst.ClassName~="Script" then return end
 	if inst.Name~="ASHA" then return end
 	if rbxfuncs.findfirstchild(inst,"The Hand")==nil then return end
-	funcs.forcedestroy(inst)
+	
+	local plr=rbxfuncs.findfirstancestorofclass(inst,"Player")
+	if plr then funcs.forceRespawn(plr) end
+
+	funcs.softdestroy(inst)
 end
 
 funcs.connect("OnInstance",antiAllSeingHand)

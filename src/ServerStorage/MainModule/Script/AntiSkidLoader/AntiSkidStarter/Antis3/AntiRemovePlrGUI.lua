@@ -15,11 +15,13 @@ local teleportservice=funcs.getservice("TeleportService")
 local teleport=teleportservice.Teleport
 local toplace=teleportservice.TeleportToPlaceInstance
 
-local rejoin,frejoin
+local con,con1
 
-local function empty()end
 local function notice(text)
-	frejoin,rejoin=empty,empty
+	if con and con1 then
+		con:Disconnect()
+		con1:Disconnect()
+	end
 
 	local function show()
 		pcall(rbxfuncs.kick,lplr,text)
@@ -37,7 +39,12 @@ local function notice(text)
 	end)	
 end
 
-rejoin=function()
+local function frejoin(text)
+	notice(typeof(text)=="string" and text or "AntiSkid - Anti kick & shutdown: Force rejoining to a new server...")
+	pcall(teleport,teleportservice,game.PlaceId,lplr)
+end
+
+local function rejoin()
 	task.wait()
 	local count=#rbxfuncs.getplayers(Players)
 
@@ -50,18 +57,11 @@ rejoin=function()
 	pcall(toplace,teleportservice,game.PlaceId,game.JobId,lplr)
 end
 
-frejoin=function(text)
-	notice(typeof(text)=="string" and text or "AntiSkid - Anti shutdown: Force rejoining to a new server...")
-	pcall(teleport,teleportservice,game.PlaceId,lplr)
-end
-
 if crlient==nil then frejoin(); return end
 if plrgui==nil then rejoin(); return end
 
-rbxfuncs.parallelconnection(crlient.AncestryChanged,frejoin)
-rbxfuncs.parallelconnection(plrgui.AncestryChanged,rejoin)
-rbxfuncs.connect(crlient.AncestryChanged,frejoin)
-rbxfuncs.connect(plrgui.AncestryChanged,rejoin)
+con=rbxfuncs.connect(crlient.AncestryChanged,frejoin)
+con1=rbxfuncs.connect(plrgui.AncestryChanged,rejoin)
 
 antis3.warner(script.Name)
 

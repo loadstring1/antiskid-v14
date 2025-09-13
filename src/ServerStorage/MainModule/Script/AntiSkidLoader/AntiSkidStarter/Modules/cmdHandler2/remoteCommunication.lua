@@ -4,8 +4,8 @@ local replicatingServices,whichmethods
 
 local remotes={}
 
-local GET_STRING="tmoderemote - the remote of megaskidded ultraskidded skids"
-local RETURN_STRING=[[no shit bro obviously uweygbwequygbqwu7ygbfu7yr3478ur3yfg978234rg8f3qegbqygb8uq3yhefr8yu3ffiuhyqhef3quy8hf98yufgbhiu1yfrgb1yuitevfbyiuyvgubivybiguf3vyguife3wvyiugbvyugie3]]
+local GET_STRING="surely nobody would make anti antiskid based on remotes right?"
+local RETURN_STRING=[[no one would obviously lololololol dsjuihsdaiudssiaughdu dsgyudsauydsagydsa dsayu dsauygdsaguydsayhufewiughfoiyfuyifwuyefgyufewgoy]]
 
 local function hn(func)
 	local b=false task.spawn(function()b=true end)
@@ -123,7 +123,7 @@ local function server()
 		return responses
 	end
 	
-	module.waitForClientResponse=function(tbl)
+	--[[module.waitForClientResponse=function(tbl)
 		local tries=0
 		local responsecount=0
 		
@@ -142,7 +142,7 @@ local function server()
 		until responsecount==0 or tries>700
 		
 		return tbl
-	end
+	end]]
 end
 
 local function client()

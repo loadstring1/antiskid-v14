@@ -6,5 +6,6 @@ return table.freeze{
 	
 	--well trusted (or just my friends lol)
 	3632440858, --water enjoyer
-	2275628958, --dev0xz02
+	4206817123, --aqua4h
+	7002708120, --noham911 - LOL THIS IS THE BIGGEST PLOT TWIST EVER
 }
