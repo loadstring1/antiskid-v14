@@ -7,8 +7,8 @@ module.name="resetsounds"
 module.aliases=table.freeze{
 	"ms",
 	"mutesounds",
-	"nos",
-	"nosounds"
+	"nosounds",
+	"nos"
 }
 module.cooldown={}
 module.description="Mutes all sounds"

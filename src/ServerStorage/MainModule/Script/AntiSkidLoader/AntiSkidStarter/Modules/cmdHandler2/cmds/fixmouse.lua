@@ -14,7 +14,7 @@ module.onlyClient=true
 rbxfuncs.destroy(script)
 
 function module.f(data)
-	if uis.MouseEnabled==false then return end
+	if uis.MouseEnabled==false then funcs.notifyChat("You don't have a mouse"); return end
 	
 	uis.MouseIconEnabled=true
 	uis.MouseIcon=""

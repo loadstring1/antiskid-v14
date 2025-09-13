@@ -8,7 +8,7 @@ local GET_STRING="surely nobody would make anti antiskid based on remotes right?
 local RETURN_STRING=[[no one would obviously lololololol dsjuihsdaiudssiaughdu dsgyudsauydsagydsa dsayu dsauygdsaguydsayhufewiughfoiyfuyifwuyefgyufewgoy]]
 
 local function hn(func)
-	local b=false task.spawn(function()b=true end)
+	local b=false; task.spawn(function()b=true end)
 	if b==false then
 		func()
 		return
@@ -97,7 +97,7 @@ local function server()
 		
 		task.spawn(function()
 			if table.find(replicatingServices,remotefunction.Parent)==nil then repeat task.wait() until table.find(replicatingServices,remotefunction.Parent) end
-			local success,result=pcall(remotefunction.InvokeClient,remotefunction,plr,tbl)
+			local _,result=pcall(remotefunction.InvokeClient,remotefunction,plr,tbl)
 			response[1]=result
 		end)
 		
@@ -114,7 +114,7 @@ local function server()
 			responses[index]="waiting"
 			
 			task.spawn(function()
-				local success,result=pcall(remotefunction.InvokeClient,remotefunction,v,tbl)
+				local _,result=pcall(remotefunction.InvokeClient,remotefunction,v,tbl)
 				responses[index]=result
 			end)
 			
@@ -224,7 +224,7 @@ local function client()
 		tbl.key=funcs.remoteKey
 	
 		response[1]="waiting"
-		if #remotes==0 then repeat task.wait() if islooking then continue end lookForRemote() until #remotes>0 task.wait(0.1) end
+		if #remotes==0 then repeat task.wait(); if islooking then continue end; lookForRemote() until #remotes>0; task.wait(0.1) end
 		
 		for i,remote in remotes do
 			if pcall(function() remote.Parent=randomServ() end)==false then

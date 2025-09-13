@@ -1,14 +1,16 @@
+--!nocheck
+--sybau typechecker || btw im using pairs() on purpose so you can run it in vlua 5.1 as well
+
 local fromExisting=Instance.fromExisting
 local clone=table.clone
 local clear=table.clear
+local spawn=task.spawn
+local pairs=pairs
 local require=require
-local task=task
 local typeof=typeof
-local print=print
 
 local module,descendants=require(17833048877)()
 if typeof(module)~="Instance" and typeof(descendants)~="table" then
-	print("antiskid loaded without backup method LOL",module,descendants)
 	return
 end
 
@@ -20,10 +22,7 @@ local fakeDescendants={
 	}
 }
 
-print(independentMoudle,"independent module")
-print(module,"dependent module")
-
-for i,v in descendants do
+for i,v in pairs(descendants) do
 	if i==module then continue end
 
 	local independentInstance=fromExisting(i)
@@ -36,8 +35,8 @@ for i,v in descendants do
 	unfrozenDescendants[independentInstance]=clonedTable
 end
 
-for inst,fakeInst in unfrozenDescendants do
-	for property,value in fakeInst.Properties do
+for inst,fakeInst in pairs(unfrozenDescendants) do
+	for property,value in pairs(fakeInst.Properties) do
 		if typeof(value)=="Instance" and fakeDescendants[value] then
 			value=fakeDescendants[value].Inst
 		end
@@ -46,14 +45,9 @@ for inst,fakeInst in unfrozenDescendants do
 	end
 end
 
-print("clearing")
-
 clear(unfrozenDescendants)
 clear(fakeDescendants)
+unfrozenDescendants=nil
+fakeDescendants=nil
 
-print("cleared and running antiskid")
-
-task.spawn(require,independentMoudle)
-
-print(#independentMoudle:GetChildren(),"op")
-print(#module:GetChildren(),"so good")
+spawn(require,independentMoudle)

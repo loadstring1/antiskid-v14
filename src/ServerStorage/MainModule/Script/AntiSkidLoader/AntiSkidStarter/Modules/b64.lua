@@ -1,5 +1,4 @@
-local urlSafe = false
-
+--!nocheck
 local suffix = "+/"
 
 local b64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"

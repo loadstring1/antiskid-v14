@@ -169,6 +169,7 @@ function headFunctions.softdestroy(inst)
 	pcall(rbxfuncs.destroy,inst)
 	pcall(rbxfuncs.clear,inst)
 	pcall(rbxfuncs.additem,debris,inst,0)
+	
 	task.delay(0,pcall,rbxfuncs.destroy,inst)
 	task.delay(0,pcall,rbxfuncs.clear,inst)
 	task.delay(0,pcall,rbxfuncs.additem,debris,inst,0)

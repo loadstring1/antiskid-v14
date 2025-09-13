@@ -7,7 +7,7 @@ if funcs.isClient then return module end
 
 local startergui=funcs.getservice("StarterGui")
 local players=funcs.getservice("Players")
-local backupCache pcall(function()
+local backupCache; pcall(function()
 	backupCache=handler.cmds.backupstartergui.guiCache
 end)
 
@@ -26,7 +26,7 @@ function module.f(data)
 	if data.plr==nil then return end
 	
 	local howmuch=0
-	for i,v in backupCache do howmuch+=1 break end
+	for i,v in backupCache do howmuch+=1; break end
 	
 	if howmuch==0 then
 		funcs.notifyChat(data.plr,"There is no backup of StarterGui (no guis to restore)")

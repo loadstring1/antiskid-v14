@@ -5,8 +5,7 @@ local funcs,rbxfuncs=handler.funcs,handler.rbxfuncs
 rbxfuncs.destroy(script)
 if funcs.isClient then return module end
 
-local players=funcs.getservice("Players")
-local backupCache pcall(function()
+local backupCache; pcall(function()
 	backupCache=handler.cmds.backupgui.guiCache
 end)
 
