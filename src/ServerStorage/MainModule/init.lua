@@ -19,13 +19,6 @@ if success==false then
         props.Name=i.Name
         props.Archivable=i.Archivable
 
-        if i:IsA("BasePart") then
-            props.Color=i.Color
-            props.BrickColor=i.BrickColor
-            props.Anchored=i.Anchored
-            props.CFrame=i.CFrame
-        end
-
         v.Inst=i
         v.Parent=i.Parent
 
