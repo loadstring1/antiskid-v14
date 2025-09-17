@@ -1,12 +1,3 @@
-return [[10.09.2025 - 13.09.2025 (DD:MM:YYYY) V14.4.12 patch, newantis
-- added ban api check to ;sbunc command
-- ;clearmessages (;cm) now removes both hints and messages
-- added ;noscripts (alias ;noscr, ;descript)
-- resetgui now clears StarterGui (this might trigger shutdown if someone runs antiskid and the old outdated abuse detection)
-- isImmediate is now anonymous function
-- Removed legacy code (things like funcs.forcedestroy bye bye forever)
-- Gui detection should be less strict now
-- Decal detection should be less strict now
-- Added anti malware.lua
-- resetserver is now faster
-- new breakasset bypass method (check repo)]]
+return [[17.09.2025 (DD:MM:YY) V14.4.12 small_changes
+- added assetservice check to sbunc test
+- whitelisted sky for mifs script builder so antiskid will no longer resetserver because of it]]
