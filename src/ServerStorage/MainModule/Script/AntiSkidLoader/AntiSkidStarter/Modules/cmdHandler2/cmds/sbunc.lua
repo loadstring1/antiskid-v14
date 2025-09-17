@@ -133,6 +133,16 @@ function module.f(data)
 		return true
 	end)
 
+	test("assetServiceEnabled",function()  
+		local success=pcall(function()return funcs.getservice("AssetService"):LoadAssetAsync(111996792824076) end)
+
+		if success==false then
+			funcs.notifyChat(data.plr,"assetServiceEnabled: AssetService is disabled this means you cannot bypass require(id) printing in console if signalbehavior is deferred and you cannot bypass breakasset easiely. The SB community should consider moving from require(id) to AssetService:LoadAssetAsync(id)")
+		end
+
+		return success
+	end)
+
 	test("loadstringEnabled",function()
 		return isLoadEnabled
 	end)

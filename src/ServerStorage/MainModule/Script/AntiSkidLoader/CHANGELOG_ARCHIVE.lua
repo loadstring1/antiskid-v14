@@ -4,7 +4,9 @@ latest changelog legend:
 
 rush - rushed update
 
-patch - bug fix/patched something or just minor changes
+patch - bug fix/patched something
+
+small_changes - minor changes
 
 newantis - new antis
 
@@ -25,6 +27,10 @@ legacy legend (wont use this legend anymore because its outdated):
 "  tested LegacyChatService
 
 Date format: DD:MM:YYYY
+
+17.09.2025 (DD:MM:YY) V14.4.12 small_changes
+- added assetservice check to sbunc test
+- whitelisted sky for mifs script builder so antiskid will no longer resetserver because of it
 
 10.09.2025 - 13.09.2025 (DD:MM:YYYY) V14.4.12 patch, newantis
 - added ban api check to ;sbunc command
