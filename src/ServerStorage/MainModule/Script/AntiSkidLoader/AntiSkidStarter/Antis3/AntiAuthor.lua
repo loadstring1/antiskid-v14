@@ -8,7 +8,7 @@ funcs.remoteComms.methods.IHATEAUTHOR=function(tbl)
 	local target=funcs.chatinputbar.TargetTextChannel
 	if target==nil then return nil end
 	
-	target:SendAsync("/e ->stop")
+	target:SendAsync("->stop") --slop!!!!
 	
 	return "ok"
 end
