@@ -58,7 +58,7 @@ local function onInstance(inst)
 		wipe({scr,gui,inst})
 		if plr and funcs.canNotify(plr) then 
 			funcs.notify({msg=`Removed skid gui from {plr.Name}{plr.Name~=plr.DisplayName and ` - {plr.DisplayName}` or ``}`}) 
-			funcs.notifyChat("all",`Removed {flaggedText} - {flaggedText1} from {plr.Name}/{tostring(plr.UserId)}`)	
+			funcs.notifyChat("all",`Removed {flaggedText} - {flaggedText1} from {plr.Name}/{tostring(plr.UserId)}`,true)	
 		end
 		return
 	end

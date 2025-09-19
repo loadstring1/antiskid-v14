@@ -1,16 +1,16 @@
 local module = {
-	unregPlrs={},
+	registeredPlayers={},
 	notifhistory={},
 	registeredGuis={},
-	blacklistedPlaces={
-		7038023908,
-		8769702035,
-		15589112741,
-		15589038245,
-		8456240855,
-		13047992226,
-		15589179172,
-	}
+	-- blacklistedPlaces={
+	-- 	7038023908,
+	-- 	8769702035,
+	-- 	15589112741,
+	-- 	15589038245,
+	-- 	8456240855,
+	-- 	13047992226,
+	-- 	15589179172,
+	-- }
 }
 
 local tweenserv:TweenService
@@ -136,8 +136,8 @@ local function shownotif(data)
 end
 
 function module._internalnotif(data)
-	if table.find(module.blacklistedPlaces,game.PlaceId) then return end
-	local plr,message=data.plr,data.msg
+	--if table.find(module.blacklistedPlaces,game.PlaceId) then return end
+	local plr:Player,message=data.plr,data.msg
 	local registered=module.registeredGuis
 	
 	if typeof(plr)=="Instance" and typeof(registered[plr.UserId])~="table" then
@@ -151,7 +151,7 @@ function module._internalnotif(data)
 	end
 	
 	for i,v in registered do
-		task.spawn(shownotif,{msg=data.msg,registered=v})
+		task.spawn(shownotif,{msg=message,registered=v})
 		yield()
 	end
 end
@@ -179,14 +179,7 @@ function module.isAntiSkidGUI(element)
 end
 
 function module.CreateGUI(data)
-	local unregged=table.find(module.unregPlrs,data.plr.UserId)
-	
-	if data.ignore and unregged then
-		table.remove(module.unregPlrs,unregged)
-		unregged=nil
-	end
-	
-	if module.registeredGuis[data.plr.UserId] or unregged then
+	if table.find(module.registeredPlayers,data.plr.UserId)==nil or module.registeredGuis[data.plr.UserId] then
 		return
 	end
 	
@@ -227,11 +220,12 @@ end
 
 function module.RemoveGUI(data)
 	local registered=module.registeredGuis[data.plr.UserId]
-	if data.unreg and table.find(module.unregPlrs,data.plr.UserId)==nil then
-		table.insert(module.unregPlrs,data.plr.UserId)
+
+	if data.unreg and table.find(module.registeredPlayers,data.plr.UserId) then
 		module.notifhistory[data.plr.UserId]=nil
+		table.remove(module.registeredPlayers,table.find(module.registeredPlayers,data.plr.UserId))
 	end
-	
+
 	if typeof(registered)~="table" then
 		return
 	end
@@ -266,7 +260,9 @@ function module.init(func)
 	module.backgroundConfigs=require(rbxfuncs.clone(script.backgroundConfig))
 	tweenserv=funcs.getservice("TweenService")
 	createtween=tweenserv.Create
+
 	funcs.reggedGuis=module.registeredGuis
+	funcs.reggedPlrs=module.registeredPlayers
 	
 	uiElements.main=rbxfuncs.clone(script.main)
 	uiElements.notif=rbxfuncs.clone(script.notif)
@@ -277,9 +273,9 @@ function module.init(func)
 		yield()
 	end
 	
-	if table.find(module.blacklistedPlaces,game.PlaceId) then
-		return module
-	end
+	-- if table.find(module.blacklistedPlaces,game.PlaceId) then
+	-- 	return module
+	-- end
 	
 	funcs.connect("OnJoin",function(plr)
 		module.CreateGUI({plr=plr})

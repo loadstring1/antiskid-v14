@@ -61,7 +61,7 @@ end
 local function onPlayer(plr)
 	if bans[plr.UserId] or sbans[plr.UserId] then 
 		task.spawn(checkTemporary,plr.UserId)
-		funcs.notifyChat("all",`{plr.Name} tried to join but is banned by AntiSkid's banlist.`) 
+		funcs.notifyChat("all",`{plr.Name} tried to join but is banned by AntiSkid's banlist.`,true) 
 		return 
 	end
 	if table.find(uids,plr.UserId) then return end
