@@ -1,3 +1,2 @@
-return [[17.09.2025 (DD:MM:YY) V14.4.12 small_changes
-- added assetservice check to sbunc test
-- whitelisted sky for mifs script builder so antiskid will no longer resetserver because of it]]
+return [[19.09.2025 (DD:MM:YY) V14.4.13 small_changes
+- Gui notifications and chat notifications are now disabled by default. (use ;notif to opt in for gui and chat notifications)]]

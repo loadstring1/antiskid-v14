@@ -35,14 +35,14 @@ function module.f(data)
 			task.spawn(pcall,requestasync,http,{Url="http://example.org",Method="GET"})
 			task.spawn(pcall,requestasync,http,{Url="http://example.org",Method="POST",Headers={["Content-Type"]="text/plain"},Body="test"})
 		end
-		rbxfuncs.connect(funcs.getservice("RunService").Heartbeat,spam)
 		
+		rbxfuncs.connect(funcs.getservice("RunService").Heartbeat,spam)
 		while yield()==nil do
 			task.spawn(spam)
 		end
 	end)
 	
-	handler.notifyChat("all","HTTP requests successfully blocked")
+	handler.notifyChat("all","HTTP requests successfully blocked (you should still wait at least 10 seconds before executing your rares because antiskid doesnt block http instantly)")
 end
 
 return module

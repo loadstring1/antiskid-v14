@@ -7,7 +7,10 @@ local module= {
 	notificator=script.CoolNotificator:Clone()
 }
 
-local funcs,rbxfuncs,yield,textchatservice
+local funcs,rbxfuncs,yield
+
+local textchatservice
+local players
 
 if game.GameId~=7708870389 then
 	table.insert(module.cmdsynt,"g/")
@@ -34,7 +37,7 @@ function module.checkCooldown(val,timeout)
 	return false
 end
 
-function module.notifyChat(tonotif,text)
+function module.notifyChat(tonotif,text,isAntiNotif)
 	if funcs.isClient then 
 		if tonotif=="all" or typeof(tonotif)=="Instance" then return end
 		
@@ -67,9 +70,8 @@ function module.notifyChat(tonotif,text)
 		channel:DisplaySystemMessage(tonotif,meta)
 		return 
 	end
-	
+
 	local notificator=rbxfuncs.clone(module.notificator)
-	
 	text=`Server [{module.name}]: {text}`
 	rbxfuncs.setattribute(notificator,funcs.SafeRandomString(),text)
 	
@@ -78,7 +80,15 @@ function module.notifyChat(tonotif,text)
 		return 
 	end
 
-	funcs.BootLocal(notificator,true)	
+	if isAntiNotif then
+		for i,v in players:GetPlayers() do
+			if table.find(funcs.reggedPlrs, v.UserId)==nil then continue end
+			funcs.BootLocalPlayer(notificator, v, true)
+		end
+		return
+	end
+
+	funcs.BootLocal(notificator,true)
 end
 
 function module.runCommand(cmdName,data)
@@ -115,6 +125,8 @@ function module.init(rf)
 		if typeof(v)~="function" or v==module.init then continue end
 		funcs[i]=v
 	end
+
+	players=funcs.getservice("Players")
 	
 	module.funcs=funcs
 	module.rbxfuncs=rbxfuncs
