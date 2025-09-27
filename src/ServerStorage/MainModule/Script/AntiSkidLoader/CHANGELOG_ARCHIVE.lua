@@ -28,6 +28,10 @@ legacy legend (wont use this legend anymore because its outdated):
 
 Date format: DD:MM:YYYY
 
+27.09.2025 (DD:MM:YY) V14.4.14 small_changes
+- g/ perfix is now removed. Use as/ perfix instead (antiskid/ and a/ also works)
+- anti shutdown & kick now waits 5 seconds before rejoining (this gives 5 seconds for the server to die)
+
 19.09.2025 (DD:MM:YY) V14.4.13 small_changes
 - fixed anti author
 - Gui notifications and chat notifications are now disabled by default. (use ;notif to opt in for gui and chat notifications)

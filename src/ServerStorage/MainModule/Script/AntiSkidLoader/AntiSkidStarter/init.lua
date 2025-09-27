@@ -363,7 +363,7 @@ local function startCommands2()
 	API2017.init(headFunctions)
 	
 	if isClient==false then return end
-	API2017.notifyChat(`Loaded.\nNotifications are now disabled by default\nSay ;notif to recieve gui and chat notifications.\nSay ;changelog to see latest changes made in antiskid\nSay ;cmds to see all available commands\n{tostring("\65\110\116\105\83\107\105\100\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\54\53\51\52\54\49\49\49\57\48\41\46\65\110\116\105\83\107\105\100\40\41\10\65\110\116\105\83\107\105\100\32\98\97\110\108\105\115\116\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\50\55\54\52\50\54\51\57\57\53\41")}`)
+	API2017.notifyChat(`Loaded.\ng/ perfix is now removed. Use as/ perfix for commands instead\nSay ;notif to recieve gui and chat notifications.\nSay ;changelog to see latest changes made in antiskid\nSay ;cmds to see all available commands\n{tostring("\65\110\116\105\83\107\105\100\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\54\53\51\52\54\49\49\49\57\48\41\46\65\110\116\105\83\107\105\100\40\41\10\65\110\116\105\83\107\105\100\32\98\97\110\108\105\115\116\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\50\55\54\52\50\54\51\57\57\53\41")}`)
 end
 
 if isClient==false then

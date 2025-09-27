@@ -1,5 +1,5 @@
 local module= {
-	cmdsynt={":",";","o","!"},
+	cmdsynt={":",";","o","!","as/","antiskid/","a/"},
 	cooldown={},
 	cmds={},
 	name="",
@@ -11,10 +11,6 @@ local funcs,rbxfuncs,yield
 
 local textchatservice
 local players
-
-if game.GameId~=7708870389 then
-	table.insert(module.cmdsynt,"g/")
-end
 
 function module.registerCommand(cmdModule)
 	local command=require(cmdModule)
