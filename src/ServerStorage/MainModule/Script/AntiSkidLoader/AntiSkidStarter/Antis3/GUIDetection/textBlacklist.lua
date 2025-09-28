@@ -32,6 +32,7 @@ return table.freeze{
 		string.reverse("revres kcuf"),
 		"destroy server",
 		"nuke server",
+		"logger",
 	},
 	
 	del=table.freeze{
