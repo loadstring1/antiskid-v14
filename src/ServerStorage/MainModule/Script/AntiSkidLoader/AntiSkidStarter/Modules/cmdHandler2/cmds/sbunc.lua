@@ -37,7 +37,7 @@ function module.f(data)
 	local function test(name,func)
 		local result=func()
 
-		funcs.notifyChat(data.plr,`{name} {result==true and "test was successfull." or "test failed."}`)
+		funcs.notifyChat(data.plr,`{name} {result==true and "test was successful." or "test failed."}`)
 
 		if result==true then
 			successfulTests+=1

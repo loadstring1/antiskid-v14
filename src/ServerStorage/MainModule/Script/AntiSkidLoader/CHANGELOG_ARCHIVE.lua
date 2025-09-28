@@ -28,9 +28,13 @@ legacy legend (wont use this legend anymore because its outdated):
 
 Date format: DD:MM:YYYY
 
+28.09.2025 (DD:MM:YY) V14.4.15 small_changes
+- gui detection now kills basic loggers like shark god logger
+
 27.09.2025 (DD:MM:YY) V14.4.14 small_changes
-- g/ perfix is now removed. Use as/ perfix instead (antiskid/ and a/ also works)
+- g/ prefix is now removed. Use as/ prefix instead (antiskid/ and a/ also works)
 - anti shutdown & kick now waits 5 seconds before rejoining (this gives 5 seconds for the server to die)
+- fixed typo in sbunc
 
 19.09.2025 (DD:MM:YY) V14.4.13 small_changes
 - fixed anti author
