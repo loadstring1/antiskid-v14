@@ -104,7 +104,7 @@ end
 
 function headFunctions.getBans(checkUpdateDates)
 	local _,lists=pcall(function()
-		return headFunctions.crazyhamburgier(124072468517565)()
+		return headFunctions.crazyhamburgier(124072468517565)("userids")
 	end)
 	if typeof(lists)~="Instance" then return nil end
 	
