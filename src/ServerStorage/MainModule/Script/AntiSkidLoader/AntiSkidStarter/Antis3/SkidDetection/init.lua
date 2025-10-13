@@ -185,7 +185,7 @@ function oninst.Decal(decal:Decal)
 end
 
 function oninst.ParticleEmitter(particle:ParticleEmitter)
-	if checkBlacklist(particle,"Texture",blacklistHandler,"particleBlacklist")==false and string.find(string.lower(particle.Texture),"http://")==nil then return end
+	if checkBlacklist(particle,"Texture",blacklistHandler,"particleBlacklist")==false then return end --and string.find(string.lower(particle.Texture),"http://")==nil
 	funcs.softdestroy(particle)
 end
 

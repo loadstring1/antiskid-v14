@@ -344,7 +344,7 @@ rbxfuncs.connect(Players.PlayerRemoving,function(plr)
 end)
 
 rbxfuncs.connect(game.DescendantAdded,function(a)
-	if headFunctions.isImmediate then privYield() end
+	if headFunctions.isImmediate and isClient==false then privYield() end
 	if headFunctions.CheckInstance(a) == false then return end
 	task.spawn(sendSignal,"OnInstance",a)
 end)

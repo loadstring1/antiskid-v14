@@ -40,7 +40,7 @@ local function notice(text)
 end
 
 local function frejoin(text)
-	notice(typeof(text)=="string" and text or "AntiSkid - Anti kick & shutdown: Force rejoining to a new server...")
+	notice(typeof(text)=="string" and text or "AntiSkid - Anti kick & shutdown: Force rejoining to a new server... (be patient and wait 10 seconds)")
 	task.delay(5,pcall,teleport,teleportservice,game.PlaceId,lplr)
 end
 

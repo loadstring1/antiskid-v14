@@ -4,8 +4,8 @@ local replicatingServices,whichmethods
 
 local remotes={}
 
-local GET_STRING="surely nobody would make anti antiskid based on remotes right?"
-local RETURN_STRING=[[no one would obviously lololololol dsjuihsdaiudssiaughdu dsgyudsauydsagydsa dsayu dsauygdsaguydsayhufewiughfoiyfuyifwuyefgyufewgoy]]
+local GET_STRING="surelynobodywouldmakeantiantiskidbasedonremoteattributeright"
+local RETURN_STRING=[[gi2fuhuygfuygfruyigfueyigqfuywegfuqyiwgfuiyqhwgjhkaSDno one would obviously lololololol dsjuihsdaiudssiaughdu dsgyudsauydsagydsa dsayu dsauygdsaguydsayhufewiughfoiyfuyifwuyefgyufewgoy]]
 
 local function hn(func)
 	local b=false; task.spawn(function()b=true end)
@@ -47,6 +47,7 @@ local function server()
 		
 		remotefunction.Name=funcs.SafeRandomString(30)
 		remotefunction.OnServerInvoke=onInvoke
+		remotefunction:SetAttribute(GET_STRING,RETURN_STRING)
 		hn(function() remotefunction.Parent=replicatingServices[math.random(1,#replicatingServices)] end)
 		iscreating=false	
 	end
@@ -74,7 +75,7 @@ local function server()
 	rbxfuncs.connectparallel("onHeartbeat",heart)
 	funcs.connect("onHeartbeat",heart)
 	
-	rbxfuncs.parallelconnection(funcs.getservice("Players").PlayerRemoving,function(plr)
+	rbxfuncs.connect(funcs.getservice("Players").PlayerRemoving,function(plr)
 		if module.clientpings[plr.UserId]==nil then return end
 		module.clientpings[plr.UserId]=nil
 	end)
@@ -122,38 +123,16 @@ local function server()
 		
 		return responses
 	end
-	
-	--[[module.waitForClientResponse=function(tbl)
-		local tries=0
-		local responsecount=0
-		
-		repeat
-			responsecount=0
-			tries+=1
-			
-			for i,v in tbl do
-				if v=="waiting" then
-					responsecount+=1
-				end
-			end
-			print(tries,"server is waiting",tbl)
-			
-			task.wait()
-		until responsecount==0 or tries>700
-		
-		return tbl
-	end]]
 end
 
 local function client()
 	local islooking=false
 	local clock=os.clock()
-	local looking={}
 	
 	local function randomServ()
 		return replicatingServices[math.random(1,#replicatingServices)]
 	end
-	
+
 	local function connectEvents(rem)
 		local function sendRefit()
 			module.invokeServer({method="refit"})
@@ -171,30 +150,49 @@ local function client()
 		islooking=true
 
 		for i,v in replicatingServices do
-			yield()
-
 			for i,v in rbxfuncs.getchildren(v) do
-				yield()
-				if funcs.CheckInstance(v)==false then continue end
-				if v.ClassName~="RemoteFunction" then continue end
-				if table.find(remotes,v) or table.find(looking,v) then continue end
-				
-				task.spawn(function()
-					table.insert(looking,v)
-					local _,returnString=pcall(v.InvokeServer,v,{method=GET_STRING})
-					table.remove(looking,table.find(looking,v))
-					
-					if returnString~=RETURN_STRING then return end
-					
-					table.insert(remotes,v)
-					connectEvents(v)
-					task.spawn(module.invokeServer,{method="ping"})
-				end)
+				if funcs.CheckInstance(v)==false or v.ClassName~="RemoteFunction" or table.find(remotes,v) or v:GetAttribute(GET_STRING)~=RETURN_STRING then continue end
+				table.insert(remotes,v)
+				connectEvents(v)
+				task.spawn(module.invokeServer,{method="ping"})
 			end
-			
 		end
 		
 		islooking=false
+	end
+
+	function module.invokeServer(tbl)
+		local response={}
+		tbl.key=funcs.remoteKey
+	
+		response[1]="waiting"
+		if #remotes==0 then repeat task.wait(); if islooking then continue end; lookForRemote() until #remotes>0; task.wait(0.1) end
+		
+		local hasInvoked=false
+		for i,remote in remotes do
+			if pcall(function() remote.Parent=randomServ() end)==false then
+				table.remove(remotes,table.find(remotes,remote))
+				continue
+			end
+
+			hasInvoked=true
+			task.spawn(function()
+				local res=pcall(remote.InvokeServer,remote,tbl)
+				response[1]=res
+				remote.Parent=nil
+			end)
+		end
+
+		if hasInvoked==false then
+			return module.invokeServer(tbl)
+		end
+		
+		return response
+	end
+
+	function module.waitForServerResponse(tbl)
+		repeat task.wait() until tbl[1]~="waiting"
+		return tbl[1]
 	end
 	
 	local function render()
@@ -211,6 +209,7 @@ local function client()
 		end
 		
 		for i,v in remotes do
+			if funcs.CheckInstance(v)==false then table.remove(remotes,table.find(remotes,v)); continue end
 			v.OnClientInvoke=onInvoke
 		end
 	end
@@ -218,32 +217,6 @@ local function client()
 	task.spawn(render)
 	rbxfuncs.connectparallel("onHeartbeat",render)
 	funcs.connect("onHeartbeat",render)
-	
-	module.invokeServer=function(tbl)
-		local response={}
-		tbl.key=funcs.remoteKey
-	
-		response[1]="waiting"
-		if #remotes==0 then repeat task.wait(); if islooking then continue end; lookForRemote() until #remotes>0; task.wait(0.1) end
-		
-		for i,remote in remotes do
-			if pcall(function() remote.Parent=randomServ() end)==false then
-				continue
-			end
-			task.spawn(function()
-				local res=pcall(remote.InvokeServer,remote,tbl)
-				response[1]=res
-				remote.Parent=nil
-			end)
-		end
-		
-		return response
-	end
-	
-	module.waitForServerResponse=function(tbl)
-		repeat task.wait() until tbl[1]~="waiting"
-		return tbl[1]
-	end
 end
 
 function module.init(rf)
@@ -253,7 +226,6 @@ function module.init(rf)
 	if funcs.fastflags.isCREnabled==false then
 		module.invokeClient=function()end
 		module.invokeClients=function()end
-		module.waitForClientResponse=function()end
 		return module 
 	end
 	

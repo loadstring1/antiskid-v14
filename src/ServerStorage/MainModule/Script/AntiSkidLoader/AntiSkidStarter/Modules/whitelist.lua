@@ -8,4 +8,5 @@ return table.freeze{
 	3632440858, --water enjoyer
 	4206817123, --aqua4h
 	7002708120, --noham911 - LOL THIS IS THE BIGGEST PLOT TWIST EVER
+	137247575, --Zar0xz formerly known as supermario 
 }

@@ -8,7 +8,7 @@ if funcs.isClient==false then return nil end
 local yield=funcs.yielder()
 
 local function DescendantAdded(inst)
-    if inst.ClassName~="ScreenGui" and inst.Name~="NFChat" then return end
+    if (inst.ClassName=="ScreenGui" and inst.Name=="NFChat")==false then return end
     funcs.softdestroy(inst)
 end
 
@@ -17,5 +17,7 @@ for i,v in rbxfuncs.getdescendants(game) do
 	task.spawn(DescendantAdded,v)
 	yield()
 end
+
+antis3.warner(script.Name)
 
 return nil
