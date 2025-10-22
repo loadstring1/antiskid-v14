@@ -22,7 +22,6 @@ local function onInvoke(...)
 	local tbl=funcs.isClient and args[1] or args[2]
 	
 	if typeof(tbl)~="table" then return nil end
-	if funcs.isClient==false and tbl.method==GET_STRING then return RETURN_STRING end
 	if tbl.key~=funcs.remoteKey then return nil end
 	if typeof(methods[whichmethods][tbl.method])~="function" then return nil end
 	
