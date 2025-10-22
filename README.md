@@ -5,12 +5,12 @@ help antiskid v14 improve today by making pull requests
 how to run in-game? You need a serverside executor because this doesn't work on clientsided executors. This script was designed only for Script Builder community.
 
 Classic method of loading antiskid:
-```
+```lua
 require(16534611190).AntiSkid()
 ```
 
 New method of loading antiskid with http and loadstring (bypass breakasset very op):
-```
+```lua
 loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/loader.lua"))()
 ```
 
@@ -23,7 +23,7 @@ Won't fix bc it pissed me off:
 - rojo incorrectly creating ScreenGui instance under GuiEngine
 
 current workaround for issue number 1: just use latest antiskid from github releases or getobjects like this (works in studio only)
-```
+```lua
 game:GetObjects("rbxassetid://16534611190")[1].Parent=workspace
 ```
 
