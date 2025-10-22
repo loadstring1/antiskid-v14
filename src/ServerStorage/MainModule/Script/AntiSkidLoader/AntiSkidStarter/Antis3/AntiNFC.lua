@@ -3,17 +3,13 @@ local funcs=antis3.funcs
 local rbxfuncs=antis3.rbxfuncs
 
 rbxfuncs.destroy(script)
-if funcs.isClient then return nil end
+if funcs.isClient==false then return nil end
 
 local yield=funcs.yielder()
 
 local function DescendantAdded(inst)
-    if (inst.ClassName=="Folder" and inst.Name=="Malware.lua")==false then return end
+    if (inst.ClassName=="ScreenGui" and inst.Name=="NFChat")==false then return end
     funcs.softdestroy(inst)
-
-    if funcs.canNotify("malwarelua") then
-        funcs.notify({msg="Alright malware.lua its time to go now"})
-    end
 end
 
 rbxfuncs.connect(game.DescendantAdded,DescendantAdded)
@@ -21,5 +17,7 @@ for i,v in rbxfuncs.getdescendants(game) do
 	task.spawn(DescendantAdded,v)
 	yield()
 end
+
+antis3.warner(script.Name)
 
 return nil

@@ -37,7 +37,6 @@ end
 local function checkBlacklistAndRemove(inst,index,bl,blname)
 	for i,v in bl[blname] do
 		if string.find(string.lower(inst[index]),v) then
-			print("removed blacklist",v)
 			removeLeftOver(inst)
 			funcs.softdestroy(inst)
 			return true
@@ -186,7 +185,7 @@ function oninst.Decal(decal:Decal)
 end
 
 function oninst.ParticleEmitter(particle:ParticleEmitter)
-	if checkBlacklist(particle,"Texture",blacklistHandler,"particleBlacklist")==false and string.find(string.lower(particle.Texture),"http://")==nil then return end
+	if checkBlacklist(particle,"Texture",blacklistHandler,"particleBlacklist")==false then return end --and string.find(string.lower(particle.Texture),"http://")==nil
 	funcs.softdestroy(particle)
 end
 

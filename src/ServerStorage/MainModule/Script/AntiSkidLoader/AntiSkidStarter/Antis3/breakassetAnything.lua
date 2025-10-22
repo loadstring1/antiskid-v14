@@ -112,7 +112,7 @@ task.spawn(function()
 	local _,tbl=pcall(mom,4867426485)
 	if typeof(tbl)~="table" then return end
 	
-	--using pairs in big 25 just to avoid __pairs metatable
+	--using pairs in big 25 just to avoid __pairs metamethod
 	for i,v in pairs(tbl) do
 		if typeof(v)~="function" then continue end
 		local toremove=rawget(genv(v),"script")

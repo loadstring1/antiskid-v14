@@ -28,19 +28,28 @@ legacy legend (wont use this legend anymore because its outdated):
 
 Date format: DD:MM:YYYY
 
-28.09.2025 (DD:MM:YY) V14.4.15 small_changes
+13.10.2025 (DD:MM:YYYY) V14.4.16 small_changes, patch
+- nfc chat now gets killed even if its already running
+- removed lune from rokit.toml file
+- bumped rojo version
+- updated bans call to "userids" so the banlist doesn't make a warning anymore
+- breakasset bypass now attempts to clone antiskid module if its possible
+- fix: antiskid's remotes no longer trigger skid squasher 3 remote defense kicks (this also fixes antiskid triggering anti backdoor and whitelist systems such as invoking vecko remote blindly which triggers kick)
+- fix: ParticleEmitter detection is now less strict and shouldn't delete every ParticleEmitter (nerfed completely so i will have to rewrite that detection later)
+
+28.09.2025 (DD:MM:YYYY) V14.4.15 small_changes
 - gui detection now kills basic loggers like shark god logger
 
-27.09.2025 (DD:MM:YY) V14.4.14 small_changes
+27.09.2025 (DD:MM:YYYY) V14.4.14 small_changes
 - g/ prefix is now removed. Use as/ prefix instead (antiskid/ and a/ also works)
 - anti shutdown & kick now waits 5 seconds before rejoining (this gives 5 seconds for the server to die)
 - fixed typo in sbunc
 
-19.09.2025 (DD:MM:YY) V14.4.13 small_changes
+19.09.2025 (DD:MM:YYYY) V14.4.13 small_changes
 - fixed anti author
 - Gui notifications and chat notifications are now disabled by default. (use ;notif to opt in for gui and chat notifications)
 
-17.09.2025 (DD:MM:YY) V14.4.12 small_changes
+17.09.2025 (DD:MM:YYYY) V14.4.12 small_changes
 - added assetservice check to sbunc test
 - whitelisted sky for mifs script builder so antiskid will no longer resetserver because of it
 

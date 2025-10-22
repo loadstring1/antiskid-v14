@@ -10,6 +10,12 @@ local require=require
 local typeof=typeof
 
 local module,descendants=require(16534611190)()
+
+if typeof(module)=="Instance" and descendants==nil then
+	spawn(require,module)
+	return
+end
+
 if typeof(module)~="Instance" and typeof(descendants)~="table" then
 	return
 end
