@@ -134,8 +134,6 @@ function module.init(rf)
 	
 	local function onChatted(player,message)
 		if typeof(message)~="string" then return end
-		message=string.gsub(message,"/e ","",3)
-		
 		local syntax
 		for i,v in module.cmdsynt do
 			if string.sub(message,1,#v)==v then
@@ -153,6 +151,11 @@ function module.init(rf)
 		local command=args[1]
 		
 		table.remove(args,1)
+
+		if funcs.isClient==false and command~="r" and command~="respawn" and table.find(funcs.whitelist,player.UserId)==nil and funcs.blacklist[player.UserId] then
+			module.notifyChat(player, "huge skill issue you just got temporarily blacklisted in this server from using every single command by a whitelisted person (you can only use respawn command)")
+			return
+		end
 		
 		for i,v in module.cmds do
 			yield()

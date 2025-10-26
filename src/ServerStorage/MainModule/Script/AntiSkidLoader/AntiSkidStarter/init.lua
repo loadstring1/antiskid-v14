@@ -2,6 +2,7 @@
 local headFunctions={
 	bans={},
 	sbans={},
+	blacklist={},
 }
 
 local FuncsDesc,StartupScripts = {},{}

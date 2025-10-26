@@ -7,8 +7,8 @@ if funcs.isClient then return module end
 
 local Players:Players=funcs.getservice("Players")
 
-module.name="unban"
-module.aliases=table.freeze{"ubaba"}
+module.name="unblacklist"
+module.aliases=table.freeze{"unbl","cmdunbl","commandunblacklist"}
 module.multiTask=true
 module.plrReq=true
 
@@ -44,9 +44,9 @@ local function checkIfExists(object)
 	return nil
 end
 
-local function unban(uid)
-	if typeof(funcs.sbans[uid])~="string" then return false end
-	funcs.sbans[uid]=nil
+local function unblacklist(uid)
+	if typeof(funcs.blacklist[uid])~="boolean" then return false end
+	funcs.blacklist[uid]=nil
 	return true
 end
 
@@ -63,28 +63,27 @@ function module.f(data)
 		return
 	end
 	
-	local toUnban=args[1]
-	local success,uid=pcall(tonumber,toUnban)
-	local doesExist=checkIfExists(success and uid or toUnban)
+	local toUnblacklist=args[1]
+	local success,uid=pcall(tonumber,toUnblacklist)
+	local doesExist=checkIfExists(success and uid or toUnblacklist)
 	
 	if doesExist==nil then
-		local success2,returner=getplayerFromAPI(success and uid or toUnban)
-		local username=typeof(returner)=="string" and returner or toUnban
+		local success2,returner=getplayerFromAPI(success and uid or toUnblacklist)
+		local username=typeof(returner)=="string" and returner or toUnblacklist
 		uid=typeof(returner)=="number" and returner or uid
 
 		if success2==false or typeof(uid)~="number" then
-			funcs.notifyChat(data.plr,`Failed to unban {toUnban}\nError: {tostring(returner)}`)
+			funcs.notifyChat(data.plr,`Failed to unblacklist {toUnblacklist}\nError: {tostring(returner)}`)
 			return
 		end
 		
-		if unban(uid)==false then funcs.notifyChat(data.plr,`{username} ({tostring(uid)}) is not banned.`); return end
-		funcs.notifyChat(data.plr,`Unbanned {username} ({tostring(uid)}) successfully.`)
+		if unblacklist(uid)==false then funcs.notifyChat(data.plr,`{username} ({tostring(uid)}) is not blacklisted.`); return end
+		funcs.notifyChat(data.plr,`Unblacklisted {username} ({tostring(uid)}) successfully.`)
 		return
 	end
 	
-	if unban(doesExist.UserId)==false then funcs.notifyChat(data.plr,`{doesExist.Name} ({tostring(doesExist.UserId)}) is not banned.`); return end
-	funcs.notifyChat(data.plr,`Unbanned {doesExist.Name} ({tostring(doesExist.UserId)}) successfully.`)
+	if unblacklist(doesExist.UserId)==false then funcs.notifyChat(data.plr,`{doesExist.Name} ({tostring(doesExist.UserId)}) is not blacklisted.`); return end
+	funcs.notifyChat(data.plr,`Unblacklisted {doesExist.Name} ({tostring(doesExist.UserId)}) successfully.`)
 end
-
 
 return module
