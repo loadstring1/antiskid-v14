@@ -1,8 +1,9 @@
-return [[13.10.2025 (DD:MM:YY) V14.4.16 small_changes, patch
-- nfc chat now gets killed even if its already running
-- removed lune from rokit.toml file
-- bumped rojo version
-- updated bans call to "userids" so the banlist doesn't make a warning anymore
-- breakasset bypass now attempts to clone antiskid module if its possible
-- fix: antiskid's remotes no longer trigger skid squasher 3 remote defense kicks (this also fixes antiskid triggering anti backdoor and whitelist systems such as invoking vecko remote blindly which triggers kick)
-- fix: ParticleEmitter detection is now less strict and shouldn't delete every ParticleEmitter (nerfed completely so i will have to rewrite that detection later)]]
+return [[26.10.2025 (DD:MM:YYYY) V14.4.16 small_changes
+- i didnt change version number bc idc and its just small update again
+- antiskid no longer supports /e this is because roblox made stupid changes and im 100% pretty sure that /e is never returning (i think that it will never be fired in .Chatted event ever again)
+- added a/blacklist command - this command is very OP and allows you to block other people from using every single antiskid command (this command is only for whitelisted people)
+(aliases for blacklist command: ;bl, ;cmdbl, ;commandblacklist)
+- added a/unblacklist command - basically just removes command blacklist from the person you blacklisted (this command is also only for whitelisted people)
+(aliases for unblacklist command: ;unbl, ;cmdunbl, ;commandunblacklist)
+- shutdown command no longer uses parallel for PlayerAdded connection
+- removed duplicate code in sban and unban commands]]

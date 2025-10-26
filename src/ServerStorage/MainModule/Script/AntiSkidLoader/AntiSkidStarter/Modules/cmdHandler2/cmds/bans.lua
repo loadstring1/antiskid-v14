@@ -10,10 +10,10 @@ module.aliases=table.freeze{}
 module.plrReq=true
 
 function module.f(data)
-	print(game.Name,"before")
+	--[[print(game.Name,"before")
 	local s=game.Changed:Wait()
 	print(s,"game.Changed")
-	print(game[s])
+	print(game[s])]]
 end
 
 return module

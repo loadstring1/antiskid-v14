@@ -8,7 +8,7 @@ local pcall=pcall
 bind.Event:Connect(function(tbl)
 	bind:Destroy()
 	
-	local binary,err,thing3=tbl.load(tbl.str)
+	local binary,err=tbl.load(tbl.str)
 	
 	if binary==nil then
 		tbl.bind:Fire({false,err})

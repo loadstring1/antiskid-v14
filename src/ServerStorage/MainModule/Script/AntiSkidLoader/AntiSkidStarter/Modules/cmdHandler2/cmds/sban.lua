@@ -16,7 +16,7 @@ module.plrReq=true
 
 local function kickBannedPerson(plr)
 	if funcs.sbans[plr.UserId]==nil then return end
-	pcall(plr.Kick,plr,`Server banned by AntiSkid {versionn}\nReason: {funcs.sbans[plr.UserId]}`)
+	pcall(plr.Kick,plr,`Server banned by {versionn}\nReason: {funcs.sbans[plr.UserId]}`)
 end
 
 rbxfuncs.connect(Players.PlayerAdded,kickBannedPerson)
@@ -78,34 +78,28 @@ function module.f(data)
 	local success,uid=pcall(tonumber,toServerBan)
 	local doesExist=checkIfExists(success and uid or toServerBan)
 	local reason=table.concat(args," ")
+
+	if #reason==0 then
+		reason="Unknown reason."
+	end
 	
 	if doesExist==nil then
-		local success,returner=getplayerFromAPI(success and uid or toServerBan)
+		local success2,returner=getplayerFromAPI(success and uid or toServerBan)
+		local username=typeof(returner)=="string" and returner or toServerBan
+		uid=typeof(returner)=="number" and returner or uid
 		
-		if success==false then
+		if success2==false or typeof(uid)~="number" then
 			funcs.notifyChat(data.plr,`Failed to ban {toServerBan}\nError: {tostring(returner)}`)
 			return
 		end
 		
-		if typeof(returner)=="string" then
-			if addToBans(uid,reason)==false then funcs.notifyChat(data.plr,`Unable to ban whitelisted individual. {returner} ({tostring(uid)})`) return end
-			funcs.notifyChat(data.plr,`Banned {returner} ({tostring(uid)}) successfully.`)
-			return
-		end
-		
-		if typeof(returner)=="number" then
-			if addToBans(returner,reason)==false then funcs.notifyChat(data.plr,`Unable to ban whitelisted individual. {toServerBan} ({tostring(returner)})`) return end
-			funcs.notifyChat(data.plr,`Banned {toServerBan} ({tostring(returner)}) successfully.`)
-			return	
-		end
-		
-		funcs.notifyChat(data.plr,`Failed to ban {toServerBan}\nError 1: {tostring(returner)}`)
+		if addToBans(uid,reason)==false then funcs.notifyChat(data.plr,`Unable to ban whitelisted individual. {username} ({tostring(uid)})`); return end
+		funcs.notifyChat(data.plr,`Banned {username} ({tostring(uid)}) successfully.`)
 		return
 	end
 	
-	if addToBans(doesExist.UserId,reason)==false then funcs.notifyChat(data.plr,`Unable to ban whitelisted individual. {doesExist.Name} {tostring(doesExist.UserId)}`) return end
-	pcall(doesExist.Kick,doesExist,`Server banned by AntiSkid {versionn}\nReason: {reason}`)
-	
+	if addToBans(doesExist.UserId,reason)==false then funcs.notifyChat(data.plr,`Unable to ban whitelisted individual. {doesExist.Name} ({tostring(doesExist.UserId)})`); return end
+	pcall(doesExist.Kick,doesExist,`Server banned by {versionn}\nReason: {reason}`)
 	funcs.notifyChat(data.plr,`Banned {doesExist.Name} ({tostring(doesExist.UserId)}) successfully.`)
 end
 
