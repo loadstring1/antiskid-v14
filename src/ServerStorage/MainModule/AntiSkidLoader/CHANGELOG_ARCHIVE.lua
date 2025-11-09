@@ -28,6 +28,12 @@ legacy legend (wont use this legend anymore because its outdated):
 
 Date format: DD:MM:YYYY
 
+31.10.2025 (DD:MM:YYYY) V14.5.16 features
+- notifications get removed in order (one by one) now instead of removing every single one at once
+- fixed remote loop refitting because of client putting refit in queue and firing it every single time new remote was created
+- made my own fake QueryDescendants function in antiskid because roblox has that function disabled on live servers
+- notifications are now finally clientsided again! (it took me 2 years to do this i planned this since first release of v14 btw)
+
 26.10.2025 (DD:MM:YYYY) V14.4.16 small_changes
 - i didnt change version number bc idc and its just small update again
 - antiskid no longer supports /e this is because roblox made stupid changes and im 100% pretty sure that /e is never returning (i think that it will never be fired in .Chatted event ever again)
@@ -275,6 +281,4 @@ See you later next version will be antiskid v14.3.2
 - Removed PGP signature
 - GUI will not even show in lua assembling (place 1 and place 2) because mau just made something that automaticially removes it
 - im not gonna play cat and mouse game and all i did in this update is just make it so the gui doesnt even get created in lua assembling
-
-
 ]]

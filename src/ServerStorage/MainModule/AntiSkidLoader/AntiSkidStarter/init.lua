@@ -8,7 +8,7 @@ local headFunctions={
 local FuncsDesc,StartupScripts = {},{}
 
 local modules=script.Modules
-local rbxfuncs=require(modules.optimizator)
+local rbxfuncs=require(modules.rbxfuncs)
 local privYield
 
 local Players=rbxfuncs.getservice(game,"Players")
@@ -19,6 +19,7 @@ local isClient=runservice.IsClient(runservice)
 local clientClone=isClient==false and rbxfuncs.clone(script) or nil
 
 local noLaunch,aversion,skidsntexts = require(modules.noLaunch),rbxfuncs.getattribute(script,"version"),{}
+local customQueries=require(modules.customQuery)
 
 headFunctions.rbxfuncs=rbxfuncs
 headFunctions.serviceCache={}
@@ -31,7 +32,7 @@ headFunctions.b64=require(modules.b64)
 headFunctions.whitelist=require(modules.whitelist)
 
 headFunctions.isImmediate=(function()
-	local bind=Instance.new("BindableEvent")
+	local bind=rbxfuncs.instnew("BindableEvent")
 	local test=false
 	bind.Event:Connect(function()
 		test=true
@@ -59,16 +60,41 @@ local function sendSignal(typ,...)
 		FuncsDesc[typ]=tofire
 	end
 	
-	for i,v in tofire do
-		if v==nil then continue end
-		task.spawn(v,...)
+	for func,isEnabled in tofire do
+		if isEnabled~=true then continue end
+		task.spawn(func,...)
 	end
+end
+
+local function internalQuery(properties,inst,func)
+	local propertyCount=0
+	local passed=0
+
+	for property,value in properties do
+		propertyCount+=1
+
+		if customQueries[property] then
+			if customQueries[property](value,inst) then
+				passed+=1
+			end
+			continue
+		end
+
+		local success,prop=pcall(rbxfuncs.gameIndex,inst,property)
+		if success and value==prop then
+			passed+=1
+		end
+	end
+
+	if propertyCount~=passed then return end
+	func(inst)
 end
 
 function headFunctions.prepareClient()
 	if isClient==false then return end
 	
 	headFunctions.lplr=Players.LocalPlayer
+	headFunctions.plrGui=rbxfuncs.findfirstchildofclass(headFunctions.lplr, "PlayerGui")
 	headFunctions.playerScripts=rbxfuncs.findfirstchildofclass(headFunctions.lplr,"PlayerScripts")
 	headFunctions.chatinputbar=rbxfuncs.findfirstchildofclass(headFunctions.getservice("TextChatService"),"ChatInputBarConfiguration")
 end
@@ -82,7 +108,7 @@ function headFunctions.serverPrepareClient()
 	clientClone.Name=clientClone.ClassName
 	
 	rbxfuncs.destroy(modules.clientStarter)
-	rbxfuncs.destroy(clientClone.Modules.GuiEngine)
+	rbxfuncs.destroy(clientClone.Modules.GuiEngine.main.touchfix)
 	rbxfuncs.destroy(clientClone.Modules.clientStarter)
 	rbxfuncs.destroy(clientClone.Modules.cmdHandler2.maps)
 	
@@ -194,18 +220,6 @@ function headFunctions.forceRespawn(plr)
 	end)
 end
 
-function headFunctions.funcDisconnection(code,func)
-	return function()
-		for i,v in FuncsDesc[code] do
-			privYield()
-			if v==func then
-				FuncsDesc[code][i]=nil
-				break
-			end
-		end
-	end
-end
-
 function headFunctions.connect(code,func)
 	if typeof(func) ~= "function" then return end
 	
@@ -213,8 +227,30 @@ function headFunctions.connect(code,func)
 		FuncsDesc[code]={}
 	end
 	
-	table.insert(FuncsDesc[code],func)
-	return headFunctions.funcDisconnection(code,func)
+	FuncsDesc[code][func]=true
+	return function()
+		FuncsDesc[code][func]=nil
+	end
+end
+
+function headFunctions.queryInstances(properties,inst,func)
+	task.spawn(function()
+		for i,v in rbxfuncs.getdescendants(inst) do
+			task.spawn(internalQuery,properties,v,func)
+			privYield()
+		end
+	end)
+end
+
+function headFunctions.queryInstanceAdded(properties,func)
+	local disconnection=headFunctions.connect("OnInstance",function(inst)
+		task.delay(1,internalQuery,properties,inst,func)
+		internalQuery(properties,inst,func)
+	end)
+
+	headFunctions.queryInstances(properties, properties.Parent or game, func)
+
+	return disconnection
 end
 
 function headFunctions.CheckInstance(a)
@@ -328,6 +364,7 @@ end
 
 privYield=headFunctions.yielder()
 headFunctions.rbxfuncs=rbxfuncs.init(headFunctions)
+customQueries.init(headFunctions)
 
 headFunctions.connect("OnJoin",isClient==false and function(plr)
 	for i,v in StartupScripts do
@@ -370,14 +407,14 @@ local function startCommands2()
 	API2017.notifyChat(`Loaded.\ng/ prefix is now removed. Use as/ prefix for commands instead\nSay ;notif to recieve gui and chat notifications.\nSay ;changelog to see latest changes made in antiskid\nSay ;cmds to see all available commands\n{tostring("\65\110\116\105\83\107\105\100\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\54\53\51\52\54\49\49\49\57\48\41\46\65\110\116\105\83\107\105\100\40\41\10\65\110\116\105\83\107\105\100\32\98\97\110\108\105\115\116\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\50\55\54\52\50\54\51\57\57\53\41")}`)
 end
 
-if isClient==false then
-	modules.GuiEngine.notif.scriptName.Text=`AntiSkid {aversion}`
-	for i,v in require(modules.GuiEngine).init(headFunctions) do
-		if typeof(v)~="function" then
-			continue
-		end
-		headFunctions[i]=v
+headFunctions.prepareClient()
+
+modules.GuiEngine.notif.scriptName.Text=`AntiSkid {aversion}`
+for i,v in require(modules.GuiEngine).init(headFunctions) do
+	if typeof(v)~="function" then
+		continue
 	end
+	headFunctions[i]=v
 end
 
 if table.find(noLaunch,game.PlaceId) then
@@ -399,20 +436,24 @@ if isClient==false then
 end
 
 task.spawn(function()
-	headFunctions.prepareClient()
+	startCommands2()
+	headFunctions.serverPrepareClient()
+	antis3Runner()
 
 	if isClient then
 		print(`AntiSkid {aversion} loaded on client`)
 	end
 
-	startCommands2()
-	headFunctions.serverPrepareClient()
-	antis3Runner()
+	-- Instance.new("Actor",workspace).Name="ez"
+	-- headFunctions.queryInstances({ClassName="Actor",ancestors={"DataModel","Workspace"}}, game, function(inst)
+	-- 	print(inst.Name,"cool")
+	-- end)
 end)
 
+--[[
 if isClient then return nil end
 
---[[local updates=headFunctions.getBans(true)
+local updates=headFunctions.getBans(true)
 
 task.delay(1,function()
 	if typeof(updates)=="table" then

@@ -202,6 +202,7 @@ function module.f(data)
 
 	gameden()
 	gameden=nil
+	funcs.ResetEngineGUI()
 	
 	if funcs.isClient then calibrateClient(); return end
 	
@@ -221,7 +222,6 @@ function module.f(data)
 		yield()
 	end
 
-	funcs.ResetEngineGUI()
 	pcall(table.clear,_G)
 	pcall(table.clear,shared)
 	giveFSE()

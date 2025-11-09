@@ -29,19 +29,17 @@ local print=print
 
 rbxfuncs.destroy(script)
 
-setfenv(0,table.freeze{})
-setfenv(1,table.freeze{})
+--[[setfenv(0,table.freeze{})
+setfenv(1,table.freeze{})]]
+
+setfenv(1, table.freeze{})
 
 local IhateKohl={}
-
-local function yieldYourselfPlease()
-	return coroutine.yield()
-end
 
 local opMeta={
 	__index=function(_,ind)
 		if ind=="GetNetworkPing" or ind=="FireClient" or ind=="unescapeRichText" or ind=="log" then
-			return yieldYourselfPlease
+			return coroutine.yield
 		end
 		
 		if ind=="FrameTime" then
@@ -57,35 +55,35 @@ table.freeze(IhateKohl)
 opMeta.__metatable=table.freeze{}
 table.freeze(opMeta)
 
-local function gameAdded(inst)
-	if inst.ClassName=="Player" or inst.ClassName=="PlayerGui" then
-		return
-	end
+-- local function gameAdded(inst)
+-- 	if inst.ClassName=="Player" or inst.ClassName=="PlayerGui" then
+-- 		return
+-- 	end
 	
-	if inst.Name=="Kohl's Admin Source" and inst.Parent==replicatedstorage then
-		task.delay(funcs.isClient and 0 or 5,funcs.softdestroy,inst)
+-- 	if inst.Name=="Kohl's Admin Source" and inst.Parent==replicatedstorage then
+-- 		task.delay(funcs.isClient and 0 or 5,funcs.softdestroy,inst)
 		
-		for i,v in rbxfuncs.getdescendants(inst) do
-			if funcs.isClient==false and v.ClassName=="Script" and v.RunContext==Enum.RunContext.Client then
-				v.Enabled=false
-				break
-			end
+-- 		for i,v in rbxfuncs.getdescendants(inst) do
+-- 			if funcs.isClient==false and v.ClassName=="Script" and v.RunContext==Enum.RunContext.Client then
+-- 				v.Enabled=false
+-- 				break
+-- 			end
 			
-			if funcs.isClient and v.ClassName=="ModuleScript" and v.Name=="Clack" then
-				task.spawn(function()
-					rawset(require(v),"sound",function()return coroutine.yield() end)
-				end)
-				break
-			end
-		end
-		return
-	end
+-- 			if funcs.isClient and v.ClassName=="ModuleScript" and v.Name=="Clack" then
+-- 				task.spawn(function()
+-- 					rawset(require(v),"sound",function()return coroutine.yield() end)
+-- 				end)
+-- 				break
+-- 			end
+-- 		end
+-- 		return
+-- 	end
 	
-	if string.find(string.lower(inst.Name),"hdadmin") then
-		funcs.softdestroy(inst)
-		if funcs.isClient==false and funcs.canNotify("antihd") then funcs.notify({msg="Attempted to block hd admin from loading."}) end
-	end
-end
+-- 	if string.find(string.lower(inst.Name),"hdadmin") then
+-- 		funcs.softdestroy(inst)
+-- 		if funcs.isClient==false and funcs.canNotify("antihd") then funcs.notify({msg="Attempted to block hd admin from loading."}) end
+-- 	end
+-- end
 
 local function removeLeftOverAdminGuis()
 	if funcs.isClient==false then return end
@@ -97,7 +95,7 @@ local function removeLeftOverAdminGuis()
 		funcs.softdestroy(kaSounds)
 	end
 	
-	for i,v in rbxfuncs.getchildren(rbxfuncs.findfirstchildofclass(funcs.lplr,"PlayerGui")) do
+	for i,v in rbxfuncs.getchildren(funcs.plrGui) do
 		yield()
 		if funcs.CheckInstance(v)==false then continue end
 		local name=string.lower(v.Name)
@@ -157,11 +155,40 @@ rbxfuncs.connect(game.DescendantAdded,function(inst)
 	end
 end)
 
-funcs.connect("OnInstance",gameAdded)
-for i,v in rbxfuncs.getdescendants(game) do
-	yield()
-	task.spawn(gameAdded,v)
-end
+funcs.queryInstanceAdded({ClassName="ModuleScript",Name="Kohl's Admin Source",Parent=replicatedstorage},function(kohlmain)
+	task.delay(funcs.isClient and 0 or 5,funcs.softdestroy,kohlmain)
+	print(kohlmain,"detected on clientside?",funcs.isClient)
+
+	if funcs.isClient then
+		funcs.queryInstances({ClassName="ModuleScript",Name="Clack"},kohlmain,function(module)
+			rawset(require(module),"sound",coroutine.yield)
+		end)
+		return
+	end
+
+	funcs.queryInstances({ClassName="Script",RunContext=Enum.RunContext.Client},kohlmain,function(client)
+		client.Enabled=false
+	end)
+
+	funcs.queryInstances({ClassName="Folder",Name="Kohl's Admin"},funcs.getservice("ServerScriptService"),funcs.softdestroy)
+	funcs.queryInstances({ClassName="Folder",Name="_KServerAddons"},funcs.getservice("ServerStorage"),funcs.softdestroy)
+end)
+
+funcs.queryInstanceAdded({lowerfind="hdadmin",excludeancestors={"PlayerGui","Player"}},function(inst)
+	-- if inst.ClassName=="Player" or inst.ClassName=="PlayerGui" then
+	-- 	return
+	-- end
+
+	print(inst.ClassName)
+	funcs.softdestroy(inst)
+	if funcs.isClient==false and funcs.canNotify("antihd") then funcs.notify({msg="Attempted to block hd admin from loading."}) end
+end)
+
+-- funcs.connect("OnInstance",gameAdded)
+-- for i,v in rbxfuncs.getdescendants(game) do
+-- 	yield()
+-- 	task.spawn(gameAdded,v)
+-- end
 
 antis3.warner(script.Name)
 

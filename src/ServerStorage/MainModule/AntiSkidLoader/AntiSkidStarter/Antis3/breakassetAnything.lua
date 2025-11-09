@@ -6,7 +6,7 @@ local funcs=require(script.Parent).funcs
 local rbxfuncs=funcs.rbxfuncs
 
 rbxfuncs.destroy(script)
-if funcs.isClient then return nil end
+if funcs.isClient or funcs.isStudio then return nil end
 
 local senv,genv=setfenv,getfenv
 

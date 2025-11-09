@@ -2,6 +2,7 @@ local game=game
 local getservice=game.GetService
 local findservice=game.FindService
 local connect=game.ChildAdded.Connect
+local once=game.ChildAdded.Once
 
 local debris=getservice(game,"Debris")
 local Players:Players=getservice(game,"Players")
@@ -31,6 +32,7 @@ local toreturn={
 	isdescendantof=game.IsDescendantOf,
 
 	connect=connect,
+	once=once,
 	disconnect=sample.Disconnect,
 
 	additem=debris.AddItem,
@@ -63,13 +65,13 @@ if typeof(toreturn.kick)~="function" then
 end
 
 xpcall(function()
-	return game[{}]
+	return game[nil]
 end, function()
 	toreturn.gameIndex = debug.info(2, "f")
 end)
 
 function toreturn.init(funcs)
-	toreturn.init=nil
+	rawset(toreturn, "init", nil)
 	
 	if funcs.isClient and toreturn.findfirstchildofclass(script,"Actor")==nil then return toreturn end
 	require(script.act.parallel).init(funcs,toreturn)

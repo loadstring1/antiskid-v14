@@ -127,6 +127,7 @@ end
 local function client()
 	local islooking=false
 	local clock=os.clock()
+	local cInvokeServer=rbxfuncs.instnew("RemoteFunction").InvokeServer
 	
 	local function randomServ()
 		return replicatingServices[math.random(1,#replicatingServices)]
@@ -134,7 +135,7 @@ local function client()
 
 	local function connectEvents(rem)
 		local function sendRefit()
-			module.invokeServer({method="refit"})
+			task.spawn(cInvokeServer,rem,{method="refit",key=funcs.remoteKey})
 			table.remove(remotes,table.find(remotes,rem))
 		end
 	
@@ -161,10 +162,9 @@ local function client()
 	end
 
 	function module.invokeServer(tbl)
-		local response={}
+		local response={"waiting"}
+		
 		tbl.key=funcs.remoteKey
-	
-		response[1]="waiting"
 		if #remotes==0 then repeat task.wait(); if islooking then continue end; lookForRemote() until #remotes>0; task.wait(0.1) end
 		
 		local hasInvoked=false
@@ -176,7 +176,7 @@ local function client()
 
 			hasInvoked=true
 			task.spawn(function()
-				local res=pcall(remote.InvokeServer,remote,tbl)
+				local _,res=pcall(cInvokeServer,remote,tbl)
 				response[1]=res
 				remote.Parent=nil
 			end)
@@ -205,6 +205,7 @@ local function client()
 		if os.clock()-clock>20 then
 			clock=os.clock()
 			task.spawn(module.invokeServer,{method="ping"})
+			print("pinged server - client")
 		end
 		
 		for i,v in remotes do

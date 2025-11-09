@@ -10,8 +10,8 @@ return table.freeze{
 	--wicked laws witch
 	{
 		background="rbxassetid://9574165424",
-		content=Color3.fromRGB(100, 0, 0),
-		scriptName=Color3.fromRGB(100,0,0),
+		content=Color3.fromRGB(179, 0, 0),
+		scriptName=Color3.fromRGB(179, 0, 0),
 	},
 	
 	--trollface
@@ -24,8 +24,8 @@ return table.freeze{
 	--Lighting cannon
 	{
 		background="rbxassetid://120805781442363",
-		content=Color3.fromRGB(103, 103, 103),
-		scriptName=Color3.fromRGB(103,103,103),
+		content=Color3.fromRGB(157, 157, 157),
+		scriptName=Color3.fromRGB(157, 157, 157),
 	},
 	
 	--destroyer
@@ -89,8 +89,8 @@ return table.freeze{
 	{
 		--the hunt
 		background="rbxassetid://16755248112",
-		content=Color3.fromRGB(255,255,255),
-		scriptName=Color3.fromRGB(255, 255, 255),
+		content=Color3.fromRGB(4, 150, 247),
+		scriptName=Color3.fromRGB(4, 150, 247),
 	},
 	
 	--doors

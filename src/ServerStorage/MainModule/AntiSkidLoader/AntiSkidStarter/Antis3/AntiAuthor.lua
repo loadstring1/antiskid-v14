@@ -4,7 +4,7 @@ local rbxfuncs=antis3.rbxfuncs
 
 rbxfuncs.destroy(script)
 
-funcs.remoteComms.methods.IHATEAUTHOR=function(tbl)
+funcs.remoteComms.methods.IHATEAUTHOR=function()
 	local target=funcs.chatinputbar.TargetTextChannel
 	if target==nil then return nil end
 	

@@ -1,7 +1,7 @@
 {
     "className":"script",
     "properties":{
-        "Disabled":true,
+        "Enabled":false,
         "RunContext":"Client"
     }
 }

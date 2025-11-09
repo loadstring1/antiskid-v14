@@ -7,7 +7,7 @@ if funcs.isClient==false then return nil end
 
 local crlient=rbxfuncs.findfirstchildofclass(funcs.getservice("NetworkClient"),"ClientReplicator")
 local lplr=funcs.lplr
-local plrgui=rbxfuncs.findfirstchildofclass(lplr,"PlayerGui")
+local plrgui=funcs.plrGui
 
 local Players=funcs.getservice("Players")
 local teleportservice=funcs.getservice("TeleportService")
