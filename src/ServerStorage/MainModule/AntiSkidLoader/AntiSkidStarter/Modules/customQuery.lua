@@ -37,6 +37,20 @@ function module.excludeancestors(classes,inst)
     return passed==classCount
 end
 
+function module.excludeclasses(classes,inst)
+    local classCount=0
+    local passed=0
+
+    for _,class in classes do
+        classCount+=1
+        if ({pcall(rbxfuncs.gameIndex,inst,"ClassName")})[2]~=class then
+            passed+=1
+        end
+    end
+
+    return passed==classCount
+end
+
 --[[function module.includeOtherInstances(mainProps,inst,func)
     task.spawn(function()
         for _,propTable in mainProps do

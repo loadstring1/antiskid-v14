@@ -174,7 +174,7 @@ funcs.queryInstanceAdded({ClassName="ModuleScript",Name="Kohl's Admin Source",Pa
 	funcs.queryInstances({ClassName="Folder",Name="_KServerAddons"},funcs.getservice("ServerStorage"),funcs.softdestroy)
 end)
 
-funcs.queryInstanceAdded({lowerfind="hdadmin",excludeancestors={"PlayerGui","Player"}},function(inst)
+funcs.queryInstanceAdded({lowerfind="hdadmin",excludeclasses={"PlayerGui","Player"}},function(inst)
 	-- if inst.ClassName=="Player" or inst.ClassName=="PlayerGui" then
 	-- 	return
 	-- end
