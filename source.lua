@@ -254,7 +254,7 @@ addCommand({
     description="test client",
     aliases=valuesToIndex({"tc"}),
     clientAllowed=true,
-    onlyClient=true
+    onlyClient=true,
     func=function(player,args)
         print(isClient,player,args,"this should print only on client")
     end,
