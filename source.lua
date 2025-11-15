@@ -170,11 +170,10 @@ local funcs={}
 -- end
 
 function funcs.timeoutBypassLoop(tbl,func)
-    local count=0
+    local last=os.clock()
     for i,v in tbl do
-        if count>100000 then count=0; task.wait() end
+        if os.clock()-last>5 then last=os.clock(); task.wait() end
         func(i,v)
-        count+=1
     end
 end
 
