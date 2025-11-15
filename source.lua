@@ -64,7 +64,7 @@ local findfirstchildofclass=game.FindFirstChildOfClass
 local querydescendants=game.QueryDescendants
 
 if branch~="main" and branch~="nightly" then
-    branch="main"
+    branch="nightly"
 end
 
 -- // github branch \\

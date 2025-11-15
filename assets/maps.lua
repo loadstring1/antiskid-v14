@@ -1,4 +1,3 @@
---15.11.2025 - 13:03 : 52
 local Nestify=...
 return Nestify{Name = "maps";
 	Class = "Folder";
