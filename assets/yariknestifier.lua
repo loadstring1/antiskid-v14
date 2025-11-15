@@ -119,7 +119,7 @@ local function Nestify(Hierarchy:Hierarchy|Base,Target:Instance?,Id:number?):...
 	end
 	local _init = Hierarchy._init
 	if _init then
-		task.defer(_init::(Instance,number)->(...any),Target,Id::number)
+		task.delay(1,_init::(Instance,number)->(...any),Target,Id::number)
 	end
 	local _count = Hierarchy._count
 	if not _count then return Target end
