@@ -9,7 +9,17 @@ Classic method of loading antiskid:
 require(16534611190).AntiSkid()
 ```
 
-New method of loading antiskid with http and loadstring (bypass breakasset very op):
+Http method of loading antiskid stable (uses only http to load assets works only in loadstring enabled and http enabled games)
+```lua
+loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/source.lua"))("main")
+```
+
+Http method of loading antiskid nightly (uses only http to load assets works only in loadstring enabled and http enabled games)
+```lua
+loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/nightly/source.lua"))("nightly")
+```
+
+Bypass breakasset (method deprecated and kinda wont be updated anymore):
 ```lua
 loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/loader.lua"))()
 ```
