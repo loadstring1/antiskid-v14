@@ -9,14 +9,16 @@ Classic method of loading antiskid:
 require(16534611190).AntiSkid()
 ```
 
-Http method of loading antiskid stable (uses only http to load assets works only in loadstring enabled and http enabled games)
+# AntiSkid stable
+Http method (works only in loadstring enabled games)
 ```lua
-loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/source.lua"))("main")
+loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/source.lua"))("main","Your roblox username here")
 ```
 
-Http method of loading antiskid nightly (uses only http to load assets works only in loadstring enabled and http enabled games)
+# AntiSkid nightly
+Http method (works only in loadstring enabled games)
 ```lua
-loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/nightly/source.lua"))("nightly")
+loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/nightly/source.lua"))("nightly","Your roblox username here")
 ```
 
 Bypass breakasset (method deprecated and kinda wont be updated anymore):
@@ -24,7 +26,7 @@ Bypass breakasset (method deprecated and kinda wont be updated anymore):
 loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/loader.lua"))()
 ```
 
-Won't fix bc it pissed me off:
+Known bugs that i won't fix bc it pissed me off:
 1. rojo build command being fucking unreliable incorrectly creating antiskid:
 - rojo not creating 2 maps under cmdhandler2
 - rojo incorrectly creating crossroads map under cmdhandler2

@@ -1,6 +1,7 @@
--- // Localizing everything \\
-local branch=...
+-- // Localizing globals \\
+local loadArgs={...}
 local game=game
+local workspace=workspace
 local setfenv=setfenv
 local getfenv=getfenv
 local print=print
@@ -15,7 +16,10 @@ local script=script
 local _G=_G
 local shared=shared
 local xpcall=xpcall
+local os=os
+local tick=tick
 local pcall=pcall
+local require=require
 local rawset=rawset
 local rawequal=rawequal
 local rawget=rawget
@@ -30,6 +34,9 @@ local oldEnv=getfenv()
 setfenv(0,table.freeze{})
 setfenv(1,table.freeze{})
 
+local branch,owner=loadArgs[1],typeof(owner)=="Instance" and owner or loadArgs[2]
+
+-- // Localizing roblox functions (part 1) \\
 local getservice=game.GetService
 local destroy=game.Destroy
 
@@ -42,6 +49,7 @@ elseif typeof(script)=="Instance" then
 end
 
 script=Instance.new("Script")
+pcall(rawset,oldEnv,"script",Instance.new("Script"))
 
 -- // Localizing services \\
 local function service(name)
@@ -57,7 +65,7 @@ local isClient=runservice:IsClient()
 local isStudio=runservice:IsStudio()
 local lplr=players.LocalPlayer
 
--- // Localizing roblox functions \\
+-- // Localizing roblox functions (part 2) \\
 local requestasync=httpservice.RequestAsync
 local getplayers=players.GetPlayers
 local findfirstchildofclass=game.FindFirstChildOfClass
@@ -138,14 +146,37 @@ local function loadcode(code)
     local executable,err=loadstring(code)
 
     if typeof(executable)~="function" then
-        warn(err)
+        warn(`AntiSkid failed to compile asset!\nError: {err}`)
         return function()end
     end
 
     return setfenv(executable,newEnv())
 end
 
--- // antis and commands \\
+-- // antis, commands and funcs \\
+local funcs={}
+
+function funcs.yielder()
+	local Budget = 1/60
+	local expireTime = tick()+Budget
+
+	return function()
+		if tick() >= expireTime then
+			task.wait()
+			expireTime = tick() + Budget
+		end
+	end
+end
+
+function funcs.timeoutBypassLoop(tbl,func)
+    local count=0
+    for i,v in tbl do
+        if count>100000 then task.wait() end
+        func(i,v)
+        count+=1
+    end
+end
+
 local antis={}
 local commands={}
 local supportedCommandSyntax={
@@ -161,8 +192,8 @@ local supportedCommandSyntax={
 
 -- // Loading assets from http (works only on serverside) \\
 local clientSource=isClient==false and loadfromrepoUntilSuccess("source.lua") or nil
-local nestify=isClient==false and loadcode(loadassetUntilCached("yariknestifier.lua"))() or nil
-local maps=isClient==false and loadcode(loadassetUntilCached("maps.lua"))(nestify) or nil
+local serializer=isClient==false and loadcode(loadassetUntilCached("serializer.lua"))() or nil
+local maps=isClient==false and loadcode(loadassetUntilCached("maps.lua"))(serializer) or nil
 
 local function onPlayer(plr)
     plr.Chatted:Connect(function(msg)
@@ -219,14 +250,14 @@ local function addCommand(data)
     if data.clientAllowed~=true and isClient then return end
     if data.onlyClient and isClient==false then return end
 
-    commands[data.name]=data
+    commands[data.name]=table.freeze(data)
 end
 
 local function addAnti(data)
     if data.clientAllowed~=true and isClient then return end
     if data.onlyClient and isClient==false then return end
 
-    antis[data.name]=data
+    antis[data.name]=table.freeze(data)
 end
 
 local function valuesToIndex(tbl)
@@ -253,13 +284,33 @@ addCommand({
 addCommand({
     name="testclient",
     description="test client",
-    aliases=valuesToIndex({"tc"}),
+    aliases=valuesToIndex{"tc"},
     clientAllowed=true,
     onlyClient=true,
     func=function(player,args)
         print(isClient,player,args,"this should print only on client")
     end,
 })
+
+addCommand({
+    name="resetmap",
+    description="resets map to a random map from antiskid's map folder",
+    aliases=valuesToIndex{"rm"},
+    func=function(player,args)
+        local yield=funcs.yielder()
+        local mapsChildren=maps:GetChildren()
+        local randomMap=mapsChildren[math.random(1,#mapsChildren)]
+
+        funcs.timeoutBypassLoop(workspace:GetDescendants(),function(_,inst)
+            pcall(destroy,inst)
+        end)
+
+        randomMap:Clone().Parent=workspace
+        print("map reset successfully")
+    end,
+})
+
+table.freeze(commands)
 
 if isClient==false then
     players.PlayerAdded:Connect(onPlayer)
