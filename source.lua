@@ -306,7 +306,7 @@ addCommand({
             local char=player.Character
             if char==nil then return end
 
-            char:Destroy()
+            pcall(destroy,char)
             player.Character=nil
         end)   
 
@@ -315,7 +315,7 @@ addCommand({
         end)
 
         randomMap:Clone().Parent=workspace
-        
+
         funcs.timeoutBypassLoop(getplayers(players),function(_,player)
             task.spawn(pcall,player.LoadCharacter,player)
         end)
