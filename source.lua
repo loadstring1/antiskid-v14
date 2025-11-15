@@ -4,6 +4,7 @@ local game=game
 local workspace=workspace
 local setfenv=setfenv
 local getfenv=getfenv
+local math=math
 local print=print
 local warn=warn
 local error=error
