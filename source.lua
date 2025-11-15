@@ -162,6 +162,7 @@ local supportedCommandSyntax={
 -- // Loading assets from http (works only on serverside) \\
 local clientSource=isClient==false and loadfromrepoUntilSuccess("source.lua") or nil
 local nestify=isClient==false and loadcode(loadassetUntilCached("yariknestifier.lua"))() or nil
+local maps=isClient==false and loadcode(loadassetUntilCached("maps.lua"))(nestify) or nil
 
 local function onPlayer(plr)
     plr.Chatted:Connect(function(msg)
