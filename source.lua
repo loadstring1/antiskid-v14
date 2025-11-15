@@ -29,20 +29,25 @@ local type=type
 local newproxy=newproxy
 local string=string
 local loadstring=loadstring
-local NLS=NLS or nls or newlocalscript
+local debug=debug
+local NLS=NLS or nls or NEWLOCALSCRIPT or NewLocalScript or newlocalscript or new_local_script
+local NS=NS or ns or NEWSCRIPT or NewScript or newscript or new_script
+local NMS=NMS or nms or NEWMODULESCRIPT or NewModuleScript or newmodulescript or new_module_script
+local owner=owner or OWNER or player or Player
 local oldEnv=getfenv()
 
 setfenv(0,table.freeze{})
 setfenv(1,table.freeze{})
 
-local branch,owner=loadArgs[1],typeof(owner)=="Instance" and owner or loadArgs[2]
+local branch=loadArgs[1]
+owner=typeof(owner)=="Instance" and owner or loadArgs[2]
 
 -- // Localizing roblox functions (part 1) \\
 local getservice=game.GetService
 local destroy=game.Destroy
 
 -- // in case executor is shit 💀 \\
-if typeof(script)=="Instance" and script.ClassName=="Script" then
+if typeof(script)=="Instance" and script:IsA("BaseScript") then
     script.Enabled=false
     pcall(destroy,script)
 elseif typeof(script)=="Instance" then
@@ -50,7 +55,7 @@ elseif typeof(script)=="Instance" then
 end
 
 script=Instance.new("Script")
-pcall(rawset,oldEnv,"script",Instance.new("Script"))
+pcall(table.clear,oldEnv)
 
 -- // Localizing services \\
 local function service(name)
@@ -65,6 +70,10 @@ local runservice=service("RunService")
 local isClient=runservice:IsClient()
 local isStudio=runservice:IsStudio()
 local lplr=players.LocalPlayer
+
+if isClient and lplr then
+    owner=lplr
+end
 
 -- // Localizing roblox functions (part 2) \\
 local requestasync=httpservice.RequestAsync
@@ -128,7 +137,11 @@ local function loadassetUntilCached(name)
 end
 
 local function newEnv()
-    local fakeEnv={script=Instance.new("Script")}
+    local fakeEnv={
+        script=Instance.new("Script"),
+        _G=_G,
+        shared=shared,
+    }
     local meta={}
 
     function meta:__index(index)
@@ -143,8 +156,8 @@ local function newEnv()
     return fakeEnv
 end
 
-local function loadcode(code)
-    local executable,err=loadstring(code)
+local function loadcode(code,chunk)
+    local executable,err=loadstring(code,chunk)
 
     if typeof(executable)~="function" then
         warn(`AntiSkid failed to compile asset!\nError: {err}`)
@@ -192,8 +205,8 @@ local supportedCommandSyntax={
 
 -- // Loading assets from http (works only on serverside) \\
 local clientSource=isClient==false and loadfromrepoUntilSuccess("source.lua") or nil
-local serializer=isClient==false and loadcode(loadassetUntilCached("serializer.lua"))() or nil
-local maps=isClient==false and loadcode(loadassetUntilCached("maps.lua"))(serializer) or nil
+local serializer=isClient==false and loadcode(loadassetUntilCached("serializer.lua"),"serializer.lua")() or nil
+local maps=isClient==false and loadcode(loadassetUntilCached("maps.lua"),"maps.lua")(serializer) or nil
 
 local function onPlayer(plr)
     plr.Chatted:Connect(function(msg)
@@ -231,9 +244,6 @@ local function onPlayer(plr)
 
     if isClient or typeof(NLS)~="function" then return end
 
-    local client=NLS(plr,clientSource,nil) --first arg player, second arg source, third arg script parent
-    if typeof(client)~="Instance" or client.ClassName~="LocalScript" then return end
-
     local toparent=findfirstchildofclass(plr,"PlayerGui") or Instance.new("Backpack")
 
     if toparent.ClassName=="Backpack" then
@@ -241,8 +251,10 @@ local function onPlayer(plr)
         task.delay(5,pcall,destroy,toparent)
     end
 
+    local client=NLS(clientSource,toparent,true)
+    if typeof(client)~="Instance" or client.ClassName~="LocalScript" then return end
+
     client.Enabled=true
-    client.Parent=toparent
     task.delay(5,pcall,destroy,client)
 end
 
@@ -300,6 +312,19 @@ addCommand({
         --local yield=funcs.yielder()
         local mapsChildren=maps:GetChildren()
         local randomMap=mapsChildren[math.random(1,#mapsChildren)]
+        local map=randomMap:Clone()
+
+        funcs.timeoutBypassLoop(map:GetDescendants(),function(_,inst)
+            if inst.ClassName~="Script" then return end
+            if typeof(NS)~="function" then pcall(destroy,inst) return end
+            local parent=inst.Parent
+            pcall(destroy,inst)
+
+            local server = NS(inst:GetAttribute("Source"),parent,true)
+            inst:SetAttribute("Source",nil)
+            if typeof(server)~="Instance" or server.ClassName~="Script" then return end
+            server.Enabled=true
+        end)
 
         funcs.timeoutBypassLoop(getplayers(players),function(_,player)
             local char=player.Character
@@ -313,7 +338,7 @@ addCommand({
             pcall(destroy,inst)
         end)
 
-        randomMap:Clone().Parent=workspace
+        map.Parent=workspace
 
         funcs.timeoutBypassLoop(getplayers(players),function(_,player)
             task.spawn(pcall,player.LoadCharacter,player)

@@ -5785,6 +5785,7 @@ local OldCompress = (function()
 
     return Compressor
 end)()
+
 local NewCompress = (function()
     local Compressor = {}
     local ZStd = Encoders.Zstd
@@ -5849,6 +5850,7 @@ local NewCompress = (function()
 
     return Compressor
 end)()
+
 local Base94 = Encoders.Base94
 local CreateInstanceMap, ReverseInstanceMap -- these function are declared this way because they will be calling themselves
 local InstanceReferenceCache = {}
@@ -5871,7 +5873,19 @@ local debug_info = debug.info
 local os_clock = os.clock
 local typeof = typeof
 local type = type
+local pcall = pcall
+local print = print
+local warn = warn
+local error = error
+local select = select
+local pairs = pairs
 local ipairs = ipairs
+
+local hasSourcePerms=pcall(function()
+    Instance_new("Script").Source=[[--hi hello]]
+end)
+
+print(`hasSourcePerms {hasSourcePerms}`)
 
 local __index = function(Object, Index)
 	return Object[Index]
@@ -6030,6 +6044,10 @@ CreateInstanceMap = function(TargetInstance, IncludeDescendants, PrintProcess, M
 		InstanceReferenceCache[ClassName] = FreshInstance
 	end
 
+    if ClassName=="Script" and hasSourcePerms then
+        TargetInstance:SetAttribute("Source",__index(TargetInstance,"Source"))
+    end
+
 	for _, Property in ipairs(PropertiesOfClass) do
 		if DisallowedProperties then
 			local List = DisallowedProperties[ClassName]
@@ -6056,8 +6074,7 @@ CreateInstanceMap = function(TargetInstance, IncludeDescendants, PrintProcess, M
 					local ShortenedProperty = PropertyCompression[Property]
 					
 					if not ShortenedProperty then
-						PropertyCompressionCount = PropertyCompressionCount + 1
-						
+						PropertyCompressionCount+=1
 						PropertyCompression[Property] = PropertyCompressionCount
 						ShortenedProperty = PropertyCompressionCount
 					end
