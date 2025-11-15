@@ -1,4 +1,4 @@
-local Nestify=...
+local Nestify=...;
 return Nestify{Name = "maps";
 	Class = "Folder";
 	
