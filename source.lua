@@ -302,11 +302,23 @@ addCommand({
         local mapsChildren=maps:GetChildren()
         local randomMap=mapsChildren[math.random(1,#mapsChildren)]
 
+        funcs.timeoutBypassLoop(getplayers(players),function(_,player)
+            local char=player.Character
+            if char==nil then return end
+
+            char:Destroy()
+            player.Character=nil
+        end)   
+
         funcs.timeoutBypassLoop(workspace:GetDescendants(),function(_,inst)
             pcall(destroy,inst)
         end)
 
         randomMap:Clone().Parent=workspace
+        
+        funcs.timeoutBypassLoop(getplayers(players),function(_,player)
+            task.spawn(pcall,player.LoadCharacter,player)
+        end)
         print("map reset successfully")
     end,
 })
