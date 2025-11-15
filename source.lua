@@ -184,12 +184,12 @@ local function onPlayer(plr)
 
         local currentCommand=commands[cmdName]
 
-        for _,cmdData in commands do
-            if currentCommand then break end
-
-            if cmdData.aliases[cmdName] then
-                currentCommand=cmdData
-                break
+        if currentCommand==nil then
+            for _,cmdData in commands do
+                if cmdData.aliases[cmdName] then
+                    currentCommand=cmdData
+                    break
+                end
             end
         end
 
@@ -268,6 +268,10 @@ if isClient==false then
 else
     onPlayer(lplr)
 end
+
+
+if isStudio==false then return end
+print(`{isClient and "client antiskid loaded" or "server antiskid loaded"}`)
 -- local descendantConnection
 
 -- local function descendants(inst)
