@@ -5623,7 +5623,7 @@ local Encoders=(function()
     end)()
 
     return {
-        ["Zstd"]=zstd,
+        ["Zstd"]=Zstd,
         ["Base64"]=Base64,
         ["Base94"]=Base94,
         ["Zlib"]=Zlib,
