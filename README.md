@@ -1,4 +1,4 @@
-# antiskid-v14
+# AntiSkid stable (works in any game even with http disabled and loadstring disabled)
 
 help antiskid v14 improve today by making pull requests
 
@@ -9,14 +9,13 @@ Classic method of loading antiskid:
 require(16534611190).AntiSkid()
 ```
 
-# AntiSkid stable
+# AntiSkid stable (http method - works only in loadstring and http enabled games)
 Http method (works only in loadstring enabled games)
 ```lua
 loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/source.lua"))("main","Your roblox username here")
 ```
 
-# AntiSkid nightly
-Http method (works only in loadstring enabled games)
+# AntiSkid nightly loader (http method - works only in loadstring and http enabled games)
 ```lua
 loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/nightly/source.lua"))("nightly","Your roblox username here")
 ```
