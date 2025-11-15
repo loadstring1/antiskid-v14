@@ -20,12 +20,12 @@ loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubuserconten
 loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/nightly/source.lua"))("nightly","Your roblox username here")
 ```
 
-# Bypass breakasset (method deprecated and kinda wont be updated anymore):
+# Bypass breakasset (method deprecated and kinda wont be updated anymore)
 ```lua
 loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/loader.lua"))()
 ```
 
-# Known bugs that i won't fix bc it pissed me off:
+# Known bugs that i won't fix bc it pissed me off
 1. rojo build command being fucking unreliable incorrectly creating antiskid:
 - rojo not creating 2 maps under cmdhandler2
 - rojo incorrectly creating crossroads map under cmdhandler2
@@ -38,7 +38,7 @@ current workaround for issue number 1: just use latest antiskid from github rele
 game:GetObjects("rbxassetid://16534611190")[1].Parent=workspace
 ```
 
-# Things that i did or fixed for this update:
+# Things that i did or fixed for this update
 1. Fixed type checker making errors when i do smth like script.Modules in AntiSkidStarter (lol rojo fixed it with rojo sourcemap very op)
 
 todo (if somebody cares enough to help with it):

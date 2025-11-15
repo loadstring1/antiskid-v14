@@ -156,22 +156,22 @@ end
 -- // antis, commands and funcs \\
 local funcs={}
 
-function funcs.yielder()
-	local Budget = 1/60
-	local expireTime = tick()+Budget
+-- function funcs.yielder()
+-- 	local Budget = 1/60
+-- 	local expireTime = tick()+Budget
 
-	return function()
-		if tick() >= expireTime then
-			task.wait()
-			expireTime = tick() + Budget
-		end
-	end
-end
+-- 	return function()
+-- 		if tick() >= expireTime then
+-- 			task.wait()
+-- 			expireTime = tick() + Budget
+-- 		end
+-- 	end
+-- end
 
 function funcs.timeoutBypassLoop(tbl,func)
     local count=0
     for i,v in tbl do
-        if count>100000 then task.wait() end
+        if count>100000 then count=0; task.wait() end
         func(i,v)
         count+=1
     end
@@ -297,7 +297,7 @@ addCommand({
     description="resets map to a random map from antiskid's map folder",
     aliases=valuesToIndex{"rm"},
     func=function(player,args)
-        local yield=funcs.yielder()
+        --local yield=funcs.yielder()
         local mapsChildren=maps:GetChildren()
         local randomMap=mapsChildren[math.random(1,#mapsChildren)]
 
