@@ -58,37 +58,13 @@ local EMPTY_TABLE = {}
 
 local AssetService = game:GetService("AssetService")
 local ReflectionServiceWrapper = (function()
-    -- TODO: replace with ReflectionService when available
-
     local ReflectionService=game:GetService("ReflectionService")
     local security=SecurityCapabilities.fromCurrent()
-
-    --local HttpService = game:GetService("HttpService")
-    --local RawApiDump
     local IsApiInitialized = false
     local Classes = {}
     local DefaultProperties = {}
 
-    -- local function loadUntilCached()
-    --     local success,result=pcall(function()
-    --         return HttpService:GetAsync("https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/refs/heads/roblox/API-Dump.json")
-    --     end)
-
-    --     if success and result then
-    --         RawApiDump=result
-    --         return
-    --     end
-
-    --     task.wait()
-    --     return loadUntilCached()
-    -- end
-
-    -- loadUntilCached()
-
     DefaultProperties.InitializeApiDump = function()
-        -- local Decoded = HttpService:JSONDecode(RawApiDump)
-        -- local DecodedClasses = Decoded.Classes
-        
         for _, Class in ReflectionService:GetClasses({Security=security}) do
             if Class.Permits.New==nil then continue end
 
@@ -98,75 +74,7 @@ local ReflectionServiceWrapper = (function()
                 if Property.Permits.Write==nil or NameFirstLetter==lower(NameFirstLetter) then continue end
                 table_insert(Classes[Class.Name],Property.Name)
             end
-            -- local Tags = Class.Tags
-            -- local Members = Class.Members
-            -- local ClassName = Class.Name
-            
-            -- -- filter out services
-            -- if Tags then
-            --     for _, Tag in pairs(Tags) do
-            --         if Tag == "Service" then
-            --             DecodedClasses[Position] = nil
-            --             continue
-            --         end
-            --     end
-            -- end
-            
-            -- -- filter out properties locked behind capabilities, filter out members that are not properties, filter out hidden properties, etc
-            -- if Members then
-            --     for MemberPosition, Property in pairs(Members) do
-            --         local Type = Property.MemberType
-            --         local Tags = Property.Tags
-            --         local Name = Property.Name
-            --         local NameFirstLetter = Name:sub(1, 1)
-            --         local Security = Property.Security
-            --         local SecurityType = type(Security)
-                    
-            --         if Type ~= "Property" then
-            --             Members[MemberPosition] = nil
-            --             continue
-            --         end
-                    
-            --         if Tags then
-            --             for _, Tag in pairs(Tags) do
-            --                 if Tag == "NotScriptable" or Tag == "ReadOnly" then
-            --                     Members[MemberPosition] = nil
-            --                     continue
-            --                 end
-            --             end
-            --         end
-                    
-            --         -- filter out legacy property references
-            --         if NameFirstLetter == NameFirstLetter:lower() then
-            --             Members[MemberPosition] = nil
-            --             continue
-            --         end
-                    
-            --         if SecurityType == "string" then
-            --             if Security ~= "None" then
-            --                 Members[MemberPosition] = nil
-            --                 continue
-            --             end
-            --         elseif SecurityType == "table" then
-            --             if Security.Read ~= "None" then -- we will include properties that can be read but not written
-            --                 Members[MemberPosition] = nil
-            --                 continue
-            --             end
-            --         end
-            --     end
-            -- end
         end
-        
-        -- for _, Class in pairs(DecodedClasses) do
-        --     local Superclass = Class.Superclass
-        --     local Members = Class.Members
-        --     local ClassName = Class.Name
-            
-        --     Classes[ClassName] = {
-        --         Superclass = Superclass,
-        --         Members = Members
-        --     }
-        -- end
         
         IsApiInitialized = true
         
@@ -178,33 +86,7 @@ local ReflectionServiceWrapper = (function()
     end
 
     DefaultProperties.GetPropertiesOfClass = function(ClassName)
-        -- local Properties = {}
-        -- local IterateThroughProperties
-        
-        -- IterateThroughProperties = function(ClassName)
-        --     local ClassInfo = Classes[ClassName]
-            
-        --     if ClassInfo then
-        --         local Members = ClassInfo.Members
-        --         local Superclass = ClassInfo.Superclass
-
-        --         for Position, Property in pairs(Members) do
-        --             local Name = Property.Name
-                    
-        --             if not table.find(Properties, Name) then -- todo: dont use table.find and table.insert
-        --                 table.insert(Properties, Name)
-        --             end
-        --         end
-                
-        --         if Superclass then
-        --             IterateThroughProperties(Superclass)
-        --         end
-        --     end
-        -- end
-        
-        -- IterateThroughProperties(ClassName)
-        
-        return Classes[ClassName] --Properties
+        return Classes[ClassName]
     end
 
     return DefaultProperties
