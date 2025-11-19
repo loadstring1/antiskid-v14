@@ -22,6 +22,8 @@ local error = error
 local select = select
 local pairs = pairs
 local ipairs = ipairs
+local rawset=rawset
+local setmetatable=setmetatable
 local game=game
 local buffer=buffer
 local string=string
@@ -2080,204 +2082,32 @@ local BufferEncoder = (function()
 end)()
 
 local Encoders=(function()
-    local Base64=(function()
-        local lookupValueToCharacter = buffer.create(64)
-        local lookupCharacterToValue = buffer.create(256)
-
-        local alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-        local padding = string.byte("=")
-
-        for index = 1, 64 do
-            local value = index - 1
-            local character = string.byte(alphabet, index)
-
-            buffer.writeu8(lookupValueToCharacter, value, character)
-            buffer.writeu8(lookupCharacterToValue, character, value)
-        end
-
-        local function encode(input: buffer): buffer
-            local inputLength = buffer.len(input)
-            local inputChunks = math.ceil(inputLength / 3)
-
-            local outputLength = inputChunks * 4
-            local output = buffer.create(outputLength)
-
-            -- Since we use readu32 and chunks are 3 bytes large, we can't read the last chunk here
-            for chunkIndex = 1, inputChunks - 1 do
-                local inputIndex = (chunkIndex - 1) * 3
-                local outputIndex = (chunkIndex - 1) * 4
-
-                local chunk = bit32.byteswap(buffer.readu32(input, inputIndex))
-
-                -- 8 + 24 - (6 * index)
-                local value1 = bit32.rshift(chunk, 26)
-                local value2 = bit32.band(bit32.rshift(chunk, 20), 0b111111)
-                local value3 = bit32.band(bit32.rshift(chunk, 14), 0b111111)
-                local value4 = bit32.band(bit32.rshift(chunk, 8), 0b111111)
-
-                buffer.writeu8(output, outputIndex, buffer.readu8(lookupValueToCharacter, value1))
-                buffer.writeu8(output, outputIndex + 1, buffer.readu8(lookupValueToCharacter, value2))
-                buffer.writeu8(output, outputIndex + 2, buffer.readu8(lookupValueToCharacter, value3))
-                buffer.writeu8(output, outputIndex + 3, buffer.readu8(lookupValueToCharacter, value4))
-            end
-
-            local inputRemainder = inputLength % 3
-
-            if inputRemainder == 1 then
-                local chunk = buffer.readu8(input, inputLength - 1)
-
-                local value1 = bit32.rshift(chunk, 2)
-                local value2 = bit32.band(bit32.lshift(chunk, 4), 0b111111)
-
-                buffer.writeu8(output, outputLength - 4, buffer.readu8(lookupValueToCharacter, value1))
-                buffer.writeu8(output, outputLength - 3, buffer.readu8(lookupValueToCharacter, value2))
-                buffer.writeu8(output, outputLength - 2, padding)
-                buffer.writeu8(output, outputLength - 1, padding)
-            elseif inputRemainder == 2 then
-                local chunk = bit32.bor(
-                    bit32.lshift(buffer.readu8(input, inputLength - 2), 8),
-                    buffer.readu8(input, inputLength - 1)
-                )
-
-                local value1 = bit32.rshift(chunk, 10)
-                local value2 = bit32.band(bit32.rshift(chunk, 4), 0b111111)
-                local value3 = bit32.band(bit32.lshift(chunk, 2), 0b111111)
-
-                buffer.writeu8(output, outputLength - 4, buffer.readu8(lookupValueToCharacter, value1))
-                buffer.writeu8(output, outputLength - 3, buffer.readu8(lookupValueToCharacter, value2))
-                buffer.writeu8(output, outputLength - 2, buffer.readu8(lookupValueToCharacter, value3))
-                buffer.writeu8(output, outputLength - 1, padding)
-            elseif inputRemainder == 0 and inputLength ~= 0 then
-                local chunk = bit32.bor(
-                    bit32.lshift(buffer.readu8(input, inputLength - 3), 16),
-                    bit32.lshift(buffer.readu8(input, inputLength - 2), 8),
-                    buffer.readu8(input, inputLength - 1)
-                )
-
-                local value1 = bit32.rshift(chunk, 18)
-                local value2 = bit32.band(bit32.rshift(chunk, 12), 0b111111)
-                local value3 = bit32.band(bit32.rshift(chunk, 6), 0b111111)
-                local value4 = bit32.band(chunk, 0b111111)
-
-                buffer.writeu8(output, outputLength - 4, buffer.readu8(lookupValueToCharacter, value1))
-                buffer.writeu8(output, outputLength - 3, buffer.readu8(lookupValueToCharacter, value2))
-                buffer.writeu8(output, outputLength - 2, buffer.readu8(lookupValueToCharacter, value3))
-                buffer.writeu8(output, outputLength - 1, buffer.readu8(lookupValueToCharacter, value4))
-            end
-
-            return output
-        end
-
-        local function decode(input: buffer): buffer
-            local inputLength = buffer.len(input)
-            local inputChunks = math.ceil(inputLength / 4)
-
-            -- TODO: Support input without padding
-            local inputPadding = 0
-            if inputLength ~= 0 then
-                if buffer.readu8(input, inputLength - 1) == padding then inputPadding += 1 end
-                if buffer.readu8(input, inputLength - 2) == padding then inputPadding += 1 end
-            end
-
-            local outputLength = inputChunks * 3 - inputPadding
-            local output = buffer.create(outputLength)
-
-            for chunkIndex = 1, inputChunks - 1 do
-                local inputIndex = (chunkIndex - 1) * 4
-                local outputIndex = (chunkIndex - 1) * 3
-
-                local value1 = buffer.readu8(lookupCharacterToValue, buffer.readu8(input, inputIndex))
-                local value2 = buffer.readu8(lookupCharacterToValue, buffer.readu8(input, inputIndex + 1))
-                local value3 = buffer.readu8(lookupCharacterToValue, buffer.readu8(input, inputIndex + 2))
-                local value4 = buffer.readu8(lookupCharacterToValue, buffer.readu8(input, inputIndex + 3))
-
-                local chunk = bit32.bor(
-                    bit32.lshift(value1, 18),
-                    bit32.lshift(value2, 12),
-                    bit32.lshift(value3, 6),
-                    value4
-                )
-
-                local character1 = bit32.rshift(chunk, 16)
-                local character2 = bit32.band(bit32.rshift(chunk, 8), 0b11111111)
-                local character3 = bit32.band(chunk, 0b11111111)
-
-                buffer.writeu8(output, outputIndex, character1)
-                buffer.writeu8(output, outputIndex + 1, character2)
-                buffer.writeu8(output, outputIndex + 2, character3)
-            end
-
-            if inputLength ~= 0 then
-                local lastInputIndex = (inputChunks - 1) * 4
-                local lastOutputIndex = (inputChunks - 1) * 3
-
-                local lastValue1 = buffer.readu8(lookupCharacterToValue, buffer.readu8(input, lastInputIndex))
-                local lastValue2 = buffer.readu8(lookupCharacterToValue, buffer.readu8(input, lastInputIndex + 1))
-                local lastValue3 = buffer.readu8(lookupCharacterToValue, buffer.readu8(input, lastInputIndex + 2))
-                local lastValue4 = buffer.readu8(lookupCharacterToValue, buffer.readu8(input, lastInputIndex + 3))
-
-                local lastChunk = bit32.bor(
-                    bit32.lshift(lastValue1, 18),
-                    bit32.lshift(lastValue2, 12),
-                    bit32.lshift(lastValue3, 6),
-                    lastValue4
-                )
-
-                if inputPadding <= 2 then
-                    local lastCharacter1 = bit32.rshift(lastChunk, 16)
-                    buffer.writeu8(output, lastOutputIndex, lastCharacter1)
-
-                    if inputPadding <= 1 then
-                        local lastCharacter2 = bit32.band(bit32.rshift(lastChunk, 8), 0b11111111)
-                        buffer.writeu8(output, lastOutputIndex + 1, lastCharacter2)
-
-                        if inputPadding == 0 then
-                            local lastCharacter3 = bit32.band(lastChunk, 0b11111111)
-                            buffer.writeu8(output, lastOutputIndex + 2, lastCharacter3)
-                        end
-                    end
-                end
-            end
-
-            return output
-        end
-
-        return {
-            encode = encode,
-            decode = decode,
-        }
-    end)()
-
     local Zstd=(function()
-            local HttpService = game:GetService("HttpService")
-            local Zstd = {}
+        local HttpService = game:GetService("HttpService")
+        local EncodingService = game:GetService("EncodingService")
+        local Zstd = {}
 
-            Zstd.Compress = function(String)
-                local Compressed = buffer.fromstring(String)
-                local Encoded = HttpService:JSONEncode(Compressed)
-                local zB64 = Encoded:match('"zbase64":"(.-)"')
-                local B64 = Encoded:match('"base64":"(.-)"')
-                
-                if B64 then
-                    return error("String passed is too short to compress.")
-                end
-                
-                if zB64 then
-                    return buffer.tostring(Base64.decode(buffer.fromstring(zB64)))
-                end
-                
-                return error("Failed to utilize Roblox's internal zstd compression algorithm by JSONEncoding a buffer. If you get this error, this feature may not be removed.")
-            end
+        Zstd.CompressBuffer = function(Buffer, CompressionLevel)
+            return EncodingService:CompressBuffer(Buffer, Enum.CompressionAlgorithm.Zstd, CompressionLevel)
+        end
 
-            Zstd.Decompress = function(String)
-                local Encoded = Base64.encode(buffer.fromstring(String))
-                local ReconstructedJSON = [[{"m": null, "t": "buffer", "zbase64": "]] .. buffer.tostring(Encoded) .. [["}]]
-                local OriginalBuffer = HttpService:JSONDecode(ReconstructedJSON)
-                
-                return buffer.tostring(OriginalBuffer)
-            end
+        Zstd.DecompressBuffer = function(Buffer)
+            return EncodingService:DecompressBuffer(Buffer, Enum.CompressionAlgorithm.Zstd)
+        end
 
-            return Zstd
+        Zstd.Compress = function(String, CompressionLevel)
+            local Buffer = buffer.fromstring(String)
+            
+            return buffer.tostring(Zstd.CompressBuffer(Buffer, CompressionLevel))
+        end
+
+        Zstd.Decompress = function(String)
+            local Buffer = buffer.fromstring(String)
+
+            return buffer.tostring(Zstd.DecompressBuffer(Buffer))
+        end
+
+        return Zstd
     end)()
 
     local Base94=(function()
@@ -5671,7 +5501,6 @@ local Encoders=(function()
 
     return {
         ["Zstd"]=Zstd,
-        ["Base64"]=Base64,
         ["Base94"]=Base94,
         ["Zlib"]=Zlib,
     }
@@ -5867,14 +5696,14 @@ local NewCompress = (function()
         end
     })
 
-    Compressor.Compress = function(String)
+    Compressor.Compress = function(String, CompressionLevel)
         local Cached = Cache[String]
 
         if Cached then
             return Cached
         end
 
-        local Compressed = ZStd.Compress(String)
+        local Compressed = ZStd.Compress(String, CompressionLevel)
 
         Cache[String] = Compressed
 
@@ -5907,12 +5736,6 @@ local PropertyCompressionCount = 0 -- resets every mapping session, make sure to
 local Minstance = {}
 
 local InstanceCreationInternalHooks = {}
-
-local hasSourcePerms=pcall(function()
-    Instance_new("Script").Source=[[--hi hello]]
-end)
-
-print(`hasSourcePerms {hasSourcePerms}`)
 
 local __index = function(Object, Index)
 	return Object[Index]
@@ -6071,10 +5894,6 @@ CreateInstanceMap = function(TargetInstance, IncludeDescendants, PrintProcess, M
 		InstanceReferenceCache[ClassName] = FreshInstance
 	end
 
-    if ClassName=="Script" and hasSourcePerms then
-        TargetInstance:SetAttribute("Source",__index(TargetInstance,"Source"))
-    end
-
 	for _, Property in ipairs(PropertiesOfClass) do
 		if DisallowedProperties then
 			local List = DisallowedProperties[ClassName]
@@ -6101,7 +5920,8 @@ CreateInstanceMap = function(TargetInstance, IncludeDescendants, PrintProcess, M
 					local ShortenedProperty = PropertyCompression[Property]
 					
 					if not ShortenedProperty then
-						PropertyCompressionCount+=1
+						PropertyCompressionCount += 1
+						
 						PropertyCompression[Property] = PropertyCompressionCount
 						ShortenedProperty = PropertyCompressionCount
 					end
@@ -6281,9 +6101,9 @@ ReverseInstanceMap = function(Map, ParentOfInstance, DeserializeMeshPartsProperl
 	TemporaryCacheTable[Map] = MainInstance
 	
 	if CallbackTable then
-        for _,func in CallbackTable do
-            func(MainInstance)
-        end
+		for _,func in CallbackTable do
+			func(MainInstance)
+		end
 	end
 
 	if ParentOfInstance then
@@ -6345,15 +6165,15 @@ ReverseInstanceMap = function(Map, ParentOfInstance, DeserializeMeshPartsProperl
 						if CachedInstance then
 							SafelySetProperty(PropertyName, CachedInstance)
 						else
-                            local function callback(GotInstance)
-                                SafelySetProperty(PropertyName, GotInstance)
-                            end
-
-                            if CurrentlyPointingTo.Callbacks then
-                                table.insert(CurrentlyPointingTo.Callbacks,callback)
-                            else
-							    CurrentlyPointingTo.Callbacks = {callback}
-                            end
+							local function Callback(GotInstance)
+								SafelySetProperty(PropertyName, GotInstance)
+							end
+							
+							if CurrentlyPointingTo.Callbacks then
+								table_insert(CurrentlyPointingTo.Callbacks, Callback)
+							else
+								CurrentlyPointingTo.Callbacks = {Callback}
+							end
 						end
 					else
 						ThrowToConsole(`Skipped setting property "{PropertyName}" to Instance "{tostring(MainInstance)}" because it was trying to find the Instance that the property was referencing to but could not find it.`)
@@ -6389,6 +6209,7 @@ end
 Minstance.SerializeInstance = function(TargetInstance: Instance, SerializationSettings: {
 	IncludeDescendants: boolean,
 	CompressSerializedData: boolean,
+	CompressionLevel: number,
 	EncodeInBase94: boolean,
 	AnnoyingConsolePrints: boolean,
 	UseLegacySlowCompressor: boolean,
@@ -6396,11 +6217,12 @@ Minstance.SerializeInstance = function(TargetInstance: Instance, SerializationSe
 	DisallowedProperties: {[string]: {[string]: any} } | nil
 	})
 	
-	local IncludeDescendants, CompressSerializedData, EncodeInBase94, AnnoyingConsolePrints, UseLegacySlowCompressor, IncludeAttributes, DisallowedProperties, StartBenchmarkTime
+	local StartBenchmarkTime
 
 	local DefaultSerializationSettings = {
 		IncludeDescendants = true,
 		CompressSerializedData = true,
+		CompressionLevel = 8, -- seems to be the sweet spot to balance performance and compression ratio
 		EncodeInBase94 = false,
 		AnnoyingConsolePrints = false,
 		UseLegacySlowCompressor = false,
@@ -6414,23 +6236,12 @@ Minstance.SerializeInstance = function(TargetInstance: Instance, SerializationSe
 		-- }
 	}
 
-	if not SerializationSettings then
-		SerializationSettings = DefaultSerializationSettings
-	end
-	
-	for Setting in pairs(DefaultSerializationSettings) do
-		if SerializationSettings[Setting] == NULL then
-			return ThrowToConsole(`Please provide add all settings to SerializationSettings. Missing "{Setting}".`, 2)
+	local Settings = SerializationSettings or {}
+	for Setting, DefaultValue in pairs(DefaultSerializationSettings) do
+		if Settings[Setting] == NULL then
+			Settings[Setting] = DefaultValue
 		end
 	end
-	
-	IncludeDescendants = SerializationSettings.IncludeDescendants
-	CompressSerializedData = SerializationSettings.CompressSerializedData
-	EncodeInBase94 = SerializationSettings.EncodeInBase94
-	AnnoyingConsolePrints = SerializationSettings.AnnoyingConsolePrints
-	UseLegacySlowCompressor = SerializationSettings.UseLegacySlowCompressor
-	IncludeAttributes = SerializationSettings.IncludeAttributes
-	DisallowedProperties = SerializationSettings.DisallowedProperties
 
 	if not ReflectionServiceWrapper.IsApiInitialized() then
 		return ThrowToConsole(`There was a problem with initalizing the API and Minstance can not serialize an Instance. Please get in contact with @WalletOverflow in Roblox and let them know about this, and please show recent console errors coming from this module.`, 2)
@@ -6444,53 +6255,53 @@ Minstance.SerializeInstance = function(TargetInstance: Instance, SerializationSe
 		return ThrowToConsole(`Instance "{TargetInstance:GetFullName()}" ({TargetInstance.ClassName}) is not creatable and can not be serialized.`, 2)
 	end
 
-	if AnnoyingConsolePrints then
+	if Settings.AnnoyingConsolePrints then
 		ThrowToConsole(`You are seeing this because AnnoyingConsolePrints setting was set to true in SerializationSettings.`)
 		ThrowToConsole(`Target Instance: "{TargetInstance:GetFullName()}" ({TargetInstance.ClassName}) ({tostring(#TargetInstance:GetDescendants())} descendants)`)
 		ThrowToConsole(`Mapping Instance...`)
 
 		StartBenchmarkTime = os_clock()
 	end
-	
+
 	if PropertyCompressionCount > 0 then
 		PropertyCompressionCount = 0
 	end
 
-	local MainMap = CreateInstanceMap(TargetInstance, IncludeDescendants, AnnoyingConsolePrints, TargetInstance, IncludeAttributes, DisallowedProperties)
-	
+	local MainMap = CreateInstanceMap(TargetInstance, Settings.IncludeDescendants, Settings.AnnoyingConsolePrints, TargetInstance, Settings.IncludeAttributes, Settings.DisallowedProperties)
+
 	if PropertyCompressionCount > 0 then
 		PropertyCompressionCount = 0
 	end
-	
-	if AnnoyingConsolePrints then
-		if IncludeDescendants then
+
+	if Settings.AnnoyingConsolePrints then
+		if Settings.IncludeDescendants then
 			ThrowToConsole(string_format(`Finished serializing/mapping "{TargetInstance:GetFullName()}" (and {tostring(#TargetInstance:GetDescendants())} descendants) in %.4fs!`, os_clock() - StartBenchmarkTime))
 		else
 			ThrowToConsole(string_format(`Finished serializing/mapping "{TargetInstance:GetFullName()}" in %.4fs!`, os_clock() - StartBenchmarkTime))
 		end
 	end
-	
+
 	local BinaryEncoded = BufferEncoder.write(MainMap, nil, nil, true)
 
-	if not CompressSerializedData then
-		if EncodeInBase94 then
+	if not Settings.CompressSerializedData then
+		if Settings.EncodeInBase94 then
 			return buffer_tostring(Base94.encode(BinaryEncoded))
 		else
 			return buffer_tostring(BinaryEncoded)
 		end
 	else
-		if AnnoyingConsolePrints then
+		if Settings.AnnoyingConsolePrints then
 			ThrowToConsole(`Attempting to compress serialized data...`)
 			StartBenchmarkTime = os_clock()
 		end
-		
+
 		local BinaryEncodedString = buffer_tostring(BinaryEncoded)
 
-		if UseLegacySlowCompressor then
-			if EncodeInBase94 then
+		if Settings.UseLegacySlowCompressor then
+			if Settings.EncodeInBase94 then
 				local FinalCompressedData = OldCompress.Compress(BinaryEncodedString)
 
-				if AnnoyingConsolePrints then
+				if Settings.AnnoyingConsolePrints then
 					ThrowToConsole(string_format(`Finished compressing & encoding serialized data in %.4fs!`, os_clock() - StartBenchmarkTime))
 					ThrowToConsole(`Serialized data character count before compression: {#BinaryEncodedString}`)
 					ThrowToConsole(`Serialized data character count after compression: {#FinalCompressedData}`)
@@ -6498,9 +6309,9 @@ Minstance.SerializeInstance = function(TargetInstance: Instance, SerializationSe
 
 				return FinalCompressedData
 			else
-				local FinalCompressedData = OldCompress.CompressNoEncoding(BinaryEncodedString)
+				local FinalCompressedData = OldCompress.CompressNoEncoding(BinaryEncodedString, Settings.CompressionLevel)
 
-				if AnnoyingConsolePrints then
+				if Settings.AnnoyingConsolePrints then
 					ThrowToConsole(string_format(`Finished compressing serialized data in %.4fs!`, os_clock() - StartBenchmarkTime))
 					ThrowToConsole(`Serialized data character count before compression: {#BinaryEncodedString}`)
 					ThrowToConsole(`Serialized data character count after compression: {#FinalCompressedData}`)
@@ -6509,39 +6320,25 @@ Minstance.SerializeInstance = function(TargetInstance: Instance, SerializationSe
 				return FinalCompressedData
 			end
 		else
-			local Success, Compressed = pcall(function()
-				return NewCompress.Compress(BinaryEncodedString)
-			end)
-			
-			if not Success then
-				if Compressed:match("String passed is too short to compress.") then -- TODO: implemetn proper fix and not this bandaid solution just beacause i have to sleep soon
-					-- TODO: implemetn proper fix and not this bandaid solution just beacause i have to sleep soon
-					MainMap[string.rep("a", 20)] = true
-					BinaryEncoded = BufferEncoder.write(MainMap, nil, nil, true)
-					BinaryEncodedString = buffer_tostring(BinaryEncoded)
-					Compressed = NewCompress.Compress(BinaryEncodedString)
-				else
-					return error(Compressed)
-				end
-			end
-			
-			if EncodeInBase94 then
+			local Compressed = NewCompress.Compress(BinaryEncodedString, Settings.CompressionLevel)
+
+			if Settings.EncodeInBase94 then
 				local Base94Encoded = buffer_tostring(Base94.encode(buffer_fromstring(Compressed)))
-				
-				if AnnoyingConsolePrints then
+
+				if Settings.AnnoyingConsolePrints then
 					ThrowToConsole(string_format(`Finished compressing & encoding serialized data in %.4fs!`, os_clock() - StartBenchmarkTime))
 					ThrowToConsole(`Serialized data character count before compression: {#BinaryEncodedString}`)
 					ThrowToConsole(`Serialized data character count after compression: {#Base94Encoded}`)
 				end
-				
+
 				return Base94Encoded
 			else
-				if AnnoyingConsolePrints then
+				if Settings.AnnoyingConsolePrints then
 					ThrowToConsole(string_format(`Finished compressing serialized data in %.4fs!`, os_clock() - StartBenchmarkTime))
 					ThrowToConsole(`Serialized data character count before compression: {#BinaryEncodedString}`)
 					ThrowToConsole(`Serialized data character count after compression: {#Compressed}`)
 				end
-				
+
 				return Compressed
 			end
 		end
@@ -6556,9 +6353,9 @@ Minstance.DeserializeInstance = function(SerializedData: string, Deserialization
 	ProperlyDeserializeMeshParts: boolean,
 	ParentInstanceWhileDeserializing: Instance?
 	})
-	
-	local IsDataCompressed, IsBase94Encoded, AnnoyingConsolePrints, IsCompressedWithLegacyCompressor, ProperlyDeserializeMeshParts, ParentInstanceWhileDeserializing, StartBenchmarkTime, MainMap
-	
+
+	local StartBenchmarkTime, MainMap
+
 	local DefaultDeserializationSettings = {
 		IsDataCompressed = true,
 		IsBase94Encoded = false,
@@ -6567,23 +6364,13 @@ Minstance.DeserializeInstance = function(SerializedData: string, Deserialization
 		ProperlyDeserializeMeshParts = false, -- load mesh parts, if off then put mesh put but not load content
 		ParentInstanceWhileDeserializing = NULL
 	}
-	
-	if not DeserializationSettings then
-		DeserializationSettings = DefaultDeserializationSettings
-	end
-	
-	for Setting in pairs(DefaultDeserializationSettings) do
-		if DeserializationSettings[Setting] == NULL then
-			return ThrowToConsole(`Please provide add all settings to SerializationSettings. Missing "{Setting}".`, 2)
+
+	local Settings = DeserializationSettings or {}
+	for Setting, DefaultValue in pairs(DefaultDeserializationSettings) do
+		if Settings[Setting] == NULL then
+			Settings[Setting] = DefaultValue
 		end
 	end
-
-	IsDataCompressed = DeserializationSettings.IsDataCompressed
-	IsBase94Encoded = DeserializationSettings.IsBase94Encoded
-	AnnoyingConsolePrints = DeserializationSettings.AnnoyingConsolePrints
-	IsCompressedWithLegacyCompressor = DeserializationSettings.IsCompressedWithLegacyCompressor
-	ProperlyDeserializeMeshParts = DeserializationSettings.ProperlyDeserializeMeshParts
-	ParentInstanceWhileDeserializing = DeserializationSettings.ParentInstanceWhileDeserializing
 
 	if not ReflectionServiceWrapper.IsApiInitialized() then
 		return ThrowToConsole(`There was a problem with initalizing the API and Minstance can not deserialize an Instance. Please get in contact with @WalletOverflow in Roblox and let them know about this, and please show recent console errors coming from this module.`, 2)
@@ -6593,16 +6380,16 @@ Minstance.DeserializeInstance = function(SerializedData: string, Deserialization
 		return ThrowToConsole(`Invalid first argument passed into DeserializeInstance! Expected: string`, 2)
 	end
 
-	if AnnoyingConsolePrints then
+	if Settings.AnnoyingConsolePrints then
 		ThrowToConsole(`You are seeing this because AnnoyingConsolePrints setting was set to true in SerializationSettings.`)
 		ThrowToConsole(`Processing serialized data...`)
 
 		StartBenchmarkTime = os_clock()
 	end
 
-	if IsDataCompressed then
-		if IsCompressedWithLegacyCompressor then
-			if IsBase94Encoded then
+	if Settings.IsDataCompressed then
+		if Settings.IsCompressedWithLegacyCompressor then
+			if Settings.IsBase94Encoded then
 				local BinaryFormat = OldCompress.Decompress(SerializedData)
 
 				MainMap = BufferEncoder.read(buffer_fromstring(BinaryFormat), nil, nil, true)
@@ -6612,7 +6399,7 @@ Minstance.DeserializeInstance = function(SerializedData: string, Deserialization
 				MainMap = BufferEncoder.read(buffer_fromstring(BinaryFormat), nil, nil, true)
 			end
 		else
-			if IsBase94Encoded then
+			if Settings.IsBase94Encoded then
 				local Base94Decoded = buffer_tostring(Base94.decode(buffer_fromstring(SerializedData)))
 				local BinaryFormat = NewCompress.Decompress(Base94Decoded)
 
@@ -6624,7 +6411,7 @@ Minstance.DeserializeInstance = function(SerializedData: string, Deserialization
 			end
 		end
 	else
-		if IsBase94Encoded then
+		if Settings.IsBase94Encoded then
 			local BinaryBuffer = Base94.decode(buffer_fromstring(SerializedData))
 
 			MainMap = BufferEncoder.read(BinaryBuffer, nil, nil, true)
@@ -6633,19 +6420,19 @@ Minstance.DeserializeInstance = function(SerializedData: string, Deserialization
 		end
 	end
 
-	if AnnoyingConsolePrints then
+	if Settings.AnnoyingConsolePrints then
 		ThrowToConsole(string_format(`Finished processing serialized data in %.4fs!`, os_clock() - StartBenchmarkTime))
 		ThrowToConsole(`Attempting to demap/deserialize serialized data into Instance...`)
 
 		StartBenchmarkTime = os_clock()
 	end
-	
+
 	local MapReversalCache = {}
-	local MainInstance = ReverseInstanceMap(MainMap, ParentInstanceWhileDeserializing, ProperlyDeserializeMeshParts, MainMap, MapReversalCache)
-	
+	local MainInstance = ReverseInstanceMap(MainMap, Settings.ParentInstanceWhileDeserializing, Settings.ProperlyDeserializeMeshParts, MainMap, MapReversalCache)
+
 	table_clear(MapReversalCache)
 
-	if AnnoyingConsolePrints then
+	if Settings.AnnoyingConsolePrints then
 		ThrowToConsole(string_format(`Finished demapping/deserializing serialized data into an Instance in %.4fs!`, os_clock() - StartBenchmarkTime))
 	end
 
