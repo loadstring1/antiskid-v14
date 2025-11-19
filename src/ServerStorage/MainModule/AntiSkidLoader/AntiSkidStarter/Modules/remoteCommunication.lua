@@ -134,7 +134,7 @@ local function client()
 
 	local function connectEvents(rem)
 		local function sendRefit()
-			task.spawn(cInvokeServer,rem,{method="refit",key=funcs.remoteKey})
+			task.spawn(pcall,cInvokeServer,rem,{method="refit",key=funcs.remoteKey})
 			table.remove(remotes,table.find(remotes,rem))
 		end
 	
