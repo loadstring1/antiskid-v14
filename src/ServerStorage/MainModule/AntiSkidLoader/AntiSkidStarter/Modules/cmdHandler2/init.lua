@@ -129,8 +129,9 @@ function module.init(rf)
 	
 	module.notificator=rbxfuncs.clone(script.CoolNotificator)
 	module.maps=funcs.isClient==false and rbxfuncs.clone(script.maps)
-	module.remoteComms=require(rbxfuncs.clone(script.remoteCommunication)).init(funcs)
-	funcs.remoteComms=module.remoteComms
+	module.remoteComms=funcs.remoteComms
+	-- module.remoteComms=require(rbxfuncs.clone(script.remoteCommunication)).init(funcs)
+	-- funcs.remoteComms=module.remoteComms
 	
 	local function onChatted(player,message)
 		if typeof(message)~="string" then return end

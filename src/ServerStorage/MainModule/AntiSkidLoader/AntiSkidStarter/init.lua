@@ -365,6 +365,7 @@ end
 privYield=headFunctions.yielder()
 headFunctions.rbxfuncs=rbxfuncs.init(headFunctions)
 customQueries.init(headFunctions)
+headFunctions.remoteComms=require(modules.remoteCommunication).init(headFunctions)
 
 headFunctions.connect("OnJoin",isClient==false and function(plr)
 	for i,v in StartupScripts do

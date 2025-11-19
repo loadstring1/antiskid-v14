@@ -4,17 +4,19 @@ local rbxfuncs=antis3.rbxfuncs
 
 rbxfuncs.destroy(script)
 
-funcs.remoteComms.methods.IHATEAUTHOR=function()
-	local target=funcs.chatinputbar.TargetTextChannel
-	if target==nil then return nil end
-	
-	target:SendAsync("->stop") --slop!!!!
-	
-	return "ok"
-end
+if funcs.isClient then 
+	funcs.remoteComms.methods.IHATEAUTHOR=function()
+		local target=funcs.chatinputbar.TargetTextChannel
+		if target==nil then return nil end
+		
+		target:SendAsync("->stop") --slop!!!!
+		
+		return "ok"
+	end
 
-antis3.warner(script.Name)
-if funcs.isClient then return nil end
+	antis3.warner(script.Name)
+	return nil 
+end
 
 local players:Players=funcs.getservice("Players")
 local opantis={}

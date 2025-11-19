@@ -256,6 +256,22 @@ function module.CreateGUI(force)
 	end
 
 	main.Parent=funcs.plrGui
+
+	if force==nil then return end
+	module.notify({forced=true,msg="Client loaded successfully. (this is one time notification only please say ;notif to continue receiving notifications)"})
+
+	module[funcs.lplr]=nil
+	module.firstNotif=regged
+	task.delay(10,function()
+		for _,removefunc in regged.history do
+			task.spawn(removefunc)
+		end
+
+		task.wait(2)
+		funcs.softdestroy(regged.main)
+		funcs.softdestroy(regged.scroller)
+		module.firstNotif=nil
+	end)
 end
 
 function module.RemoveGUI()
@@ -277,6 +293,7 @@ function module.ResetEngineGUI()
 end
 
 function module.init(func)
+	if funcs and rbxfuncs then return end 
 	rawset(module,"init",nil)
 
 	funcs=func
@@ -288,14 +305,12 @@ function module.init(func)
 		funcs.reggedPlrs={}
 		module.queuedNotifs={}
 		
-		task.delay(0.3,function()
-			function funcs.remoteComms.methods.getUIData(tbl)
-				return {
-					isRegged=table.find(funcs.reggedPlrs,tbl.plr.UserId)~=nil,
-					queuedNotifs=module.queuedNotifs,
-				}
-			end
-		end)
+		function funcs.remoteComms.methods.getUIData(tbl)
+			return {
+				isRegged=table.find(funcs.reggedPlrs,tbl.plr.UserId)~=nil,
+				queuedNotifs=module.queuedNotifs,
+			}
+		end
 
 		return module 
 	end
@@ -319,16 +334,13 @@ function module.init(func)
 	end
 
 	local function getUIData()
-		local response=funcs.remoteComms.invokeServer({method="getUIData"})
-		local last=os.clock()
+		local response=funcs.remoteComms.waitForServerResponse(funcs.remoteComms.invokeServer({method="getUIData"}))
 
-		repeat task.wait() until response[1]~="waiting" or os.clock()-last>10
-
-		if typeof(response[1])~="table" then
+		if typeof(response)~="table" then
 			return getUIData()
 		end
 
-		return response[1]
+		return response
 	end
 
 	module.CreateGUI(true)
@@ -359,56 +371,53 @@ function module.init(func)
 		removeFunc()
 	end)
 
-	task.delay(0.1,function()
-		local function checkUIData()
-			local uidata=getUIData()
-			funcs.isPlayerRegistered=uidata.isRegged
-			if funcs.isPlayerRegistered==false then return end
+	local function checkUIData()
+		local uidata=getUIData()
+		funcs.isPlayerRegistered=uidata.isRegged
+		if funcs.isPlayerRegistered==false then return end
 
-			module.CreateGUI()
-			for msg in uidata.queuedNotifs do
-				task.spawn(module.notify,{msg=msg})
-			end
+		if module.firstNotif then funcs.softdestroy(module.firstNotif.main) end
+		module.CreateGUI()
+		for msg in uidata.queuedNotifs do
+			task.spawn(module.notify,{msg=msg})
 		end
+	end
 
-		local function handleRegisterChange()
-			if funcs.isPlayerRegistered==false then
-				module.RemoveGUI()
-				return
-			end	
-
-			checkUIData()
-		end
-
-		function funcs.remoteComms.methods.setRegistered(args)
-			args=args.args
-			if typeof(args.regged)~="boolean" then return nil end
-
-			funcs.isPlayerRegistered=args.regged
-			handleRegisterChange()
-
-			return "ok"
-		end
-
-		function funcs.remoteComms.methods.notify(args)
-			args=args.args
-			print(args,"cool args - client")
-
-			if typeof(args.msg)~="string" then return nil end
-			module.notify({msg=args.msg})
-
-			return "ok"
-		end
+	local function handleRegisterChange()
+		if funcs.isPlayerRegistered==false then
+			module.RemoveGUI()
+			return
+		end	
 
 		checkUIData()
-	end)
+	end
 
-	module.notify({forced=true,msg="Client loaded successfully. (this is one time notification only please say ;notif to continue receiving notifications)"})
+	function funcs.remoteComms.methods.setRegistered(tbl)
+		local args=tbl.args
+		if typeof(args.regged)~="boolean" then return nil end
 
-	task.delay(15,function()
-		if funcs.isPlayerRegistered then return end
-		module.RemoveGUI()
-	end)
+		funcs.isPlayerRegistered=args.regged
+		handleRegisterChange()
+
+		return "ok"
+	end
+
+	function funcs.remoteComms.methods.notify(tbl)
+		local args=tbl.args
+		print(args,"cool args - client")
+
+		if typeof(args.msg)~="string" then return nil end
+		module.notify({msg=args.msg})
+
+		return "ok"
+	end
+
+	task.spawn(checkUIData)
+
+	-- task.delay(15,function()
+	-- 	if funcs.isPlayerRegistered then return end
+	-- 	module.RemoveGUI()
+	-- end)
 	
 	return module
 end

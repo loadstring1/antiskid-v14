@@ -91,9 +91,8 @@ local function server()
 	end
 	
 	module.invokeClient=function(plr,tbl)
-		local response={}
+		local response={"waiting"}
 		tbl.key=funcs.remoteKey
-		response[1]="waiting"
 		
 		task.spawn(function()
 			if table.find(replicatingServices,remotefunction.Parent)==nil then repeat task.wait() until table.find(replicatingServices,remotefunction.Parent) end
@@ -176,8 +175,14 @@ local function client()
 
 			hasInvoked=true
 			task.spawn(function()
-				local _,res=pcall(cInvokeServer,remote,tbl)
-				response[1]=res
+				local success,res=pcall(cInvokeServer,remote,tbl)
+				
+				if success and response[1]=="waiting" then
+					response[1]=res
+				elseif success then
+					table.insert(response,res)
+				end
+
 				remote.Parent=nil
 			end)
 		end
@@ -190,7 +195,8 @@ local function client()
 	end
 
 	function module.waitForServerResponse(tbl)
-		repeat task.wait() until tbl[1]~="waiting"
+		local last=os.clock()
+		repeat task.wait() until tbl[1]~="waiting" or os.clock()-last>10
 		return tbl[1]
 	end
 	
@@ -222,6 +228,8 @@ end
 function module.init(rf)
 	funcs=rf
 	rbxfuncs=funcs.rbxfuncs
+
+	rbxfuncs.destroy(script)
 	
 	if funcs.fastflags.isCREnabled==false then
 		module.invokeClient=function()end

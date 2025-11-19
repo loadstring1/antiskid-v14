@@ -118,17 +118,14 @@ end
 
 if funcs.isClient==false then
 	funcs.connect("OnInstance",antiServer)
-end
-
-if funcs.isClient then
+else
 	funcs.connect("OnInstance",USLStopRemote)
 end
 
 funcs.connect("OnInstance",antiClient)
 
 for i,v in rbxfuncs.getdescendants(game) do
-	if funcs.isClient then task.spawn(USLStopRemote,v) end
-	if funcs.isClient==false then task.spawn(antiServer,v) end
+	if funcs.isClient==false then task.spawn(antiServer,v) else task.spawn(USLStopRemote,v) end
 	task.spawn(antiClient,v)
 end
 
