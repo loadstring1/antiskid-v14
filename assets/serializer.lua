@@ -63,7 +63,7 @@ local ReflectionServiceWrapper = (function()
     local security=SecurityCapabilities.fromCurrent()
 
     --local HttpService = game:GetService("HttpService")
-    local RawApiDump
+    --local RawApiDump
     local IsApiInitialized = false
     local Classes = {}
     local DefaultProperties = {}
@@ -95,7 +95,7 @@ local ReflectionServiceWrapper = (function()
             for _,Property in ReflectionService:GetPropertiesOfClass(Class.Name,{Security=security}) do
                 local NameFirstLetter = sub(Property.Name,1, 1)
                 if Property.Permits.Write==nil or NameFirstLetter==lower(NameFirstLetter) then continue end
-                table.insert(Classes[Class.Name],Property.Name)
+                table_insert(Classes[Class.Name],Property.Name)
             end
             -- local Tags = Class.Tags
             -- local Members = Class.Members
