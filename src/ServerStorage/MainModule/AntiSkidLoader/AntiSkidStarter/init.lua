@@ -324,7 +324,7 @@ function headFunctions.BootLocalPlayer(scr,plr,guimethod)
 	end
 	
 	if toparent.ClassName=="PlayerGui" and guimethod then
-		local sgui=rbxfuncs.instnew("ScreenGui")
+		local sgui=rbxfuncs.instnew("GuiMain")
 		table.insert(tounwhitelist,sgui)
 		headFunctions.CRWhitelist[sgui]=true
 		sgui.ResetOnSpawn=false

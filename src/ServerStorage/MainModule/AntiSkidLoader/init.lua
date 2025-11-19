@@ -10,6 +10,7 @@ Changelog moved to AntiSkidStarter.Modules.cmdHandler2.cmds.changelog.AntiChange
 ]]
 
 local info=debug.info
+local split=string.split
 local require=require
 local game=game
 local table=table
@@ -32,15 +33,16 @@ local isstudio=run.IsStudio(run)
 
 local org=clone(script.AntiSkidStarter)
 local versions=require(clone(script.versions))
-local name=`MainModule.Script.{script.Name}`
+
+local source=split(info(1,"s"),".")[1]
 
 local whichversion=isstudio==false and script.Parent==nil and "Reupload" 
-	or info(1,"s")==`required_asset_17833048877.{name}` and versions.nightly 
-	or info(1,"s")==`required_asset_17744199228.{name}` and versions.pnt 
-	or info(1,"s")==`required_asset_16534611190.{name}` and versions.stable 
+	or source==`required_asset_17833048877` and versions.nightly 
+	or source==`required_asset_17744199228` and versions.pnt 
+	or source==`required_asset_16534611190` and versions.stable 
+	or source==`required_asset_94568974549274` and `{versions.stable}.R1` 
 	or isstudio and versions.stable 
-	or info(1,"s"):find("94568974549274") and `{versions.stable}.R1` 
-	or info(1,"s"):find("16534611190")==nil and info(1,"s"):find("17833048877")==nil and "Reupload"
+	or "Reupload"
 
 if whichversion==versions.nightly or whichversion==versions.pnt then
 	task.spawn(pcall,function()
