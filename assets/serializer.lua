@@ -1,6 +1,7 @@
 --!native
 --!optimize 2
---!strict
+--!nocheck
+--!nolint
 
 -- localize luau api functions for faster access, avoid having to invoke the internal metamethods to fetch a function like "new" from Instance (Instance.new)
 local Instance_new = Instance.new
