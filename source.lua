@@ -190,6 +190,8 @@ function funcs.timeoutBypassLoop(tbl,func)
     end
 end
 
+table.freeze(funcs)
+
 local antis={}
 local commands={}
 local supportedCommandSyntax={

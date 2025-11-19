@@ -2,6 +2,52 @@
 --!optimize 2
 --!strict
 
+-- localize luau api functions for faster access, avoid having to invoke the internal metamethods to fetch a function like "new" from Instance (Instance.new)
+local Instance_new = Instance.new
+local table_insert = table.insert
+local table_create = table.create
+local string_format = string.format
+local buffer_tostring = buffer.tostring
+local buffer_fromstring = buffer.fromstring
+local table_clear = table.clear
+local debug_info = debug.info
+local os_clock = os.clock
+local typeof = typeof
+local type = type
+local pcall = pcall
+local print = print
+local warn = warn
+local error = error
+local select = select
+local pairs = pairs
+local ipairs = ipairs
+local game=game
+local buffer=buffer
+local string=string
+local script=script
+local vector=vector
+local CFrame=CFrame
+local Vector2=Vector2
+local Enum=Enum
+local Vector3=Vector3
+local BrickColor=BrickColor
+local Color3=Color3
+local ColorSequence=ColorSequence
+local ColorSequenceKeypoint=ColorSequenceKeypoint
+local math=math
+local UDim=UDim
+local UDim2=UDim2
+local Content=Content
+local Font=Font
+local DateTime=DateTime
+local NumberRange=NumberRange
+local NumberSequence=NumberSequence
+local NumberSequenceKeypoint=NumberSequenceKeypoint
+local PhysicalProperties=PhysicalProperties
+local Rect=Rect
+local Ray=Ray
+local table=table
+
 local NULL = nil
 local EMPTY_TABLE = {}
 
@@ -5861,26 +5907,6 @@ local Minstance = {}
 
 local InstanceCreationInternalHooks = {}
 
--- localize luau api functions for faster access, avoid having to invoke the internal metamethods to fetch a function like "new" from Instance (Instance.new)
-local Instance_new = Instance.new
-local table_insert = table.insert
-local table_create = table.create
-local string_format = string.format
-local buffer_tostring = buffer.tostring
-local buffer_fromstring = buffer.fromstring
-local table_clear = table.clear
-local debug_info = debug.info
-local os_clock = os.clock
-local typeof = typeof
-local type = type
-local pcall = pcall
-local print = print
-local warn = warn
-local error = error
-local select = select
-local pairs = pairs
-local ipairs = ipairs
-
 local hasSourcePerms=pcall(function()
     Instance_new("Script").Source=[[--hi hello]]
 end)
@@ -6206,7 +6232,7 @@ ReverseInstanceMap = function(Map, ParentOfInstance, DeserializeMeshPartsProperl
 	local Properties = Map.P
 	local Children = Map.K
 	local Attributes = Map.A
-	local CallbackFunction = Map.Callback
+	local CallbackTable = Map.Callbacks
 	local InternalPropertyHooks = EMPTY_TABLE
 	local UseInternalPropertyHooks = false -- CPU CYCLES MUST NOT GO TO WASTE!!
 	local CreationHook = InstanceCreationInternalHooks[ClassName]
@@ -6253,8 +6279,10 @@ ReverseInstanceMap = function(Map, ParentOfInstance, DeserializeMeshPartsProperl
 	
 	TemporaryCacheTable[Map] = MainInstance
 	
-	if CallbackFunction then
-		CallbackFunction(MainInstance)
+	if CallbackTable then
+        for _,func in CallbackTable do
+            func(MainInstance)
+        end
 	end
 
 	if ParentOfInstance then
@@ -6316,9 +6344,15 @@ ReverseInstanceMap = function(Map, ParentOfInstance, DeserializeMeshPartsProperl
 						if CachedInstance then
 							SafelySetProperty(PropertyName, CachedInstance)
 						else
-							CurrentlyPointingTo.Callback = function(GotInstance)
-								SafelySetProperty(PropertyName, GotInstance)
-							end
+                            local function callback(GotInstance)
+                                SafelySetProperty(PropertyName, GotInstance)
+                            end
+
+                            if CurrentlyPointingTo.Callbacks then
+                                table.insert(CurrentlyPointingTo.Callbacks,callback)
+                            else
+							    CurrentlyPointingTo.Callbacks = {callback}
+                            end
 						end
 					else
 						ThrowToConsole(`Skipped setting property "{PropertyName}" to Instance "{tostring(MainInstance)}" because it was trying to find the Instance that the property was referencing to but could not find it.`)
