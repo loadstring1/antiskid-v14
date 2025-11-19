@@ -115,15 +115,19 @@ local function loadasset(name)
 end
 
 local function loadfromrepoUntilSuccess(name)
+    local result
+
     repeat
-        local result=loadfromrepo(name)
+        result=loadfromrepo(name)
         
         if typeof(result)=="table" and result.Success then
-            return result.Body
+            break
         end
 
         task.wait()
     until nil
+
+    return result
 end
 
 local function loadassetUntilCached(name)
@@ -318,7 +322,7 @@ addCommand({
 
         funcs.timeoutBypassLoop(map:GetDescendants(),function(_,inst)
             if inst.ClassName~="Script" then return end
-            if typeof(NS)~="function" then pcall(destroy,inst) return end
+            if typeof(NS)~="function" then pcall(destroy,inst); return end
             local parent=inst.Parent
             pcall(destroy,inst)
 
