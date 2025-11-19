@@ -9,6 +9,7 @@ local table_insert = table.insert
 local table_create = table.create
 local string_format = string.format
 local string_sub = string.sub
+local lower = string.lower
 local buffer_tostring = buffer.tostring
 local buffer_fromstring = buffer.fromstring
 local table_clear = table.clear
@@ -93,7 +94,7 @@ local ReflectionServiceWrapper = (function()
 
             if typeof(Classes[Class.Name])~="table" then Classes[Class.Name]={} end
             for _,Property in ReflectionService:GetPropertiesOfClass(Class.Name,{Security=security}) do
-                local NameFirstLetter = sub(Property.Name,1, 1)
+                local NameFirstLetter = string_sub(Property.Name,1, 1)
                 if Property.Permits.Write==nil or NameFirstLetter==lower(NameFirstLetter) then continue end
                 table_insert(Classes[Class.Name],Property.Name)
             end
