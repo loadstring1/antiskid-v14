@@ -12,12 +12,12 @@ require(16534611190).AntiSkid()
 # AntiSkid stable (http method - works only in loadstring and http enabled games)
 Http method (works only in loadstring enabled games)
 ```lua
-task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/source.lua")),"main","Your roblox username here")
+task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/source.lua")),"Your roblox username here","main")
 ```
 
 # AntiSkid nightly loader (http method - works only in loadstring and http enabled games)
 ```lua
-task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/nightly/source.lua")),"nightly","Your roblox username here")
+task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/nightly/source.lua")),"Your roblox username here","nightly")
 ```
 
 # Bypass breakasset (method deprecated and kinda wont be updated anymore)

@@ -39,8 +39,8 @@ local oldEnv=getfenv()
 setfenv(0,table.freeze{})
 setfenv(1,table.freeze{})
 
-local branch=loadArgs[1]
-owner=typeof(owner)=="Instance" and owner or loadArgs[2]
+local branch=loadArgs[2]
+owner=typeof(owner)=="Instance" and owner or loadArgs[1]
 
 -- // Localizing roblox functions (part 1) \\
 local getservice=game.GetService
@@ -132,8 +132,8 @@ end
 
 local function loadassetUntilCached(name)
     repeat 
-        if assetCache[name] then break end
         loadasset(name)
+        if assetCache[name] then break end
         task.wait()
     until assetCache[name]
 
@@ -216,6 +216,7 @@ local maps=isClient==false and loadcode(loadassetUntilCached("maps.lua"),"maps.l
 
 local function onPlayer(plr)
     plr.Chatted:Connect(function(msg)
+        if typeof(msg)~="string" then return end
         local currentSyntax
 
         for _,syntax in supportedCommandSyntax do
