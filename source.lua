@@ -127,7 +127,7 @@ local function loadfromrepoUntilSuccess(name)
         task.wait()
     until nil
 
-    return result
+    return result.Body
 end
 
 local function loadassetUntilCached(name)
