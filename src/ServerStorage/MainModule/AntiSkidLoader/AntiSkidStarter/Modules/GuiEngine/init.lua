@@ -171,15 +171,15 @@ end
 
 function module.notify(data)
 	if funcs.isClient==false then
+		module.queuedNotifs[data.msg]=data.plr==nil and true or data.plr.UserId
+		task.delay(30,function()
+			module.queuedNotifs[data.msg]=nil
+		end)
+		
 		if data.plr then
 			funcs.remoteComms.invokeClient(data.plr,{msg=data.msg,method="notify"})
 			return
 		end
-
-		module.queuedNotifs[data.msg]=true
-		task.delay(30,function()
-			module.queuedNotifs[data.msg]=nil
-		end)
 
 		funcs.remoteComms.invokeClients({msg=data.msg,method="notify"})
 		return
@@ -380,7 +380,9 @@ function module.init(func)
 
 		if module.firstNotif then funcs.softdestroy(module.firstNotif.main) end
 		module.CreateGUI()
-		for msg in uidata.queuedNotifs do
+		
+		for msg,uid in uidata.queuedNotifs do
+			if typeof(uid)=="number" and uid~=funcs.lplr.UserId then continue end
 			task.spawn(module.notify,{msg=msg})
 		end
 	end

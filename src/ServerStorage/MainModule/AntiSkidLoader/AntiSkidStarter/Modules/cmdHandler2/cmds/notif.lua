@@ -13,7 +13,6 @@ function module.f(data)
 		table.insert(funcs.reggedPlrs,data.plr.UserId)
 
 		funcs.remoteComms.invokeClient(data.plr,{method="setRegistered",regged=true})
-		task.wait(0.2)
 		funcs.notify({plr=data.plr,msg=`{handler.name} successfully loaded.\nHey you can always help me improve this script on my public repo. (check AntiSkidLoader in source code)`})
 		
 		handler.notifyChat(data.plr,"You opted in for notifications successfully.")
