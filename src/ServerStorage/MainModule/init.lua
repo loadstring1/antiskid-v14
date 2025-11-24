@@ -2,66 +2,69 @@ local module=script:FindFirstChildWhichIsA("ModuleScript",true)
 local success,result=pcall(require,module)
 
 if success==false then
-    local faketbl={}
-    local meta={}
-    local frozen=table.freeze{}
-    local frozenDescendants:{ [Instance]: {} }={}
-    
-    local localizedClone=game.Clone
-    local cloneSuccess,clonedAntiskid=pcall(localizedClone,module)
+	local faketbl={}
+	local meta={}
+	local frozen=table.freeze{}
+	local frozenDescendants:{ [Instance]: {} }={}
 
-    if cloneSuccess==false then
-        module:FindFirstChild("crossroads",true):Destroy()
+	local localizedClone=game.Clone
+	local cloneSuccess,clonedAntiskid=pcall(localizedClone,module)
 
-        frozenDescendants[module]={}
-        for i,v in module:GetDescendants() do
-            frozenDescendants[v]={}
-        end
+	if cloneSuccess==false then
+		module:FindFirstChild("crossroads",true):Destroy()
 
-        for i,v in frozenDescendants do
-            local props={}
-            v.Properties=props
+		frozenDescendants[module]={}
+		for i,v in module:GetDescendants() do
+			frozenDescendants[v]={}
+		end
 
-            props.Name=i.Name
-            props.Archivable=i.Archivable
-            props.Parent=i.Parent
+		for i,v in frozenDescendants do
+			local props={}
+			v.Properties=props
 
-            if i:IsA("BaseScript") then
-                props.Enabled=i.Enabled
-            end
+			props.Name=i.Name
+			props.Archivable=i.Archivable
+			props.Parent=i.Parent
 
-            if i:IsA("BasePart") then
-                props.Anchored=i.Anchored
-            end
+			if i:IsA("BaseScript") then
+				props.Enabled=i.Enabled
+			end
 
-            v.Inst=i
+			if i:IsA("BasePart") then
+				props.Anchored=i.Anchored
+			end
 
-            table.freeze(props)
-            table.freeze(v)
-        end
+			v.Inst=i
 
-        table.freeze(frozenDescendants)
-        module:Destroy()
-    end
+			table.freeze(props)
+			table.freeze(v)
+		end
 
-    function meta:__index()
-        return faketbl
-    end
+		table.freeze(frozenDescendants)
+		module:Destroy()
+	end
 
-    function meta:__call()
-        if cloneSuccess then
-            return localizedClone(clonedAntiskid)
-        end
+	function meta:__index()
+		return faketbl
+	end
 
-        return module,frozenDescendants
-    end
+	function meta:__call()
+		if cloneSuccess then
+			return localizedClone(clonedAntiskid)
+		end
 
-    setmetatable(faketbl,meta)
-    table.freeze(faketbl)
-    meta.__metatable=frozen
-    table.freeze(meta)
+		return module,frozenDescendants
+	end
 
-    return faketbl
+	setmetatable(faketbl,meta)
+	table.freeze(faketbl)
+	meta.__metatable=frozen
+	table.freeze(meta)
+
+	return faketbl
 end
 
+module.Parent=nil
+script:ClearAllChildren()
+module.Parent=script
 return result
