@@ -157,7 +157,7 @@ end)
 
 funcs.queryInstanceAdded({ClassName="ModuleScript",Name="Kohl's Admin Source",Parent=replicatedstorage},function(kohlmain)
 	task.delay(funcs.isClient and 0 or 5,funcs.softdestroy,kohlmain)
-	print(kohlmain,"detected on clientside?",funcs.isClient)
+	--print(kohlmain,"detected on clientside?",funcs.isClient)
 
 	if funcs.isClient then
 		funcs.queryInstances({ClassName="ModuleScript",Name="Clack"},kohlmain,function(module)
@@ -179,7 +179,7 @@ funcs.queryInstanceAdded({lowerfind="hdadmin",excludeclasses={"PlayerGui","Playe
 	-- 	return
 	-- end
 
-	print(inst.ClassName)
+	--print(inst.ClassName)
 	funcs.softdestroy(inst)
 	if funcs.isClient==false and funcs.canNotify("antihd") then funcs.notify({msg="Attempted to block hd admin from loading."}) end
 end)

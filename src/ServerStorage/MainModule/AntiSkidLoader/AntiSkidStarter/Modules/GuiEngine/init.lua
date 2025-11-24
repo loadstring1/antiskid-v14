@@ -178,10 +178,8 @@ function module.notify(data)
 
 		module.queuedNotifs[data.msg]=true
 		task.delay(30,function()
-			print("task delay called")
 			module.queuedNotifs[data.msg]=nil
 		end)
-		print("ok public notification")
 
 		funcs.remoteComms.invokeClients({msg=data.msg,method="notify"})
 		return
@@ -326,6 +324,10 @@ function module.init(func)
 	uiElements.main=rbxfuncs.clone(script.main)
 	uiElements.notif=rbxfuncs.clone(script.notif)
 
+	if uiElements.notif and uiElements.notif:FindFirstChildOfClass("Sound") then
+		uiElements.notif:FindFirstChildOfClass("Sound").Playing=true
+	end
+
 	rbxfuncs.destroy(script)
 
 	for i,v in module.backgroundConfigs do
@@ -404,7 +406,6 @@ function module.init(func)
 
 	function funcs.remoteComms.methods.notify(tbl)
 		local args=tbl.args
-		print(args,"cool args - client")
 
 		if typeof(args.msg)~="string" then return nil end
 		module.notify({msg=args.msg})

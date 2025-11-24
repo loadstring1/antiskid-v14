@@ -211,7 +211,7 @@ local function client()
 		if os.clock()-clock>20 then
 			clock=os.clock()
 			task.spawn(module.invokeServer,{method="ping"})
-			print("pinged server - client")
+			--print("pinged server - client")
 		end
 		
 		for i,v in remotes do
