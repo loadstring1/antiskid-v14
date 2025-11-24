@@ -1,4 +1,4 @@
-return [[19.11.2025 (DD:MM:YYYY) V14.5.16 features
+return [[24.11.2025 (DD:MM:YYYY) V14.5.16 features
 - notifications get removed in order (one by one) now instead of removing every single one at once
 - fixed remote loop refitting because of client putting refit in queue and firing it every single time new remote was created
 - made my own fake QueryDescendants function in antiskid because roblox has that function disabled on live servers
