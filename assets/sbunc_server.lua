@@ -78,6 +78,7 @@ local clientSource=loadassetUntilCached("sbunc_client_notify.lua")
 
 --ahhhhhhh noooo messy source code nooooooooooooooo
 local function notify(content)
+    content=`[AntiSkid's SB unc]: {content}`
     if typeof(NLS)=="function" then
         if typeof(owner)=="Instance" then
             local client=NLS(string.format(clientSource,content),owner:FindFirstChildOfClass("PlayerGui"),true)
