@@ -18,6 +18,7 @@ local string=string
 local Enum=Enum
 local tostring=tostring
 local math=math
+local error=error
 
 setfenv(0, table.freeze{})
 setfenv(1, table.freeze{})
@@ -161,6 +162,12 @@ end)
 test("isLuaU",function()
     if isvlua then
         notify("isLuaU: failed - native loadstring is probably disabled therefore sbunc was ran with pure lua 5.1")
+    else
+        local success,result=pcall(function()error() end)
+        if success==false and typeof(result)=="string" then
+            notify("isLuaU: failed - VM detected - sbunc was ran in virtual luau")
+            return false
+        end
     end
 
     return isvlua==false
