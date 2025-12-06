@@ -190,7 +190,7 @@ test("banAsyncDisabled",function()
     local success,result=pcall(players.UnbanAsync,players,{UserIds={1},ApplyToUniverse=true})  
 
     if success or success==false and result~="UnbanAsync is disabled due to Players:BanningEnabled being set to false" then
-        notify("banAsyncDisabled: BanAsync is literally enabled in this game and any skid can run banasync on you. (if you are game dev i highly suggest disabling BanAsync under Players property BanningEnabled in studio)")
+        notify("banAsyncDisabled: BanAsync is literally enabled in this game and any skid can run banasync on you. (go to Players -> BanningEnabled and disable it)")
         return false
     end
 
