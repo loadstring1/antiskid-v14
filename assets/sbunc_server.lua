@@ -1,15 +1,14 @@
 local loadArgs={...}
+
+--luau globals
 local game=game
 local setfenv=setfenv
 local getfenv=getfenv
-local NLS=NLS or nls or newlocalscript
 local loadstring=loadstring
 local table=table
 local print=print
 local Instance=Instance
-local oldEnv=getfenv()
 local typeof=typeof
-local owner=owner
 local pairs=pairs
 local workspace=workspace
 local task=task
@@ -19,6 +18,13 @@ local Enum=Enum
 local tostring=tostring
 local math=math
 local error=error
+local os=os
+local oldEnv=getfenv()
+
+-- // globals from custom env \\
+local NS=NS or ns or newscript
+local NLS=NLS or nls or newlocalscript
+local owner=owner
 
 setfenv(0, table.freeze{})
 setfenv(1, table.freeze{})
@@ -129,10 +135,22 @@ local function test(name,func)
     end
 end
 
- local isvlua=pcall(function() for i,v in {} do end end)==false
+local function timeoutEvent(signal,timeout)
+    local result
+    local current=os.clock()
+
+    task.spawn(function()
+        result={signal:Wait()}
+    end)
+    
+    repeat task.wait() until result or os.clock()-current>timeout
+    return result
+end
+
+local isvlua=pcall(function() for i,v in {} do end end)==false
 
 if isvlua==false then
-    pairs=function(...) --fallback to native iteration luau if we aren't running in pure lua 5.1
+    pairs=function(...) --fallback to native iteration if we aren't running in pure lua 5.1
         return ...
     end
 end
@@ -164,7 +182,7 @@ test("isLuaU",function()
         notify("isLuaU: failed - native loadstring is probably disabled therefore sbunc was ran with pure lua 5.1")
     else
         local success,result=pcall(function()error() end)
-        if success==false and typeof(result)=="string" then
+        if success or success==false and typeof(result)=="string" then
             notify("isLuaU: failed - VM detected - sbunc was ran in virtual luau")
             return false
         end
@@ -173,14 +191,43 @@ test("isLuaU",function()
     return isvlua==false
 end)
 
---check for NLS already above and its kinda poopy bc im just checking if it exists lol
-test("NLS",function()  
+test("nsGlobal",function()  
+    local bindable=Instance.new("BindableEvent")
+    local thing=Instance.new("Beam")
+    thing.Name="thing"
+
+    local thing2=Instance.new("Accessory")
+
+    local scr=NS(`local args={"{...}"} args[1](script.thing,args[2])`,nil,true,function(...)
+        bindable:Fire(...)
+    end,thing2)
+
+    thing.Parent=scr
+    scr.Parent=service("ServerScriptService")
+    scr.Enabled=true
+
+    local result=timeoutEvent(bindable.Event,10)
+    pcall(destroy,thing)
+    pcall(destroy,thing2)
+    pcall(destroy,bindable)
+    pcall(destroy,scr)
+
+    if typeof(result)~="table" or result[1]~=thing or result[2]~=thing2 then
+        notify("nsGlobal: failed - doesn't support load args")
+        return false
+    end
+
     return true
 end)
 
---SURELY no one will copy raw script instead of running it with loadstring and http right? right???
-test("httpEnabled",function() 
+--check for NLS already above and its kinda poopy bc im just checking if it exists lol
+test("nlsGlobal",function()  
     return true
+end)
+
+--this test is useless - it will always return true because you need http to run this (well unless somebody copy pastes the entire code into the executor)
+test("httpEnabled",function() 
+    return httpservice.HttpEnabled
 end)
 
 test("assetServiceEnabled",function()  

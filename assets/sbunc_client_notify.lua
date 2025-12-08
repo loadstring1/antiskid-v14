@@ -1,7 +1,7 @@
 script.Disabled = true
 task.delay(0,pcall,game.Destroy,script)
 
-local tosay="%s"
+local tosay=`%s`
 local textchatservice=game:GetService("TextChatService")
 
 local meta = tostring(math.random())
