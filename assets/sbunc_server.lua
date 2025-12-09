@@ -309,7 +309,7 @@ test("isImmediateSignalBehavior",function()
     end)()
 
     if isImmediate==false then
-	    notify(`isImmediateSignalBehavior: Immediate is disabled in this experience. This means scripts that rely on hypernull won't work here. (go to workspace -> properties -> SignalBehavior and change it to Immediate)`)
+        notify(`isImmediateSignalBehavior: Immediate is disabled in this experience. This means scripts that rely on hypernull won't work here. (go to workspace -> properties -> SignalBehavior and change it to Immediate)`)
     end
     
     return isImmediate
