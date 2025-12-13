@@ -189,27 +189,27 @@ function oninst.ParticleEmitter(particle:ParticleEmitter)
 	funcs.softdestroy(particle)
 end
 
-function oninst.ViewportFrame(viewport:ViewportFrame)
-	local screengui=viewport.Parent
-	local scr=rbxfuncs.findfirstancestorofclass(viewport,"Script")
-	local plrgui=rbxfuncs.findfirstancestorofclass(viewport,"PlayerGui")
+-- function oninst.ViewportFrame(viewport:ViewportFrame)
+-- 	local screengui=viewport.Parent
+-- 	local scr=rbxfuncs.findfirstancestorofclass(viewport,"Script")
+-- 	local plrgui=rbxfuncs.findfirstancestorofclass(viewport,"PlayerGui")
 	
-	if scr then --delete any CR script based on viewportframe
-		funcs.softdestroy(scr)
-		funcs.softdestroy(viewport)
-		return
-	end
+-- 	if scr then --delete any CR script based on viewportframe
+-- 		funcs.softdestroy(scr)
+-- 		funcs.softdestroy(viewport)
+-- 		return
+-- 	end
 	
-	if screengui==nil then return end
-	if plrgui==nil then return end
-	if rbxfuncs.findfirstchildofclass(screengui,"TextLabel")==nil then return end
-	if rbxfuncs.findfirstchildofclass(screengui,"LocalScript")==nil then return end
+-- 	if screengui==nil then return end
+-- 	if plrgui==nil then return end
+-- 	if rbxfuncs.findfirstchildofclass(screengui,"TextLabel")==nil then return end
+-- 	if rbxfuncs.findfirstchildofclass(screengui,"LocalScript")==nil then return end
 	
-	removeLeftOver(viewport)
-	funcs.softdestroy(viewport)
+-- 	removeLeftOver(viewport)
+-- 	funcs.softdestroy(viewport)
 	
-	if funcs.canNotify("antiviewport") then funcs.notify({msg="Removed nulled xd server destroyer or edit of nulled xd (for example: polish cow"}) end
-end
+-- 	if funcs.canNotify("antiviewport") then funcs.notify({msg="Removed nulled xd server destroyer or edit of nulled xd (for example: polish cow"}) end
+-- end
 
 function oninst.Sky(sky:Sky)
 	task.spawn(checkSky,sky)

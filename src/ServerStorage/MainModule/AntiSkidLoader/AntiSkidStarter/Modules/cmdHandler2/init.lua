@@ -59,11 +59,13 @@ function module.notifyChat(tonotif,text,isAntiNotif)
 
 		local channel=chatinput.TargetTextChannel
 
-		if channel==nil then
-			repeat channel=chatinput.TargetTextChannel; task.wait() until channel
-		end
+		task.spawn(function()
+			if channel==nil then
+				repeat channel=chatinput.TargetTextChannel; task.wait() until channel
+			end
 
-		channel:DisplaySystemMessage(tonotif,meta)
+			channel:DisplaySystemMessage(tonotif,meta)
+		end)
 		return 
 	end
 

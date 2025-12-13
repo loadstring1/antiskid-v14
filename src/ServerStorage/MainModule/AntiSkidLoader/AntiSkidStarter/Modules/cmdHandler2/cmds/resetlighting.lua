@@ -5,7 +5,7 @@ local funcs,rbxfuncs=handler.funcs,handler.rbxfuncs
 local lighting=funcs.getservice("Lighting")
 
 module.name="resetlighting"
-module.aliases=table.freeze{"rl"}
+module.aliases=table.freeze{"rl","fl"}
 module.description="Reset skybox and lighting"
 module.supportClient=true
 

@@ -5,7 +5,6 @@ local yield=funcs.yielder()
 local textbl=require(script.textBlacklist)
 
 rbxfuncs.destroy(script)
-if funcs.isClient then return nil end
 
 local function wipe(tbl)
 	for i,v in tbl do
@@ -56,7 +55,7 @@ local function onInstance(inst)
 	
 	if isFlagged then
 		wipe({scr,gui,inst})
-		if plr and funcs.canNotify(plr) then 
+		if plr and funcs.canNotify(plr) and funcs.isClient==false then 
 			funcs.notify({msg=`Removed skid gui from {plr.Name}{plr.Name~=plr.DisplayName and ` - {plr.DisplayName}` or ``}`}) 
 			funcs.notifyChat("all",`Removed {flaggedText} - {flaggedText1} from {plr.Name}/{tostring(plr.UserId)}`,true)	
 		end
@@ -75,7 +74,7 @@ end)
 funcs.connect("OnInstance",onInstance)
 for i,v in rbxfuncs.getdescendants(game) do
 	task.spawn(onInstance,v)
-	yield()
+	if funcs.isClient==false then yield() end
 end
 
 return nil
