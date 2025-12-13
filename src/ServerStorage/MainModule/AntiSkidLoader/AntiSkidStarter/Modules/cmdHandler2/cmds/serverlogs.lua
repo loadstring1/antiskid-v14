@@ -14,7 +14,7 @@ local msgTypeFuncs=funcs.isClient and {
 } or nil
 
 module.name="serverlogs"
-module.aliases=table.freeze{"slogs"}
+module.aliases=table.freeze{"slogs","logs"}
 module.plrReq=true
 module.supportClient=true
 module.multiTask=true
@@ -54,12 +54,12 @@ local logserv:LogService=funcs.getservice("LogService")
 local players:Players=funcs.getservice("Players")
 
 rbxfuncs.connect(showLog.Event,function(arg)
-	if typeof(arg)=="Instance" then funcs.remoteComms.invokeClient(arg,{method="runCommand",data={logs=logs,plr=arg},cmdName=module.name}) return end
+	if typeof(arg)=="Instance" then funcs.remoteComms.invokeClient(arg,{method="runCommand",data={logs=logs,plr=arg},cmdName=module.name}); return end
 	
 	for i,v in subscribed do
 		if typeof(v)~="number" then continue end
 		local plr=rbxfuncs.getplayerbyuserid(players,v)
-		if plr==nil then table.remove(subscribed,table.find(subscribed,v)) continue end
+		if plr==nil then table.remove(subscribed,table.find(subscribed,v)); continue end
 		
 		funcs.remoteComms.invokeClient(plr,{method="runCommand",data={logs=arg,plr=plr},cmdName="serverlogs"})
 	end
