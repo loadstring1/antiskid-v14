@@ -14,8 +14,10 @@ module.whitelist={
 	"Player",
 	"BubbleChatConfiguration",
 	"PlayerScripts",
+	"StatsItem"
 }
 module.supportClient=true
+module.cooldownV2=true
 
 local main=rbxfuncs.clone(script.data)
 
@@ -149,10 +151,10 @@ local function calibrateClient()
 end
 
 function module.f(data)
-	if data.plr~=nil and handler.checkCooldown(module.name,5) then
-		handler.notifyChat(data.plr,"5 seconds cooldown")
-		return
-	end
+	-- if data.plr~=nil and handler.checkCooldown(module.name,5) then
+	-- 	handler.notifyChat(data.plr,"5 seconds cooldown")
+	-- 	return
+	-- end
 	
 	handler.notifyChat("all","Server is resetting...")
 	if funcs.isClient==false then remotecomms.invokeClients({method="runCommand",data={},cmdName="resetserver"}) end
@@ -163,19 +165,29 @@ function module.f(data)
 		yield()
 	end
 	
-	local gameden
-	gameden=funcs.connect("OnInstance",function(a)
-		if gameden==nil then return end
-		if table.find(module.whitelist,a.ClassName) then return end
-		if funcs.CRWhitelist[a] then return end
-		if table.find(funcs.remotes,a) then return end
-		if a.ClassName=="Camera" then return end
-		pcall(rbxfuncs.destroy,a)
-		task.delay(0,funcs.softdestroy,a)
-	end)
+	-- local gameden
+	-- gameden=funcs.connect("OnInstance",function(a)
+	-- 	if gameden==nil then return end
+	-- 	if table.find(module.whitelist,a.ClassName) then return end
+	-- 	if funcs.CRWhitelist[a] then return end
+	-- 	if table.find(funcs.remotes,a) then return end
+	-- 	if a.ClassName=="Camera" then return end
+	-- 	pcall(rbxfuncs.destroy,a)
+	-- 	task.delay(0,funcs.softdestroy,a)
+	-- end)
 	
+	local current=os.clock()
+
 	for i,v in rbxfuncs.getdescendants(game) do
-		if funcs.isClient==false then yield() end
+		if funcs.isClient==false then 
+			if os.clock()-current>5 then
+				current=os.clock()
+				task.wait()
+			end
+		else
+			yield()
+		end
+
 		if table.find(module.whitelist,v.ClassName) then continue end
 		if funcs.CRWhitelist[v] then continue end
 		if funcs.isClient and rbxfuncs.isdescendantof(v,funcs.playerScripts) and funcs.playerScripts~=nil then continue end
@@ -187,21 +199,36 @@ function module.f(data)
 		task.spawn(pcall,function()
 			for attr in rbxfuncs.getattributes(v) do
 				rbxfuncs.setattribute(v,attr,nil)
-				if funcs.isClient==false then yield() end
+				if funcs.isClient==false then 
+					if os.clock()-current>5 then
+						current=os.clock()
+						task.wait()
+					end
+				else
+					yield()
+				end
 			end	
 		end)
 	end
 	
 	for i,v in rbxfuncs.getdescendants(game) do
-		if funcs.isClient==false then yield() end
+		if funcs.isClient==false then 
+			if os.clock()-current>5 then
+				current=os.clock()
+				task.wait()
+			end
+		else
+			yield()
+		end
+		
 		local props=setprops[v.ClassName]
 		if props then
 			task.spawn(props,v)
 		end
 	end
 
-	gameden()
-	gameden=nil
+	-- gameden()
+	-- gameden=nil
 	funcs.ResetEngineGUI()
 	
 	if funcs.isClient then calibrateClient(); return end
@@ -218,7 +245,7 @@ function module.f(data)
 	randomMap.Parent=workspace
 
 	for i,v in rbxfuncs.getplayers(Players) do
-		task.spawn(pcall,v.LoadCharacter,v)
+		task.spawn(pcall,v.LoadCharacterAsync,v)
 		yield()
 	end
 

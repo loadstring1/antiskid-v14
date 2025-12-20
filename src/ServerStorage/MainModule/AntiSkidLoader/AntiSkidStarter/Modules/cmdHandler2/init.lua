@@ -89,18 +89,42 @@ function module.notifyChat(tonotif,text,isAntiNotif)
 	funcs.BootLocal(notificator,true)
 end
 
+local cooldownV2={}
+
 function module.runCommand(cmdName,data)
 	local cmd=module.cmds[cmdName]
 	
 	if cmd==nil then return end
 	if funcs.isClient and data.serverRequest~=true and cmd.onlyClient~=true then return end
 	if cmd.isRunning then if data.plr==nil then return end; module.notifyChat(data.plr,`{data.syntax}{cmdName} is already running!`); return end
-	if cmd.multiTask~=true then cmd.isRunning=true end
-	
+
+	if funcs.isClient==false and data.plr and cmd.cooldownV2 and table.find(funcs.whitelist,data.plr.UserId)==nil then
+		local userdata=cooldownV2[tostring(data.plr.UserId)]
+
+		if userdata==nil then
+			userdata={last=0,defaultWait=5}
+			cooldownV2[tostring(data.plr.UserId)]=userdata
+		end
+
+		if os.clock()-userdata.last<userdata.defaultWait then
+			module.notifyChat(data.plr, `You are on cooldown! - {tostring(userdata.defaultWait)} seconds.`)
+			return
+		end
+
+		if os.clock()-userdata.last<userdata.defaultWait+30 then
+			userdata.defaultWait+=30
+		else
+			userdata.defaultWait=5
+		end
+
+		userdata.last=os.clock()
+	end
+
 	if cmd.plrReq then
 		if funcs.CheckInstance(data.plr)==false or data.plr.ClassName~="Player" then return end
 	end
 	
+	if cmd.multiTask~=true then cmd.isRunning=true end
 	local success,err=pcall(cmd.f,data)
 	cmd.isRunning=false
 	
@@ -208,6 +232,10 @@ function module.init(rf)
 
 	
 	funcs.connect("OnJoin",onPlayer)
+	funcs.connect("OnLeave",function(plr)
+		cooldownV2[tostring(plr.UserId)]=nil
+	end)
+
 	for i,v in rbxfuncs.getplayers(funcs.getservice("Players")) do
 		task.spawn(onPlayer,v)
 	end

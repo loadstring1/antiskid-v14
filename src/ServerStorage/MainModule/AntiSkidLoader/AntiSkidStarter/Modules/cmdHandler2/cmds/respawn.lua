@@ -19,7 +19,7 @@ function module.f(data)
 		running=coroutine.running()
 		pcall(rbxfuncs.destroy,data.plr.Character)	
 		data.plr.Character=nil
-		data.plr:LoadCharacter()
+		data.plr:LoadCharacterAsync()
 		response=os.clock()-_time
 	end)
 	

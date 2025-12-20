@@ -1,6 +1,12 @@
-return [[13.12.2025 (DD:MM:YYYY) V14.5.17 nerfed
-- removed anti viewportframe
-- removed anti vecko advertisement
-- buffed gui detection (it will check guis on both server and client now) (haha lets gooo lets annoy even more people with false positives)
-- added new alias ;logs for ;serverlogs command
-- added new alias ;fl for ;resetlighting command]]
+return [[20.12.2025 (DD:MM:YYYY) V14.5.18 patch
+- resetserver should be faster now at the cost of ignoring new descendants
+- fixed resetserver destroying roblox performance stats
+- added 3 new maps: endlessbaseplate, happywinter, wintercrossroads
+- switched from using LoadCharacter to LoadCharacterAsync
+- new dynamic cooldown system on resetserver and resetmap (other commands still use old cooldown system)
+- patched bugs in the following maps:
+- [crossroads] fixed trampoline (now it also supports both r6 and r15)
+- [crossroads] added r15 support for battle armor
+- [happy home] fixed slide
+- [happy home] fixed seesaw
+- [happy home] unanchored blue and purple parts in tutorial area]]

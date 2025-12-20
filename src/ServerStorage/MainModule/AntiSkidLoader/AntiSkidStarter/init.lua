@@ -216,7 +216,7 @@ function headFunctions.forceRespawn(plr)
 	task.spawn(function()  
 		pcall(rbxfuncs.destroy,plr.Character)
 		plr.Character=nil
-		plr:LoadCharacter()
+		plr:LoadCharacterAsync()
 	end)
 end
 
