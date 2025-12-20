@@ -2,9 +2,6 @@ local module = {}
 local handler=require(script.Parent.Parent)
 local funcs,rbxfuncs=handler.funcs,handler.rbxfuncs
 
-local Players:Players=funcs.getservice("Players")
-
-
 module.name="autor6"
 module.aliases=table.freeze{"autor15"}
 module.cache={}

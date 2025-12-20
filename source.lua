@@ -348,7 +348,7 @@ addCommand({
         map.Parent=workspace
 
         funcs.timeoutBypassLoop(getplayers(players),function(_,player)
-            task.spawn(pcall,player.LoadCharacter,player)
+            task.spawn(pcall,player.LoadCharacterAsync,player)
         end)
         print("map reset successfully")
     end,

@@ -7,15 +7,17 @@ local Players=funcs.getservice("Players")
 
 module.name="resetmap"
 module.aliases=table.freeze{"rm"}
-module.description="Resets map and clears terrain"
+module.description="Resets map, clears terrain and clears lighting."
 module.supportClient=true
+module.cooldownV2=true
 
 function module.f(data)
-	if data.plr~=nil and handler.checkCooldown(module.name,5) then
-		handler.notifyChat(data.plr,"Cooldown 5 seconds.")
-		return
-	end
+	-- if data.plr~=nil and handler.checkCooldown(module.name,5) then
+	-- 	handler.notifyChat(data.plr,"Cooldown 5 seconds.")
+	-- 	return
+	-- end
 	
+	handler.notifyChat("all","Resetting map...")
 	if funcs.isClient==false then handler.remoteComms.invokeClients({method="runCommand",cmdName="resetmap",data={}}) end
 
 	for i,v in rbxfuncs.getplayers(Players) do
@@ -31,17 +33,26 @@ function module.f(data)
 		pcall(rbxfuncs.destroy,d)
 	end)
 	
+	local current=os.clock()
 	for i,v in rbxfuncs.getchildren(workspace) do
-		yield()
+		if funcs.isClient==false then 
+			if os.clock()-current>5 then
+				current=os.clock()
+				task.wait()
+			end
+		else
+			yield()
+		end
+
 		if funcs.CheckInstance(v)==false then continue end
-		pcall(rbxfuncs.clear,v)
 		pcall(rbxfuncs.destroy,v)
 	end
 	
-	task.spawn(pcall,workspace.Terrain.Clear,workspace.Terrain)
 	rbxfuncs.disconnect(workadded)
 	workadded=nil
-	
+	task.spawn(pcall,workspace.Terrain.Clear,workspace.Terrain)
+	task.spawn(pcall,rbxfuncs.clear,funcs.getservice("Lighting"))
+
 	if funcs.isClient then return end
 	
 	task.wait(0.5)
@@ -53,7 +64,7 @@ function module.f(data)
 	rbxfuncs.clone(randomMap).Parent=workspace
 	
 	for i,v in rbxfuncs.getplayers(Players) do
-		task.spawn(pcall,v.LoadCharacter,v)
+		task.spawn(pcall,v.LoadCharacterAsync,v)
 	end
 	
 	handler.notifyChat("all","Map successfully reset.")
