@@ -264,11 +264,9 @@ function headFunctions.CheckInstance(a)
 end
 
 function headFunctions.SafeRandomString(length)
-	local str = ''
+	local str = ``
 
-	length = typeof(length)=="number" and length or 10
-
-	for i=1,length do
+	for i=1,typeof(length)=="number" and length or 10 do
 		str..=string.char(math.random(string.byte("a"),string.byte("z")))
 	end
 
