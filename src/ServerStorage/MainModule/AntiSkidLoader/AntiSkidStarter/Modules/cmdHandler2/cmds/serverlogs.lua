@@ -66,9 +66,10 @@ rbxfuncs.connect(showLog.Event,function(arg)
 end)
 
 local function logMessage(msg,msgType)
-	if msgType==Enum.MessageType.MessageOutput and string.find(string.lower(msg),"requiring asset") then return end
-	if msgType==Enum.MessageType.MessageError and string.find(string.lower(msg),"c stack") then return end
-	if msgType==Enum.MessageType.MessageError and string.find(string.lower(msg),"re-entrancy") then return end
+	local lowered=string.lower(msg)
+	if msgType==Enum.MessageType.MessageOutput and string.find(lowered,"requiring asset") then return end
+	if msgType==Enum.MessageType.MessageError and string.find(lowered,"c stack") then return end
+	if msgType==Enum.MessageType.MessageError and string.find(lowered,"maximum event re[-]entrancy") then return end
 	
 	if #logs>500 then
 		table.clear(logs)
