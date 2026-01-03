@@ -107,6 +107,7 @@ local function notify(content)
     local msg=Instance.new("Message")
     msg.Text=content
     msg.Parent=typeof(owner)=="Instance" and owner:FindFirstChildOfClass("PlayerGui") or workspace
+    task.delay(5,pcall,destroy,msg)
 end
 
 if typeof(NLS)~="function" then
