@@ -1,12 +1,6 @@
-return [[20.12.2025 (DD:MM:YYYY) V14.5.18 patch
-- resetserver should be faster now at the cost of ignoring new descendants
-- fixed resetserver destroying roblox performance stats
-- added 3 new maps: endlessbaseplate, happywinter, wintercrossroads
-- switched from using LoadCharacter to LoadCharacterAsync
-- new dynamic cooldown system on resetserver and resetmap (other commands still use old cooldown system)
-- patched bugs in the following maps:
-- [crossroads] fixed trampoline (now it also supports both r6 and r15)
-- [crossroads] added r15 support for battle armor
-- [happy home] fixed slide
-- [happy home] fixed seesaw
-- [happy home] unanchored blue and purple parts in tutorial area]]
+return [[10.01.2025 (DD:MM:YYYY) V14.5.19 patch
+- roblox recently renamed textchatservice to text1984service which killed all of my commands i apologize to all of my userbase
+- because of that bug i added a new command bar you can trigger it by pressing your mouse wheel on PC and long press your screen on mobile
+- command bar doesnt need a prefix just type in a command and it works
+- added new command ;sign (alias ;signchat)
+- added new alias for cmds command (;help)]]

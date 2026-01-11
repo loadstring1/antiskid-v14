@@ -242,7 +242,7 @@ function module.CreateGUI(force)
 	module[funcs.lplr]=regged
 
 	local function touchEnabled(isEnabled)
-		regged.scroller.Position=isEnabled and UDim2.fromScale(0.835,0.324) or UDim2.fromScale(0.008,0.649)
+		regged.scroller.Position=isEnabled and UDim2.fromScale(0.755,0.05) or UDim2.fromScale(0.008,0.649)
 	end
 
 	touchEnabled(uis.TouchEnabled)

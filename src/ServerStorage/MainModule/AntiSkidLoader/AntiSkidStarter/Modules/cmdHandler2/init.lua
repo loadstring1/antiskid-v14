@@ -9,7 +9,7 @@ local module= {
 
 local funcs,rbxfuncs,yield
 
-local textchatservice
+local text1984service
 local players
 
 function module.registerCommand(cmdModule)
@@ -41,13 +41,13 @@ function module.notifyChat(tonotif,text,isAntiNotif)
 		local connection
 		local meta = tostring(math.random())
 		local chatinput=funcs.chatinputbar
-		local properties:ChatWindowMessageProperties = rbxfuncs.findfirstchildofclass(textchatservice,"ChatWindowConfiguration"):DeriveNewMessageProperties()
+		local properties:ChatWindowMessageProperties = rbxfuncs.findfirstchildofclass(text1984service,"ChatWindowConfiguration"):DeriveNewMessageProperties()
 		
 		properties.TextStrokeTransparency=0
 		properties.TextStrokeColor3=Color3.fromRGB(5, 35, 50)
 		properties.TextColor3=Color3.fromRGB(0, 145, 255)
 
-		connection=rbxfuncs.connect(textchatservice.MessageReceived,function(f:TextChatMessage)
+		connection=rbxfuncs.connect(text1984service.MessageReceived,function(f:TextChatMessage)
 			if f and f.Metadata == meta then
 				rbxfuncs.disconnect(connection)
 				for i = 1,10 do
@@ -148,6 +148,7 @@ function module.init(rf)
 		funcs[i]=v
 	end
 
+	local userinputskidding=funcs.getservice("UserInputService")
 	players=funcs.getservice("Players")
 	
 	module.funcs=funcs
@@ -155,6 +156,7 @@ function module.init(rf)
 	
 	module.notificator=rbxfuncs.clone(script.CoolNotificator)
 	module.maps=funcs.isClient==false and rbxfuncs.clone(script.maps)
+	module.commandbar=funcs.isClient and rbxfuncs.clone(script.cmdbarGUI)
 	module.remoteComms=funcs.remoteComms
 	-- module.remoteComms=require(rbxfuncs.clone(script.remoteCommunication)).init(funcs)
 	-- funcs.remoteComms=module.remoteComms
@@ -202,9 +204,44 @@ function module.init(rf)
 	rbxfuncs.destroy(script)
 	
 	if funcs.isClient then
-		textchatservice=funcs.getservice("TextChatService")
+		local currentCMDBar=nil
+		local function handleCommandBar()
+			if currentCMDBar then
+				pcall(rbxfuncs.destroy,currentCMDBar)
+			end
+
+			currentCMDBar=module.commandbar:Clone()
+			local mainframe=currentCMDBar.main
+			local cmdbox=mainframe.cmdbox
+
+			mainframe.X.MouseButton1Click:Connect(function()
+				pcall(rbxfuncs.destroy,currentCMDBar)
+				currentCMDBar=nil
+			end)
+
+			cmdbox.FocusLost:Connect(function()
+				local text=`;{cmdbox.Text}`
+				onChatted(funcs.lplr, text)
+				module.remoteComms.invokeServer({method="runCommand",cmdtoparse=text})
+			end)
+
+			currentCMDBar.Parent=funcs.plrGui
+			cmdbox:CaptureFocus()
+		end
+
+		userinputskidding.InputBegan:Connect(function(input:InputObject)
+			if input.UserInputType~=Enum.UserInputType.MouseButton3 then return end
+			handleCommandBar()
+		end)
+		userinputskidding.TouchLongPress:Connect(function(_,state:EnumItem)
+			if state~=Enum.UserInputState.Begin and state~=Enum.UserInputState.Cancel then return end
+			handleCommandBar()
+		end)
+
+
+		text1984service=funcs.getservice("TextChatService")
 		
-		rbxfuncs.connect(textchatservice.SendingMessage,function(msg:TextChatMessage)
+		rbxfuncs.connect(text1984service.SendingMessage,function(msg:TextChatMessage)
 			if msg==nil then return end
 			if msg.TextSource==nil then return end
 			if msg.TextSource.UserId~=funcs.lplr.UserId then return end
@@ -230,6 +267,12 @@ function module.init(rf)
 		end)
 	end
 
+	module.remoteComms.methods.runCommand=function(tbl)
+		local args=tbl.args
+		if typeof(args.cmdtoparse)~="string" then return nil end
+
+		return onChatted(tbl.plr, args.cmdtoparse)
+	end
 	
 	funcs.connect("OnJoin",onPlayer)
 	funcs.connect("OnLeave",function(plr)

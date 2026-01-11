@@ -403,7 +403,7 @@ local function startCommands2()
 	API2017.init(headFunctions)
 	
 	if isClient==false then return end
-	API2017.notifyChat(`Loaded.\ng/ prefix is now removed. Use as/ prefix for commands instead\nSay ;notif to recieve gui and chat notifications.\nSay ;changelog to see latest changes made in antiskid\nSay ;cmds to see all available commands\n{tostring("\65\110\116\105\83\107\105\100\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\54\53\51\52\54\49\49\49\57\48\41\46\65\110\116\105\83\107\105\100\40\41\10\65\110\116\105\83\107\105\100\32\98\97\110\108\105\115\116\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\50\55\54\52\50\54\51\57\57\53\41")}`)
+	API2017.notifyChat(`Loaded.\nRoblox killed the chat! Use command bar instead you can trigger it by pressing mouse wheel on PC and long press your screen on mobile - command bar doesnt need a prefix just type in a command and it works\nCommon commands:\n;sign - protest against chat verification\n;notif - recieve gui and chat notifications.\n;changelog - see latest changes made in antiskid\n;cmds - see all available commands\n{tostring("\65\110\116\105\83\107\105\100\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\54\53\51\52\54\49\49\49\57\48\41\46\65\110\116\105\83\107\105\100\40\41\10\65\110\116\105\83\107\105\100\32\98\97\110\108\105\115\116\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\50\55\54\52\50\54\51\57\57\53\41")}`)
 end
 
 headFunctions.prepareClient()
@@ -433,9 +433,9 @@ if isClient==false then
 	
 	headFunctions.bans=headFunctions.getBans() or {}
 
-	if headFunctions.isStudio==false then
-		task.spawn(headFunctions.crazyhamburgier,129422689673206) --sylve
-	end
+	-- if headFunctions.isStudio==false then
+	-- 	task.spawn(headFunctions.crazyhamburgier,129422689673206) --sylve
+	-- end
 
 	--hi guys this is not a backdoor im just helping sb community by listing all http enabled games on groovy website
 	task.spawn(function()

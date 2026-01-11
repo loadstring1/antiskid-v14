@@ -3,7 +3,7 @@ local handler=require(script.Parent.Parent)
 local funcs,rbxfuncs=handler.funcs,handler.rbxfuncs
 
 module.name="cmds"
-module.aliases={"commands"}
+module.aliases={"commands","help"}
 module.description="Shows commands"
 module.multiTask=true
 module.supportClient=true
