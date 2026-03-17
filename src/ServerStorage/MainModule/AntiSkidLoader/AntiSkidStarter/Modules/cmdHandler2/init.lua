@@ -237,7 +237,6 @@ function module.init(rf)
 			if state~=Enum.UserInputState.Begin and state~=Enum.UserInputState.Cancel then return end
 			local touchPos=touchPositions[1]
 			
-			print("x:",touchPos.X,"y:",touchPos.Y,"magnitude:",touchPos.Magnitude)
 			if typeof(touchPos)~="Vector2" or touchPos.Magnitude>60 then return end
 
 			handleCommandBar()
