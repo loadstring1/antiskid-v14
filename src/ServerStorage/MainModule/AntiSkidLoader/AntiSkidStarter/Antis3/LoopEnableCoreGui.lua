@@ -29,7 +29,6 @@ local function onheart()
 end
 
 
-rbxfuncs.connectparallel("onHeartbeat",onheart)
 funcs.connect("onHeartbeat",onheart)
 
 antis3.warner(script.Name)

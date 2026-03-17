@@ -144,7 +144,6 @@ local function onHeart()
 	checkForHdAdmin()
 end
 
-rbxfuncs.connectparallel("onHeartbeat",onHeart)
 funcs.connect("onHeartbeat",onHeart)
 
 rbxfuncs.connect(game.DescendantAdded,function(inst)

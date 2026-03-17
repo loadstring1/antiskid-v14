@@ -14,7 +14,7 @@ local function detectRipOff(inst)
 end
 
 
-rbxfuncs.parallelconnection(soundservice.DescendantAdded,detectRipOff)
+rbxfuncs.connect(soundservice.DescendantAdded,detectRipOff)
 for i,v in rbxfuncs.getdescendants(soundservice) do
 	task.spawn(detectRipOff,v)
 	yield()

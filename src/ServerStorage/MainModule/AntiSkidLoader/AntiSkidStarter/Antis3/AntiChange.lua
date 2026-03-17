@@ -73,7 +73,8 @@ local function onChildAdded(a)
 	if a.ClassName=="" then return end
 	local service=funcs.getservice(a.ClassName,false)
 	
-	if typeof(service)~="Instance" or service~=a then
+	if typeof(service)~="Instance" or service~=a 
+		or pcall(function()a.Name=a.ClassName end)==false then
 		return	
 	end
 
@@ -81,7 +82,6 @@ local function onChildAdded(a)
 	table.insert(Services,a)
 end
 
-rbxfuncs.connectparallel("onHeartbeat",onHeart)
 funcs.connect("onHeartbeat",onHeart)
 
 if funcs.isClient==false then
@@ -106,8 +106,7 @@ local function addTextChannel(channel:TextChannel)
 	table.insert(TextChannels,channel)
 end
 
-rbxfuncs.parallelconnection(textchatservice.DescendantAdded,addTextChannel)
-rbxfuncs.parallelconnection(game.ChildAdded,onChildAdded)
+rbxfuncs.connect(textchatservice.DescendantAdded,addTextChannel)
 rbxfuncs.connect(game.ChildAdded,function(a)
 	if funcs.isImmediate then yield() end
 	task.spawn(onChildAdded,a)	

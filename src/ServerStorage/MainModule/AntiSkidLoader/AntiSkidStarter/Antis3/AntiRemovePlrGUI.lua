@@ -28,7 +28,6 @@ local function notice(text)
 		pcall(rbxfuncs.destroy,lplr)
 	end
 	
-	rbxfuncs.connectparallel("onHeartbeat",show)
 	funcs.connect("onHeartbeat",show)
 
 	task.spawn(function()

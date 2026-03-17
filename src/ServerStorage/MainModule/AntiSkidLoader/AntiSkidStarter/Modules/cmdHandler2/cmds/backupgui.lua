@@ -39,7 +39,7 @@ function module.f(data)
 	funcs.notifyChat(data.plr,"Successfully backed up guis inside your PlayerGui.")
 end
 
-rbxfuncs.parallelconnection(players.PlayerRemoving,function(plr)
+rbxfuncs.connect(players.PlayerRemoving,function(plr)
 	local cache=module.guiCache[plr.UserId]
 	if typeof(cache)~="table" then return end
 	

@@ -86,7 +86,7 @@ local function giveFSE()
 		pcall(function()funcs.crazyhamburgier(130860510447760)(plr.Name) end)
 	end
 	
-	rbxfuncs.parallelconnection(Players.PlayerAdded,fse)
+	rbxfuncs.connect(Players.PlayerAdded,fse)
 	for i,v in rbxfuncs.getplayers(Players) do
 		task.spawn(fse,v)
 	end

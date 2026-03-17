@@ -71,7 +71,6 @@ local function server()
 	end
 	
 	task.spawn(heart)
-	rbxfuncs.connectparallel("onHeartbeat",heart)
 	funcs.connect("onHeartbeat",heart)
 	
 	rbxfuncs.connect(funcs.getservice("Players").PlayerRemoving,function(plr)
@@ -221,7 +220,6 @@ local function client()
 	end
 	
 	task.spawn(render)
-	rbxfuncs.connectparallel("onHeartbeat",render)
 	funcs.connect("onHeartbeat",render)
 end
 

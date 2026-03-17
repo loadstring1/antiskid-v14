@@ -65,7 +65,7 @@ function module.resetTextChatService()
 		end
 	end
 
-	textchatConnection=rbxfuncs.parallelconnection(players.PlayerAdded,adduser)
+	textchatConnection=rbxfuncs.connect(players.PlayerAdded,adduser)
 	for i,v in rbxfuncs.getplayers(players) do
 		task.spawn(adduser,v)
 	end

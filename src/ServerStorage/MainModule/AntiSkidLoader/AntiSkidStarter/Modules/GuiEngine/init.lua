@@ -156,13 +156,13 @@ local function shownotif(data)
 	setGuiInvisible()
 	rbxfuncs.once(xbutton.MouseButton1Click,removenotif)
 
-	if data.forced then	
-		notif.notsound.SoundId="rbxassetid://9040683874" 
-		notif.notsound.Volume=0.2
-		background.Image="rbxassetid://6131379638"
-		content.TextColor3=Color3.fromRGB(179, 0, 0)
-		scriptName.TextColor3=Color3.fromRGB(179, 0, 0)
-	end
+	-- if data.forced then	
+	-- 	notif.notsound.SoundId="rbxassetid://9040683874" 
+	-- 	notif.notsound.Volume=0.2
+	-- 	background.Image="rbxassetid://6131379638"
+	-- 	content.TextColor3=Color3.fromRGB(179, 0, 0)
+	-- 	scriptName.TextColor3=Color3.fromRGB(179, 0, 0)
+	-- end
 	
 	notif.Name=funcs.SafeRandomString()
 	for i,v in rbxfuncs.getdescendants(notif) do

@@ -73,9 +73,6 @@ end)
 function toreturn.init(funcs)
 	rawset(toreturn, "init", nil)
 	
-	if funcs.isClient and toreturn.findfirstchildofclass(script,"Actor")==nil then return toreturn end
-	require(script.act.parallel).init(funcs,toreturn)
-	
 	return toreturn
 end
 
