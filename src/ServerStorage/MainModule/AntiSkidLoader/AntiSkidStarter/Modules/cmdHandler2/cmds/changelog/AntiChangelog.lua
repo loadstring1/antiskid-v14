@@ -1,12 +1,5 @@
-return [[20.12.2025 (DD:MM:YYYY) V14.5.18 patch
-- resetserver should be faster now at the cost of ignoring new descendants
-- fixed resetserver destroying roblox performance stats
-- added 3 new maps: endlessbaseplate, happywinter, wintercrossroads
-- switched from using LoadCharacter to LoadCharacterAsync
-- new dynamic cooldown system on resetserver and resetmap (other commands still use old cooldown system)
-- patched bugs in the following maps:
-- [crossroads] fixed trampoline (now it also supports both r6 and r15)
-- [crossroads] added r15 support for battle armor
-- [happy home] fixed slide
-- [happy home] fixed seesaw
-- [happy home] unanchored blue and purple parts in tutorial area]]
+return [[17.03.2026 (DD:MM:YYYY) V14.5.20 patch
+- removed parallel
+- removed christmas notification theme on start
+- for mobile users command bar has been rebinded and it will open only if you long press upper left corner of your screen and won't work on the entire screen like before
+- fixed warning and error spam that was happening because of roblox engine updates]]

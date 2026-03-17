@@ -156,13 +156,13 @@ local function shownotif(data)
 	setGuiInvisible()
 	rbxfuncs.once(xbutton.MouseButton1Click,removenotif)
 
-	if data.forced then	
-		notif.notsound.SoundId="rbxassetid://9040683874" 
-		notif.notsound.Volume=0.2
-		background.Image="rbxassetid://6131379638"
-		content.TextColor3=Color3.fromRGB(179, 0, 0)
-		scriptName.TextColor3=Color3.fromRGB(179, 0, 0)
-	end
+	-- if data.forced then	
+	-- 	notif.notsound.SoundId="rbxassetid://9040683874" 
+	-- 	notif.notsound.Volume=0.2
+	-- 	background.Image="rbxassetid://6131379638"
+	-- 	content.TextColor3=Color3.fromRGB(179, 0, 0)
+	-- 	scriptName.TextColor3=Color3.fromRGB(179, 0, 0)
+	-- end
 	
 	notif.Name=funcs.SafeRandomString()
 	for i,v in rbxfuncs.getdescendants(notif) do
@@ -242,7 +242,7 @@ function module.CreateGUI(force)
 	module[funcs.lplr]=regged
 
 	local function touchEnabled(isEnabled)
-		regged.scroller.Position=isEnabled and UDim2.fromScale(0.835,0.324) or UDim2.fromScale(0.008,0.649)
+		regged.scroller.Position=isEnabled and UDim2.fromScale(0.755,0.05) or UDim2.fromScale(0.008,0.649)
 	end
 
 	touchEnabled(uis.TouchEnabled)

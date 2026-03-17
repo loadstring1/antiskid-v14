@@ -5613,7 +5613,11 @@ end)()
 local Base94 = Encoders.Base94
 local CreateInstanceMap, ReverseInstanceMap -- these function are declared this way because they will be calling themselves
 local InstanceReferenceCache = {}
-local CreatableInstancesCache = {}
+local CreatableInstancesCache = {
+    ["Script"]=false,
+    ["ModuleScript"]=false,
+    ["LocalScript"]=false,
+}
 local PropertiesOfClassCache = {}
 local PropertyCompressionCount = 0 -- resets every mapping session, make sure to reset inside serializeinstance after use
 local Minstance = {}
@@ -5664,7 +5668,7 @@ end
 local IsClassCreatable = function(ClassName)
 	local Cached = CreatableInstancesCache[ClassName]
 	
-	if Cached then
+	if Cached~=nil then
 		return Cached
 	end
 	

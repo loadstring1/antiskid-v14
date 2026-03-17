@@ -69,7 +69,7 @@ local function onPlayer(plr)
 end
 
 rbxfuncs.connect(players.PlayerAdded,onPlayer)
-rbxfuncs.parallelconnection(players.PlayerRemoving,unbanLoop)
+rbxfuncs.connect(players.PlayerRemoving,unbanLoop)
 for i,v in rbxfuncs.getplayers(players) do
 	yield()
 	task.spawn(onPlayer,v)

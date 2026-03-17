@@ -107,6 +107,7 @@ local function notify(content)
     local msg=Instance.new("Message")
     msg.Text=content
     msg.Parent=typeof(owner)=="Instance" and owner:FindFirstChildOfClass("PlayerGui") or workspace
+    task.delay(5,pcall,destroy,msg)
 end
 
 if typeof(NLS)~="function" then
@@ -177,13 +178,13 @@ test("ownerGlobal",function()
 end)
 
 --luau check
-test("isLuaU",function()
+test("loadstring enabled (isLuaU)",function()
     if isvlua then
-        notify("isLuaU: failed - native loadstring is probably disabled therefore sbunc was ran with pure lua 5.1")
+        notify("loadstring enabled (isLuaU): failed - native loadstring is probably disabled therefore sbunc was ran with pure lua 5.1")
     else
         local success,result=pcall(function()error() end)
         if success or success==false and typeof(result)=="string" then
-            notify("isLuaU: failed - VM detected - sbunc was ran in virtual luau")
+            notify("loadstring enabled (isLuaU): failed - VM detected - sbunc was ran in virtual luau")
             return false
         end
     end
@@ -244,7 +245,7 @@ test("banAsyncDisabled",function()
     local success,result=pcall(players.UnbanAsync,players,{UserIds={1},ApplyToUniverse=true})  
 
     if success or success==false and result~="UnbanAsync is disabled due to Players:BanningEnabled being set to false" then
-        notify("banAsyncDisabled: BanAsync is literally enabled in this game and any skid can run banasync on you. (go to Players -> BanningEnabled and disable it)")
+        notify("banAsyncDisabled: BanAsync is enabled in this game and any skid can run banasync on you. (go to Players -> BanningEnabled and disable it)")
         return false
     end
 

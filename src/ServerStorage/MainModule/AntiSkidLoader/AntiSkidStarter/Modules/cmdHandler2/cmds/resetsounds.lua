@@ -32,7 +32,7 @@ function module.f(data)
 		mute.Priority=2147483647
 		mute.Enabled=true
 		
-		rbxfuncs.parallelconnection(mute.Changed,function(change)
+		rbxfuncs.connect(mute.Changed,function(change)
 			funcs.softdestroy(v)
 			funcs.softdestroy(mute)
 		end)

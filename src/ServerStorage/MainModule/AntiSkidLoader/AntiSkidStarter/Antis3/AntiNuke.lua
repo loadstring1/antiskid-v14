@@ -65,7 +65,6 @@ local function checkForV1()
 		lighting.Ambient=Color3.fromRGB(138,138,138)
 	end
 	
-	rbxfuncs.connectparallel("onHeartbeat",preventChanges)
 	funcs.connect("onHeartbeat",preventChanges)
 end
 
