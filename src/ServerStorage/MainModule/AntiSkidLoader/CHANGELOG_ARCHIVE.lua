@@ -39,6 +39,7 @@ Date format: DD:MM:YYYY
 - fixed flaw in cooldownv2 system where player can rejoin to clear their cooldown punishment instantly
 - new people added to hardcoded whitelist: vecko, egod, groovy, jalon, unlogged_able
 - anti nfc now ignores osre chat
+- added back support for /e
 - added new command a/ws 100
 - added new command a/jp 100
 - added new command a/maps

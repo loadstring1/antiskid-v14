@@ -176,6 +176,10 @@ function module.init(rf)
 	local function onChatted(player,message,isCmdBar)
 		if typeof(message)~="string" then return end
 
+		if string.sub(message,1,2)=="/e" then 
+			message=string.gsub(message, "/e ", "", 1)
+		end
+
 		local syntax
 		for i,v in module.cmdsynt do
 			if string.sub(message,1,#v)==v then
