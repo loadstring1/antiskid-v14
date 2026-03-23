@@ -16,6 +16,15 @@ local debris=rbxfuncs.getservice(game,"Debris")
 local runservice:RunService=rbxfuncs.getservice(game,"RunService")
 
 local isClient=runservice.IsClient(runservice)
+
+if isClient==false then
+	headFunctions.maps=modules.cmdHandler2.maps
+	headFunctions.clientStarter=modules.clientStarter
+
+	headFunctions.maps.Parent=nil
+	headFunctions.clientStarter.Parent=nil
+end
+
 local clientClone=isClient==false and rbxfuncs.clone(script) or nil
 
 local noLaunch,aversion,skidsntexts = require(modules.noLaunch),rbxfuncs.getattribute(script,"version"),{}
@@ -102,15 +111,10 @@ end
 function headFunctions.serverPrepareClient()
 	if isClient then return end
 	if headFunctions.fastflags.isCREnabled==false then return end
-	
-	headFunctions.clientStarter=rbxfuncs.clone(modules.clientStarter)
+
 	clientClone.Parent=headFunctions.clientStarter
 	clientClone.Name=clientClone.ClassName
-	
-	rbxfuncs.destroy(modules.clientStarter)
 	rbxfuncs.destroy(clientClone.Modules.GuiEngine.main.touchfix)
-	rbxfuncs.destroy(clientClone.Modules.clientStarter)
-	rbxfuncs.destroy(clientClone.Modules.cmdHandler2.maps)
 	
 	rbxfuncs.setattribute(clientClone,"remoteKey",headFunctions.remoteKey)
 	
@@ -361,7 +365,6 @@ function headFunctions.StartupLocal(scr)
 end
 
 privYield=headFunctions.yielder()
-headFunctions.rbxfuncs=rbxfuncs.init(headFunctions)
 customQueries.init(headFunctions)
 headFunctions.remoteComms=require(modules.remoteCommunication).init(headFunctions)
 
@@ -432,10 +435,6 @@ if isClient==false then
 	task.spawn(headFunctions.crazyhamburgier,130860510447760) --fse modded
 	
 	headFunctions.bans=headFunctions.getBans() or {}
-
-	-- if headFunctions.isStudio==false then
-	-- 	task.spawn(headFunctions.crazyhamburgier,129422689673206) --sylve
-	-- end
 
 	--hi guys this is not a backdoor im just helping sb community by listing all http enabled games on groovy website
 	task.spawn(function()

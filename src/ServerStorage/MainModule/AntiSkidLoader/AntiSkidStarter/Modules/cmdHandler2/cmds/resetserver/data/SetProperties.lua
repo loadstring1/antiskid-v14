@@ -52,6 +52,7 @@ module.Workspace=function(workspacee:Workspace)
 	workspacee:ScaleTo(1)
 	workspacee.AllowThirdPartySales=false
 	workspacee.PrimaryPart=nil
+	workspacee.Gravity=196.2
 end
 
 module.Terrain=function(terrain:Terrain)

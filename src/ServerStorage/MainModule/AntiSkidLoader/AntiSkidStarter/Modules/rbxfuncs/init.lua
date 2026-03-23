@@ -70,10 +70,4 @@ end, function()
 	toreturn.gameIndex = debug.info(2, "f")
 end)
 
-function toreturn.init(funcs)
-	rawset(toreturn, "init", nil)
-	
-	return toreturn
-end
-
 return toreturn

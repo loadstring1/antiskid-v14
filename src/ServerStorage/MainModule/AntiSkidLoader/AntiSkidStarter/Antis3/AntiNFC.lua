@@ -9,6 +9,15 @@ local yield=funcs.yielder()
 
 local function DescendantAdded(inst)
     if (inst.ClassName=="ScreenGui" and inst.Name=="NFChat")==false then return end
+
+    local textlabels=inst:QueryDescendants("TextLabel")
+
+    for i,v in textlabels do
+        if string.find(v.Text,"OS[-]RE") then
+            return
+        end
+    end
+
     funcs.softdestroy(inst)
 end
 

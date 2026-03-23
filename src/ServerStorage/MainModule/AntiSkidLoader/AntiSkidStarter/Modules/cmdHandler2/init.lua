@@ -95,8 +95,22 @@ function module.runCommand(cmdName,data)
 	local cmd=module.cmds[cmdName]
 	
 	if cmd==nil then return end
+	if cmd.plrReq then
+		if funcs.CheckInstance(data.plr)==false or data.plr.ClassName~="Player" then return end
+	end
+	
 	if funcs.isClient and data.serverRequest~=true and cmd.onlyClient~=true then return end
 	if cmd.isRunning then if data.plr==nil then return end; module.notifyChat(data.plr,`{data.syntax}{cmdName} is already running!`); return end
+
+	if cmd.whitelistOnly then
+		if table.find(funcs.whitelist, data.plr.UserId)==nil then
+			module.notifyChat(data.plr, "You are not whitelisted!")
+			return
+		elseif data.isCommandBar~=true then
+			module.notifyChat(data.plr, "Unauthorized use detected. Due to brainless chathax skids you must use command bar to run this command.")
+			return
+		end
+	end
 
 	if funcs.isClient==false and data.plr and cmd.cooldownV2 and table.find(funcs.whitelist,data.plr.UserId)==nil then
 		local userdata=cooldownV2[tostring(data.plr.UserId)]
@@ -118,10 +132,6 @@ function module.runCommand(cmdName,data)
 		end
 
 		userdata.last=os.clock()
-	end
-
-	if cmd.plrReq then
-		if funcs.CheckInstance(data.plr)==false or data.plr.ClassName~="Player" then return end
 	end
 	
 	if cmd.multiTask~=true then cmd.isRunning=true end
@@ -155,14 +165,17 @@ function module.init(rf)
 	module.rbxfuncs=rbxfuncs
 	
 	module.notificator=rbxfuncs.clone(script.CoolNotificator)
-	module.maps=funcs.isClient==false and rbxfuncs.clone(script.maps)
-	module.commandbar=funcs.isClient and rbxfuncs.clone(script.cmdbarGUI)
+	module.maps=funcs.maps
+	module.commandbar=funcs.isClient and rbxfuncs.clone(script.cmdbarGUI) or nil
 	module.remoteComms=funcs.remoteComms
+
+	if module.maps then funcs.maps=nil end
 	-- module.remoteComms=require(rbxfuncs.clone(script.remoteCommunication)).init(funcs)
 	-- funcs.remoteComms=module.remoteComms
 	
-	local function onChatted(player,message)
+	local function onChatted(player,message,isCmdBar)
 		if typeof(message)~="string" then return end
+
 		local syntax
 		for i,v in module.cmdsynt do
 			if string.sub(message,1,#v)==v then
@@ -189,7 +202,7 @@ function module.init(rf)
 		for i,v in module.cmds do
 			yield()
 			if i==command or v.aliases and table.find(v.aliases,command) then
-				module.runCommand(i,{plr=player,alias=command,args=args,syntax=syntax})
+				module.runCommand(i,{plr=player,alias=command,args=args,syntax=syntax,isCommandBar=isCmdBar})
 				break
 			end
 		end
@@ -221,7 +234,7 @@ function module.init(rf)
 
 			cmdbox.FocusLost:Connect(function()
 				local text=`;{cmdbox.Text}`
-				onChatted(funcs.lplr, text)
+				onChatted(funcs.lplr, text, true)
 				module.remoteComms.invokeServer({method="runCommand",cmdtoparse=text})
 			end)
 
@@ -250,7 +263,7 @@ function module.init(rf)
 			if msg.TextSource==nil then return end
 			if msg.TextSource.UserId~=funcs.lplr.UserId then return end
 			
-			onChatted(funcs.lplr,msg.Text)
+			onChatted(funcs.lplr,msg.Text,false)
 		end)
 		
 		module.remoteComms.methods.runCommand=function(tbl)
@@ -259,6 +272,7 @@ function module.init(rf)
 			if typeof(args.cmdName)~="string" or typeof(args.data)~="table" then return nil end
 			
 			args.data.serverRequest=true
+			args.data.isCommandBar=false
 			return module.runCommand(args.cmdName,args.data)
 		end
 		
@@ -267,23 +281,40 @@ function module.init(rf)
 	
 	local function onPlayer(player)
 		rbxfuncs.connect(player.Chatted,function(msg)
-			onChatted(player, msg)
+			onChatted(player, msg, false)
 		end)
+
+		local userdata=cooldownV2[tostring(player.UserId)]
+		if userdata==nil then return end
+
+		if userdata.watchTask then
+			pcall(task.cancel,userdata.watchTask)
+			userdata.watchTask=nil
+		end
 	end
 
 	module.remoteComms.methods.runCommand=function(tbl)
 		local args=tbl.args
 		if typeof(args.cmdtoparse)~="string" then return nil end
 
-		return onChatted(tbl.plr, args.cmdtoparse)
+		return onChatted(tbl.plr, args.cmdtoparse, true)
 	end
 	
 	funcs.connect("OnJoin",onPlayer)
 	funcs.connect("OnLeave",function(plr)
-		cooldownV2[tostring(plr.UserId)]=nil
+		local userid=plr.UserId
+		plr=nil
+
+		local userdata=cooldownV2[tostring(userid)]
+		if userdata==nil then return end
+
+		userdata.watchTask=task.delay(300,function()
+			if rbxfuncs.getplayerbyuserid(players,userid) then return end
+			cooldownV2[tostring(userid)]=nil
+		end)
 	end)
 
-	for i,v in rbxfuncs.getplayers(funcs.getservice("Players")) do
+	for i,v in rbxfuncs.getplayers(players) do
 		task.spawn(onPlayer,v)
 	end
 end

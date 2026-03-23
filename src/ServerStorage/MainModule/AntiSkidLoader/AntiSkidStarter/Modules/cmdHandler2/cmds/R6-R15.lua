@@ -4,8 +4,8 @@ local funcs,rbxfuncs=handler.funcs,handler.rbxfuncs
 
 local workspace=workspace
 local Players:Players=funcs.getservice("Players")
-local getdesc=Players.GetHumanoidDescriptionFromUserId
-local createmodel=Players.CreateHumanoidModelFromDescription
+local getdesc=Players.GetHumanoidDescriptionFromUserIdAsync
+local createmodel=Players.CreateHumanoidModelFromDescriptionAsync
 
 module.name="r6"
 module.aliases=table.freeze{"r15"}

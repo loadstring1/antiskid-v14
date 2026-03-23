@@ -29,8 +29,9 @@ local function onHeart()
 		return 
 	end
 	
-	for i,v in TextChannels do
-		v.ShouldDeliverCallback=nil
+	for channel in TextChannels do
+		if rbxfuncs.isdescendantof(channel,textchatservice)==false then TextChannels[channel]=nil; continue end
+		channel.ShouldDeliverCallback=nil
 	end
 	
 	for plr:Player,gui:PlayerGui in PlayerGuis do		
@@ -103,7 +104,7 @@ end
 local function addTextChannel(channel:TextChannel)
 	if funcs.isImmediate then yield() end
 	if channel.ClassName~="TextChannel" then return end
-	table.insert(TextChannels,channel)
+	TextChannels[channel]=true
 end
 
 rbxfuncs.connect(textchatservice.DescendantAdded,addTextChannel)

@@ -4,8 +4,8 @@ local replicatingServices,whichmethods
 
 local remotes={}
 
-local GET_STRING="surelynobodywouldmakeantiantiskidbasedonremoteattributeright"
-local RETURN_STRING=[[gi2fuhuygfuygfruyigfueyigqfuywegfuqyiwgfuiyqhwgjhkaSDno one would obviously lololololol dsjuihsdaiudssiaughdu dsgyudsauydsagydsa dsayu dsauygdsaguydsayhufewiughfoiyfuyifwuyefgyufewgoy]]
+local GET_STRING="fuh3fiuo3q2erfioyghfqhugfewjkhweafdwejkwaefjkgawfhgjk"
+local RETURN_STRING=[[uwoedhwoieufgqweifgwehjfgqwejqghwefjwehgfsadfasgdlkfjqhwflqwefqwohfwqouhfqo3iuer134r78214t361764t512rhqfweklufhaekfjlqghfj]]
 
 local function hn(func)
 	local b=false; task.spawn(function()b=true end)
@@ -54,7 +54,7 @@ local function server()
 	local function heart()
 		if iscreating then return end
 		
-		if remotefunction==nil or table.find(replicatingServices,remotefunction.Parent)==nil then
+		if remotefunction==nil or funcs.CheckInstance(remotefunction)==false or table.find(replicatingServices,remotefunction.Parent)==nil then
 			createRemote()
 			return
 		end
@@ -67,6 +67,7 @@ local function server()
 			end
 		end
 
+		remotefunction:SetAttribute(GET_STRING,RETURN_STRING)
 		remotefunction.OnServerInvoke=onInvoke
 	end
 	

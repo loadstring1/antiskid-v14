@@ -5,17 +5,14 @@ local players=funcs.getservice("Players")
 
 module.name="shutdown"
 module.aliases=table.freeze{"sd"}
+module.description="shutdowns this server"
 module.multiTask=true
 module.plrReq=true
+module.whitelistOnly=true
 
 rbxfuncs.destroy(script)
 
 function module.f(data)
-	if table.find(funcs.whitelist,data.plr.UserId)==nil then
-		handler.notifyChat(data.plr,"You are not whitelisted - Conajwyżej możesz mi jaja polizać")
-		return
-	end
-	
 	local reason=data.args and #data.args>0 and `Server has been shutdown manually by {data.plr.Name} Reason: {table.concat(data.args," ")}` or `Server has been shutdown manually by {data.plr.Name} Reason: unspecified`
 	
 	local function loopkick()
