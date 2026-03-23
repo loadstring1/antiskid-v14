@@ -1,4 +1,4 @@
-local stable="V14.5.20"
+local stable="V14.5.21"
 return table.freeze{
 	stable=stable,
 	nightly=`{stable}.NIGHT`,

@@ -50,6 +50,8 @@ function module.f(data)
 	
 	rbxfuncs.disconnect(workadded)
 	workadded=nil
+
+	workspace.Gravity=196.2
 	task.spawn(pcall,workspace.Terrain.Clear,workspace.Terrain)
 	task.spawn(pcall,rbxfuncs.clear,funcs.getservice("Lighting"))
 

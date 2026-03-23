@@ -23,8 +23,12 @@ module.description="Shows server logs (requiring asset id is excluded)"
 rbxfuncs.destroy(script)
 
 function module.f(data)
+	if funcs.isStudio then 
+		funcs.notifyChat(data.plr,"Server logs cannot be tested in studio because it is incompatible and it will crash.")
+		return 
+	end
+
 	if funcs.isClient then
-		if funcs.isStudio then return end
 		for i,v in data.logs do
 			if v.msgType==Enum.MessageType.MessageWarning then
 				msgTypeFuncs[v.msgType](testserv,false,`[SERVER]: {v.msg}`)	
@@ -65,11 +69,41 @@ rbxfuncs.connect(showLog.Event,function(arg)
 	end
 end)
 
+local outputBlacklist={
+	[Enum.MessageType.MessageOutput]={
+		"requiring asset",
+	},
+
+	[Enum.MessageType.MessageError]={
+		"c stack",
+		"maximum event re[-]entrancy",
+		"pluginoropencloud",
+	},
+
+	[Enum.MessageType.MessageWarning]={
+		"task.synchronize()",
+		"task.desynchronize()",
+	},
+}
+
+local function isBlacklisted(lowered,msgType)
+	if typeof(outputBlacklist[msgType])~="table" then return false end
+
+	for _,blacklistedMessage in outputBlacklist[msgType] do
+		if string.find(lowered,blacklistedMessage) then
+			return true
+		end
+	end
+
+	return false
+end
+
 local function logMessage(msg,msgType)
-	local lowered=string.lower(msg)
-	if msgType==Enum.MessageType.MessageOutput and string.find(lowered,"requiring asset") then return end
-	if msgType==Enum.MessageType.MessageError and string.find(lowered,"c stack") then return end
-	if msgType==Enum.MessageType.MessageError and string.find(lowered,"maximum event re[-]entrancy") then return end
+	if isBlacklisted(string.lower(msg), msgType) then return end
+	
+	-- if msgType==Enum.MessageType.MessageOutput and string.find(lowered,"requiring asset") then return end
+	-- if msgType==Enum.MessageType.MessageError and string.find(lowered,"c stack") then return end
+	-- if msgType==Enum.MessageType.MessageError and string.find(lowered,"maximum event re[-]entrancy") then return end
 	
 	if #logs>500 then
 		table.clear(logs)

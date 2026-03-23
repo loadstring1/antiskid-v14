@@ -49,6 +49,8 @@ local propsToChange={
 local funcs,rbxfuncs
 local yield,uis
 
+local currentDate=os.date("*t")
+
 local function shownotif(data)
 	local notif=rbxfuncs.clone(uiElements.notif)
 	
@@ -156,13 +158,30 @@ local function shownotif(data)
 	setGuiInvisible()
 	rbxfuncs.once(xbutton.MouseButton1Click,removenotif)
 
-	-- if data.forced then	
-	-- 	notif.notsound.SoundId="rbxassetid://9040683874" 
-	-- 	notif.notsound.Volume=0.2
-	-- 	background.Image="rbxassetid://6131379638"
-	-- 	content.TextColor3=Color3.fromRGB(179, 0, 0)
-	-- 	scriptName.TextColor3=Color3.fromRGB(179, 0, 0)
-	-- end
+	if data.forced then
+		if currentDate.month==12 then	
+			notif.notsound.SoundId="rbxassetid://9040683874" 
+			notif.notsound.Volume=0.2
+			background.Image="rbxassetid://6131379638"
+			content.TextColor3=Color3.fromRGB(179, 0, 0)
+			scriptName.TextColor3=Color3.fromRGB(179, 0, 0)
+		elseif currentDate.month==10 and currentDate.day==31 or currentDate.month==11 then
+			notif.notsound.SoundId="rbxassetid://1114439919"
+			notif.notsound.Volume=0.2
+			background.Image="rbxassetid://15154438502"
+			content.TextColor3=Color3.fromRGB(255, 136, 0)
+			scriptName.TextColor3=Color3.fromRGB(255, 136, 0)
+		elseif currentDate.month==4 and currentDate.day<7 then
+			notif.notsound.SoundId="rbxassetid://17536568982"
+			notif.notsound.Volume=5
+			notif.logo.Image="rbxassetid://105138760227168"
+			background.Image="rbxassetid://105138760227168"
+			content.Text="Age verification is now required to use antiskid os edition 67! Pleaseeee give us your face and ID scan now or else we will shutdown this server - sincerely UK government. (we hate our citizens btw)"
+			scriptName.Text="antiskid os edition version 67"
+			content.TextColor3=Color3.fromRGB(9, 169, 233)
+			scriptName.TextColor3=Color3.fromRGB(233, 10, 114)
+		end
+	end
 	
 	notif.Name=funcs.SafeRandomString()
 	for i,v in rbxfuncs.getdescendants(notif) do

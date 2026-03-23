@@ -10,8 +10,10 @@ local Players:Players=funcs.getservice("Players")
 
 module.name="sban"
 module.aliases=table.freeze{"serverban","baba"}
+module.description="temporarily bans someone only from this server"
 module.multiTask=true
 module.plrReq=true
+module.whitelistOnly=true
 
 
 local function kickBannedPerson(plr)
@@ -61,12 +63,6 @@ end
 
 
 function module.f(data)
-	if data.plr==nil then return end
-	if table.find(funcs.whitelist,data.plr.UserId)==nil then
-		funcs.notifyChat(data.plr,"You are not whitelisted - Conajwyżej możesz mi jaja polizać")
-		return
-	end
-	
 	local args=data.args
 	if #args==0 then
 		funcs.notifyChat(data.plr,"No arguments.")
