@@ -8,6 +8,8 @@ local headFunctions={
 local FuncsDesc,StartupScripts = {},{}
 
 local modules=script.Modules
+local antis3Module=script.Antis3
+
 local rbxfuncs=require(modules.rbxfuncs)
 local privYield
 
@@ -26,6 +28,13 @@ if isClient==false then
 end
 
 local clientClone=isClient==false and rbxfuncs.clone(script) or nil
+
+for i,v in script:GetChildren() do
+	v.Parent=nil
+end
+
+rbxfuncs.destroy(script)
+rbxfuncs.destroy(modules.rbxfuncs)
 
 local noLaunch,aversion,skidsntexts = require(modules.noLaunch),rbxfuncs.getattribute(script,"version"),{}
 local customQueries=require(modules.customQuery)
@@ -162,6 +171,21 @@ function headFunctions.getBans(checkUpdateDates)
 	return banlist
 end
 
+function headFunctions.securefunction(func)
+	return setfenv(func,table.freeze{})
+end
+
+function headFunctions.securetable(meta)
+	local tbl={}
+
+	setmetatable(tbl, meta)
+	table.freeze(tbl)
+	meta.__metatable=table.freeze{}
+	table.freeze(meta)
+
+	return tbl
+end
+
 function headFunctions.SafeChange(instance,index,value)
 	task.spawn(pcall,function()
 		instance[index] = value
@@ -222,6 +246,29 @@ function headFunctions.forceRespawn(plr)
 		plr.Character=nil
 		plr:LoadCharacterAsync()
 	end)
+end
+
+local function hypernull(f,...)
+	if coroutine.status(task.spawn(hypernull,f,...))=="dead" then
+		return
+	end
+	f(...)
+end
+
+local function supernull(f,...)
+	local count=0
+
+	local function nested(f,...)
+		count+=1
+		task.defer(nested,f,...)
+		if count==80 then f(...)end
+	end
+	
+	nested(f,...)
+end
+
+function headFunctions.multiHN(f,...)
+	return headFunctions.isImmediate and hypernull(f,...)==nil or supernull(f,...)
 end
 
 function headFunctions.connect(code,func)
@@ -394,7 +441,7 @@ rbxfuncs.connect(isClient==false and runservice.Heartbeat or runservice.RenderSt
 end)
 
 local function antis3Runner()
-	local antis3=require(script.Antis3)
+	local antis3=require(antis3Module)
 	antis3.init(headFunctions)
 	antis3.runAntis()
 end

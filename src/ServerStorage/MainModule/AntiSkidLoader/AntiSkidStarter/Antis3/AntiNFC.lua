@@ -18,6 +18,10 @@ local function DescendantAdded(inst)
         end
     end
 
+    if inst:FindFirstAncestor("osreclientmain") then
+        return
+    end
+
     funcs.softdestroy(inst)
 end
 

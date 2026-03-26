@@ -28,6 +28,13 @@ legacy legend (wont use this legend anymore because its outdated):
 
 Date format: DD:MM:YYYY
 
+27.03.2026 (DD:MM:YYYY) V14.5.22
+- rejoin no longer serverhops when you're alone in the server - use ;serverhop command if you used rejoin for serverhopping when you were alone in the server
+- added anti traveller
+- improved anti admin - it blocks abuse detection shutdown antis now
+- patched mr.robot hack scriptcontext.Error descendant leak
+- uses supernull on deferred instead of hypernull
+
 20.03.2026 (DD:MM:YYYY) V14.5.21
 - command handler doesn't clone maps anymore instead maps get parented to nil
 - fixed r6/r15 command using deprecated functions - yes its the new roblox's Async update

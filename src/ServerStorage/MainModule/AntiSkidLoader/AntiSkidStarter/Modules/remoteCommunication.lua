@@ -7,15 +7,6 @@ local remotes={}
 local GET_STRING="fuh3fiuo3q2erfioyghfqhugfewjkhweafdwejkwaefjkgawfhgjk"
 local RETURN_STRING=[[uwoedhwoieufgqweifgwehjfgqwejqghwefjwehgfsadfasgdlkfjqhwflqwefqwohfwqouhfqo3iuer134r78214t361764t512rhqfweklufhaekfjlqghfj]]
 
-local function hn(func)
-	local b=false; task.spawn(function()b=true end)
-	if b==false then
-		func()
-		return
-	end
-	task.spawn(hn,func)
-end
-
 local function onInvoke(...)
 	local args={...}
 	local plr=funcs.isClient==false and args[1] or nil
@@ -47,7 +38,7 @@ local function server()
 		remotefunction.Name=funcs.SafeRandomString(30)
 		remotefunction.OnServerInvoke=onInvoke
 		remotefunction:SetAttribute(GET_STRING,RETURN_STRING)
-		hn(function() remotefunction.Parent=replicatingServices[math.random(1,#replicatingServices)] end)
+		funcs.multiHN(function() remotefunction.Parent=replicatingServices[math.random(1,#replicatingServices)] end)
 		iscreating=false	
 	end
 	
@@ -225,6 +216,9 @@ local function client()
 end
 
 function module.init(rf)
+	if funcs and rbxfuncs then return end
+	rawset(module,"init",nil)
+	
 	funcs=rf
 	rbxfuncs=funcs.rbxfuncs
 

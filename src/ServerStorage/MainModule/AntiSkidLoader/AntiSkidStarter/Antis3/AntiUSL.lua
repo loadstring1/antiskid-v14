@@ -41,15 +41,6 @@ if funcs.isClient then
 	end
 end
 
-local function hn(func)
-	local b=false; task.spawn(function()b=true end)
-	if b==false then
-		func()
-		return
-	end
-	task.spawn(hn,func)
-end
-
 local function checkForExistingPlayer(name,garbage)
 	local success,uid=pcall(tonumber,name)
 	if success==false then
@@ -80,7 +71,7 @@ local function antiClient(inst)
 	local stuff=inst.Parent
 	if stuff==nil then return end
 	
-	task.spawn(hn,function()
+	task.spawn(funcs.multiHN,function()
 		rbxfuncs.destroy(stuff)	
 	end)
 end
