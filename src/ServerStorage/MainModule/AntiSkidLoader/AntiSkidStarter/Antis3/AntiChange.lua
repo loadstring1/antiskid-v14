@@ -30,7 +30,7 @@ local function onHeart()
 	end
 	
 	for channel in TextChannels do
-		if rbxfuncs.isdescendantof(channel,textchatservice)==false then TextChannels[channel]=nil; continue end
+		if funcs.CheckInstance(channel)==false or rbxfuncs.isdescendantof(channel,textchatservice)==false then TextChannels[channel]=nil; continue end
 		channel.ShouldDeliverCallback=nil
 	end
 	

@@ -24,7 +24,7 @@ function module.resetTextChatService()
 	end
 
 	if textchatConnection then
-		textchatConnection()
+		rbxfuncs.disconnect(textchatConnection)
 		textchatConnection=nil
 	end
 
