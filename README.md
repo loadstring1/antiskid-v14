@@ -1,3 +1,5 @@
+> disclaimer: This script shouldn't be used in regular games. It was made only for games where developers give serverside execution access to everyone on purpose. This script gives admin commands to everyone without permission. Use at your own risk!
+
 ### AntiSkid stable (works in any game even with http disabled and loadstring disabled)
 
 help antiskid v14 improve today by making pull requests
@@ -13,21 +15,40 @@ require(16534611190).AntiSkid()
 
 </details>
 
+> Http version of antiskid is still unfinished! Use classic method instead.
+
 ### AntiSkid stable (http method - works only in loadstring and http enabled games)
-Http method (works only in loadstring enabled games)
+
+<details>
+<summary>Http method (works only in loadstring enabled games)</summary>
+
 ```lua
 task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/source.lua")),"Your roblox username here","main")
 ```
 
+</details>
+
 ### AntiSkid nightly loader (http method - works only in loadstring and http enabled games)
+
+<details>
+<summary>Http method - nightly loader</summary>
+
 ```lua
 task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/nightly/source.lua")),"Your roblox username here","nightly")
 ```
 
-### Bypass breakasset (method deprecated and kinda wont be updated anymore)
+</details>
+
+### Bypass breakasset - http method
+
+<details>
+<summary>bypass breakasset - http method </summary>
+
 ```lua
 loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/loader.lua"))()
 ```
+
+</details>
 
 ### Known bugs that i won't fix bc it pissed me off
 1. rojo build command being fucking unreliable incorrectly creating antiskid:
