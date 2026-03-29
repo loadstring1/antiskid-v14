@@ -15,6 +15,8 @@ require(16534611190).AntiSkid()
 
 </details>
 
+---
+
 ### AntiSkid stable (http method - works only in loadstring and http enabled games)
 
 <details>
@@ -27,6 +29,8 @@ task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githu
 > Http version of antiskid is still unfinished! Use classic method instead.
 
 </details>
+
+---
 
 ### AntiSkid nightly loader (http method - works only in loadstring and http enabled games)
 
@@ -41,6 +45,8 @@ task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githu
 
 </details>
 
+---
+
 ### Bypass breakasset - http method
 
 <details>
@@ -53,6 +59,8 @@ loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubuserconten
 > this is just classic method behind http however it bypasses breakasset in case somebody killed antiskid require on purpose
 
 </details>
+
+---
 
 ### Known bugs that i won't fix bc it pissed me off
 - rojo build command being fucking unreliable incorrectly creating antiskid
