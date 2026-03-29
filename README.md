@@ -6,9 +6,11 @@ how to run in-game? You need a serverside executor because this doesn't work on 
 
 <details>
 <summary>Classic method of loading antiskid</summary>
+
 ```lua
 require(16534611190).AntiSkid()
 ```
+
 </details>
 
 ### AntiSkid stable (http method - works only in loadstring and http enabled games)
