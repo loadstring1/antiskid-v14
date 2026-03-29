@@ -55,14 +55,20 @@ loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubuserconten
 </details>
 
 ### Known bugs that i won't fix bc it pissed me off
-1. rojo build command being fucking unreliable incorrectly creating antiskid:
+- rojo build command being fucking unreliable incorrectly creating antiskid
 - rojo not creating 2 maps under cmdhandler2
 - rojo incorrectly creating crossroads map under cmdhandler2
 - rojo incorrectly creating Fly tool under cmdhandler2 -> cmds -> fly -> Fly (no remoteevent and those scripts are supposed to be disabled)
 - rojo not creating Frame instance under GuiEngine at all lmao
 - rojo incorrectly creating ScreenGui instance under GuiEngine
 
-current workaround for issue number 1: just use latest antiskid from github releases or getobjects like this (works in studio only)
+conclusion: use rbxm from releases or this workaround in studio
+
+<details>
+<summary>current workaround for studio</summary>
+
 ```lua
 game:GetObjects("rbxassetid://16534611190")[1].Parent=workspace
 ```
+
+</details>
