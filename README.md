@@ -15,8 +15,6 @@ require(16534611190).AntiSkid()
 
 </details>
 
-> Http version of antiskid is still unfinished! Use classic method instead.
-
 ### AntiSkid stable (http method - works only in loadstring and http enabled games)
 
 <details>
@@ -25,6 +23,8 @@ require(16534611190).AntiSkid()
 ```lua
 task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/source.lua")),"Your roblox username here","main")
 ```
+
+> Http version of antiskid is still unfinished! Use classic method instead.
 
 </details>
 
@@ -37,6 +37,8 @@ task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githu
 task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/nightly/source.lua")),"Your roblox username here","nightly")
 ```
 
+> Http version of antiskid is still unfinished! Use classic method instead.
+
 </details>
 
 ### Bypass breakasset - http method
@@ -47,6 +49,8 @@ task.spawn(loadstring(game:GetService("HttpService"):GetAsync("https://raw.githu
 ```lua
 loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/loadstring1/antiskid-v14/refs/heads/main/loader.lua"))()
 ```
+
+> this is just classic method behind http however it bypasses breakasset in case somebody killed antiskid require on purpose
 
 </details>
 
