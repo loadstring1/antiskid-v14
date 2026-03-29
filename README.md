@@ -4,10 +4,12 @@ help antiskid v14 improve today by making pull requests
 
 how to run in-game? You need a serverside executor because this doesn't work on clientsided executors. This script was designed only for Script Builder community.
 
-Classic method of loading antiskid:
+<details>
+<summary>Classic method of loading antiskid</summary>
 ```lua
 require(16534611190).AntiSkid()
 ```
+</details>
 
 ### AntiSkid stable (http method - works only in loadstring and http enabled games)
 Http method (works only in loadstring enabled games)
