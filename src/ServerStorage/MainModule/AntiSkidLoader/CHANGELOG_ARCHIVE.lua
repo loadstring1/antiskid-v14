@@ -28,7 +28,8 @@ legacy legend (wont use this legend anymore because its outdated):
 
 Date format: DD:MM:YYYY
 
-27.03.2026 (DD:MM:YYYY) V14.5.22
+29.03.2026 (DD:MM:YYYY) V14.5.22
+- blocks adonis anti exploit on clientside to avoid server shutdowns for some random bullshit someone did
 - updated default starterplayerscripts to their latest version
 - fixed resetchat command failing to refit chat when used more than once
 - detect and block all generic screen blockers and jumpscares - antiskid doesn't notify about that btw

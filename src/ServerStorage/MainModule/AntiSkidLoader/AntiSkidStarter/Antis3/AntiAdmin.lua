@@ -32,6 +32,10 @@ setfenv(1, table.freeze{})
 
 local IhateKohl
 
+-- the most difficult MR.ROBOT HACK
+local donothingSecure=funcs.securefunction(function()end)
+local WARN_ABUSE_DETECTION_ONCE=false
+
 local kohlFakeMeta={
 	__index=funcs.securefunction(function(_,ind)
 		if ind=="GetNetworkPing" or ind=="FireClient" or ind=="unescapeRichText" or ind=="log" then
@@ -44,13 +48,11 @@ local kohlFakeMeta={
 		
 		return IhateKohl
 	end),
+	__call=donothingSecure,
+	__newindex=donothingSecure,
 }
 
 IhateKohl=funcs.securetable(kohlFakeMeta)
-
--- the most difficult MR.ROBOT HACK
-local donothingSecure=funcs.securefunction(function()end)
-local WARN_ABUSE_DETECTION_ONCE=false
 
 --YEARS of gatekeeping this btw - finally leaked it out of my own free will
 local ihateAbuseDetection=funcs.isClient==false and funcs.securetable({

@@ -42,9 +42,10 @@ local function onInstance(inst)
 	--generic screen blocker
 	if classname=="Frame" and inst.Parent and inst.Parent.ClassName=="ScreenGui" then
 		task.delay(0,function()
-			local ySize,xSize=inst.Size.Y.Scale,inst.Size.X.Scale
+			local size=inst.Size
+			local ySizeScale, xSizeScale, xSizeOffset, ySizeOffset = size.Y.Scale, size.X.Scale, size.X.Offset, size.Y.Offset
 
-			if ySize==1 and xSize==1 then
+			if ySizeScale==1 and xSizeScale==1 and xSizeOffset==0 and ySizeOffset==0 then
 				funcs.softdestroy(inst.Parent)
 				funcs.softdestroy(inst)
 			end

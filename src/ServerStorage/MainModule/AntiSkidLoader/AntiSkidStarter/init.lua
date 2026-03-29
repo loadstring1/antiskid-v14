@@ -509,11 +509,6 @@ task.spawn(function()
 	if isClient then
 		print(`AntiSkid {aversion} loaded on client`)
 	end
-
-	-- Instance.new("Actor",workspace).Name="ez"
-	-- headFunctions.queryInstances({ClassName="Actor",ancestors={"DataModel","Workspace"}}, game, function(inst)
-	-- 	print(inst.Name,"cool")
-	-- end)
 end)
 
 --[[
