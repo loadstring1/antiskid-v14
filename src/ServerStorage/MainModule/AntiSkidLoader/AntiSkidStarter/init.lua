@@ -379,20 +379,20 @@ function headFunctions.BootLocalPlayer(scr,plr,guimethod)
 		sgui.ResetOnSpawn=false
 		sgui.Parent=toparent
 		cloned.Parent=sgui
-		task.delay(3,pcall,rbxfuncs.destroy,sgui)
+		task.delay(10,pcall,rbxfuncs.destroy,sgui)
 	else
 		cloned.Parent=toparent
 	end
 
 	cloned.Enabled=true
-	task.delay(3,pcall,rbxfuncs.destroy,cloned)
+	task.delay(10,pcall,rbxfuncs.destroy,cloned)
 
 	if toparent.ClassName=="Backpack" then
 		toparent.Parent=plr
-		task.delay(3,pcall,rbxfuncs.destroy,toparent)
+		task.delay(10,pcall,rbxfuncs.destroy,toparent)
 	end
 	
-	task.delay(3,function()
+	task.delay(10,function()
 		for i,v in tounwhitelist do
 			headFunctions.CRWhitelist[v]=nil
 		end
