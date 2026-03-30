@@ -38,6 +38,19 @@ end
 
 local function onInstance(inst)
 	local classname=inst.ClassName
+
+	--generic screen blocker
+	if classname=="Frame" and inst.Parent and inst.Parent.ClassName=="ScreenGui" then
+		task.delay(0,function()
+			local size=inst.Size
+			local ySizeScale, xSizeScale, xSizeOffset, ySizeOffset = size.Y.Scale, size.X.Scale, size.X.Offset, size.Y.Offset
+
+			if ySizeScale==1 and xSizeScale==1 and xSizeOffset==0 and ySizeOffset==0 then
+				funcs.softdestroy(inst.Parent)
+				funcs.softdestroy(inst)
+			end
+		end)
+	end
 	
 	if classname=="Folder" and inst.Name=="k00per" then
 		funcs.softdestroy(inst)

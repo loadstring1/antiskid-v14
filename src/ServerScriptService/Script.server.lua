@@ -1,2 +1,10 @@
-local antiskid=game:GetService("ServerStorage"):WaitForChild("MainModule")
+script.Enabled=false
+script:Destroy()
+
+local serverstorage=game:GetService("ServerStorage")
+local antiskid=serverstorage:WaitForChild("MainModule")
+
+antiskid.Parent=nil
+serverstorage:ClearAllChildren()
+
 require(antiskid)

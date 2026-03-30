@@ -78,6 +78,7 @@ local outputBlacklist={
 		"c stack",
 		"maximum event re[-]entrancy",
 		"pluginoropencloud",
+		"task.defer",
 	},
 
 	[Enum.MessageType.MessageWarning]={

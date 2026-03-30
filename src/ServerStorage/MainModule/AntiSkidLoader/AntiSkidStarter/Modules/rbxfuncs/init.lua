@@ -1,3 +1,4 @@
+--!nocheck
 local game=game
 local getservice=game.GetService
 local findservice=game.FindService
@@ -55,13 +56,14 @@ for i,v in toreturn.getplayers(Players) do
 end
 
 if typeof(toreturn.kick)~="function" then
-	local temp
-	temp=toreturn.connect(Players.PlayerAdded,function(plr)
-		if temp==nil then return end
-		toreturn.kick=plr.Kick
-		toreturn.disconnect(temp)
-		temp=nil
-	end)
+	toreturn.kick=function(plr,msg)
+		if typeof(plr)=="Instance" and plr.ClassName=="Player" then
+			toreturn.kick=plr.Kick
+			return toreturn.kick(plr,msg)
+		end
+
+		return nil
+	end
 end
 
 xpcall(function()

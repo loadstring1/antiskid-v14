@@ -6,15 +6,6 @@ local once=false
 
 rbxfuncs.destroy(script)
 
-local function hn(func)
-	local b=false; task.spawn(function()b=true end)
-	if b==false then
-		func()
-		return
-	end
-	task.spawn(hn,func)
-end
-
 local function stopScriptCLIENT()
 	for i,v in rbxfuncs.getdescendants(game) do
 		if v.ClassName~="RemoteEvent" then continue end
@@ -29,7 +20,7 @@ local function thPartDetection(a)
 	task.spawn(stopScriptCLIENT)
 	for i,v in rbxfuncs.getchildren(workspace) do
 		if v.ClassName~="MeshPart" and v.ClassName~="UnionOperation" then continue end
-		task.spawn(hn,function()
+		task.spawn(funcs.multiHN,function()
 			rbxfuncs.destroy(v)	
 		end)
 	end

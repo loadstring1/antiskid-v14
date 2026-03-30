@@ -33,6 +33,7 @@ return table.freeze{
 		"spam particle",
 		string.reverse("emag kcuf"),
 		string.reverse("revres kcuf"),
+		string.reverse("kcuf"),
 		"destroy server",
 		"nuke server",
 		"logger",

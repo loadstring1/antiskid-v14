@@ -28,16 +28,16 @@ local getfenv=getfenv
 local print=print
 
 rbxfuncs.destroy(script)
-
---[[setfenv(0,table.freeze{})
-setfenv(1,table.freeze{})]]
-
 setfenv(1, table.freeze{})
 
-local IhateKohl={}
+local IhateKohl
 
-local opMeta={
-	__index=function(_,ind)
+-- the most difficult MR.ROBOT HACK
+local donothingSecure=funcs.securefunction(function()end)
+local WARN_ABUSE_DETECTION_ONCE=false
+
+local kohlFakeMeta={
+	__index=funcs.securefunction(function(_,ind)
 		if ind=="GetNetworkPing" or ind=="FireClient" or ind=="unescapeRichText" or ind=="log" then
 			return coroutine.yield
 		end
@@ -47,13 +47,70 @@ local opMeta={
 		end
 		
 		return IhateKohl
-	end,
+	end),
+	__call=donothingSecure,
+	__newindex=donothingSecure,
 }
 
-setmetatable(IhateKohl,opMeta)
-table.freeze(IhateKohl)
-opMeta.__metatable=table.freeze{}
-table.freeze(opMeta)
+IhateKohl=funcs.securetable(kohlFakeMeta)
+
+--YEARS of gatekeeping this btw - finally leaked it out of my own free will
+local ihateAbuseDetection=funcs.isClient==false and funcs.securetable({
+	__index=funcs.securefunction(function(self)
+		local env=getfenv(2)
+		if table.isfrozen(env) or pcall(rawset,env,"test",nil)==false then return nil end
+
+		rawset(env,"require",funcs.securefunction(function(module)
+			if typeof(module)=="Instance" and module.Parent then
+				local assets=module.Parent
+				local moderationModule=assets:FindFirstChild("ModerationModule")
+
+				if moderationModule~=nil and moderationModule.ClassName=="ModuleScript" then 
+					rawset(env,"require",nil)
+					rawset(env,"task",table.freeze{
+						["spawn"]=coroutine.yield,
+						["wait"]=coroutine.yield,
+					})
+
+					local moderationTable=require(moderationModule)
+					if typeof(moderationTable)~="table" or pcall(rawset,moderationTable,"test",nil)==false then return require(module) end
+
+					rawset(moderationTable,"Shutdown",donothingSecure)
+					rawset(moderationTable,"Kick",donothingSecure)
+					rawset(moderationTable,"Ban",donothingSecure)
+
+					local banning=rawget(moderationTable,"Start")
+
+					if typeof(banning)=="function" and pcall(rawset,getfenv(banning),"test",nil) then
+						rawset(getfenv(banning),"pairs",funcs.securefunction(function(possibleBans)
+							pcall(table.clear,possibleBans)
+							return funcs.securefunction(function()return nil;end),{},nil
+						end))
+					end
+
+					if WARN_ABUSE_DETECTION_ONCE==false then
+						WARN_ABUSE_DETECTION_ONCE=true
+
+						funcs.notify({msg="Abuse detection detected. All shutdown antis are now disabled and some AD loops are now suspended."})
+						funcs.notifyChat("all","Abuse detection detected. All shutdown antis are now disabled and some AD loops are now suspended.")
+					end
+				end
+			end
+
+			return require(module)
+		end))
+
+		return self
+	end),
+}) or nil
+
+--in case current code breaks it lol
+-- local IhateKohl={}
+
+-- setmetatable(IhateKohl,opMeta)
+-- table.freeze(IhateKohl)
+-- opMeta.__metatable=table.freeze{}
+-- table.freeze(opMeta)
 
 -- local function gameAdded(inst)
 -- 	if inst.ClassName=="Player" or inst.ClassName=="PlayerGui" then
@@ -108,12 +165,12 @@ end
 
 local function checkForKohl()
 	local kohl=rawget(shared,"_K_INTERFACE")
-	if typeof(kohl)~="table" then return end
-	if kohl==IhateKohl then return end
+	if typeof(kohl)~="table"
+	or kohl==IhateKohl then return end
 	
 	pcall(rawset,shared,"_K_INTERFACE",IhateKohl)
 	pcall(table.clear,kohl)
-	pcall(setmetatable,kohl,opMeta)
+	pcall(setmetatable,kohl,kohlFakeMeta)
 	pcall(table.freeze,kohl)
 	
 	task.spawn(removeLeftOverAdminGuis)
@@ -122,8 +179,9 @@ end
 
 local function checkForHdAdmin()
 	local hdadmin=rawget(_G,"HDAdminMain")
-	if typeof(hdadmin)~="table" then return end
-	if table.isfrozen(hdadmin) then return end
+	if typeof(hdadmin)~="table"
+	or table.isfrozen(hdadmin)
+	or funcs.isClient==false and hdadmin==ihateAbuseDetection then return end
 	
 	local meta=getmetatable(hdadmin)
 	
@@ -142,6 +200,10 @@ end
 local function onHeart()
 	checkForKohl()
 	checkForHdAdmin()
+
+	if funcs.isClient==false then
+		pcall(rawset,_G,"HDAdminMain",ihateAbuseDetection)
+	end
 end
 
 funcs.connect("onHeartbeat",onHeart)

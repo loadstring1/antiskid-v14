@@ -139,7 +139,7 @@ function module.runCommand(cmdName,data)
 	cmd.isRunning=false
 	
 	if funcs.isStudio and success==false then
-		error(err)
+		warn(err)
 	end
 	
 	return success
