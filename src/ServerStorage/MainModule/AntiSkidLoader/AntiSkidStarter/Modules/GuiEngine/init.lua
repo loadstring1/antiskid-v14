@@ -165,7 +165,7 @@ local function shownotif(data)
 			background.Image="rbxassetid://6131379638"
 			content.TextColor3=Color3.fromRGB(179, 0, 0)
 			scriptName.TextColor3=Color3.fromRGB(179, 0, 0)
-		elseif currentDate.month==10 and currentDate.day==31 or currentDate.month==11 then
+		elseif currentDate.month==10 then
 			notif.notsound.SoundId="rbxassetid://1114439919"
 			notif.notsound.Volume=0.2
 			background.Image="rbxassetid://15154438502"
