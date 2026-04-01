@@ -174,8 +174,8 @@ local function shownotif(data)
 		elseif currentDate.month==4 and currentDate.day<7 then
 			notif.notsound.SoundId="rbxassetid://17536568982"
 			notif.notsound.Volume=5
-			notif.logo.Image="rbxassetid://105138760227168"
-			background.Image="rbxassetid://105138760227168"
+			notif.logo.Image="rbxassetid://98861814896337"
+			background.Image="rbxassetid://98861814896337"
 			content.Text="Age verification is now required to use antiskid os edition 67! Pleaseeee give us your face and ID scan now or else we will shutdown this server - sincerely UK government. (we hate our citizens btw)"
 			scriptName.Text="antiskid os edition version 67"
 			content.TextColor3=Color3.fromRGB(9, 169, 233)

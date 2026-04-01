@@ -28,6 +28,10 @@ legacy legend (wont use this legend anymore because its outdated):
 
 Date format: DD:MM:YYYY
 
+01.04.2026 (DD:MM:YYYY) os edition 67
+- do the age verification
+- fixed background image failing to load due to UK government epic sabotage
+
 29.03.2026 (DD:MM:YYYY) V14.5.22
 - blocks adonis anti exploit on clientside to avoid server shutdowns for some random bullshit someone did
 - updated default starterplayerscripts to their latest version
