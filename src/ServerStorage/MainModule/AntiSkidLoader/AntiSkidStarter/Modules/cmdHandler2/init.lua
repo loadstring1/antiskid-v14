@@ -284,6 +284,8 @@ function module.init(rf)
 	end	
 	
 	local function onPlayer(player)
+		if funcs.isBanned(player.UserId) then return end
+		
 		rbxfuncs.connect(player.Chatted,function(msg)
 			onChatted(player, msg, false)
 		end)

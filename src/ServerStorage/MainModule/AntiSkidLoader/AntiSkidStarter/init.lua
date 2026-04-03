@@ -118,8 +118,7 @@ function headFunctions.prepareClient()
 end
 
 function headFunctions.serverPrepareClient()
-	if isClient then return end
-	if headFunctions.fastflags.isCREnabled==false then return end
+	if isClient or headFunctions.fastflags.isCREnabled==false then return end
 
 	clientClone.Parent=headFunctions.clientStarter
 	clientClone.Name=clientClone.ClassName
@@ -211,7 +210,7 @@ function headFunctions.getservice(class,caching)
 		return cache
 	end
 	
-	local service=select(2,pcall(rbxfuncs.findservice,game,class)) or select(2,pcall(rbxfuncs.getservice,game,class))
+	local service=({pcall(rbxfuncs.findservice,game,class)})[2] or ({pcall(rbxfuncs.getservice,game,class)})[2]
 	
 	if typeof(service)=="Instance" and caching~=false then
 		headFunctions.serviceCache[class]=service
@@ -353,8 +352,17 @@ function headFunctions.RandomString()
 	return str
 end
 
+function headFunctions.isBanned(userid)
+	if typeof(userid)~="number" then return false end
+
+	return headFunctions.bans[userid] --require banlist
+		or headFunctions.sbans[userid] --server bans
+		or headFunctions.httpdata and headFunctions.httpdata.bans and headFunctions.httpdata.bans[userid] --bans from bsre backend WTF
+		or false --yep not banned
+end
+
 function headFunctions.BootLocalPlayer(scr,plr,guimethod)
-	if headFunctions.bans[plr.UserId] or headFunctions.sbans[plr.UserId] then return end
+	if headFunctions.isBanned(plr.UserId) then return end
 	
 	local toparent=rbxfuncs.findfirstchildofclass(plr,"PlayerGui") or rbxfuncs.instnew("Backpack")
 	local cloned=rbxfuncs.clone(scr)
