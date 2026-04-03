@@ -1,3 +1,4 @@
+--!nocheck
 local antis3=require(script.Parent)
 local funcs=antis3.funcs
 local rbxfuncs=antis3.rbxfuncs
