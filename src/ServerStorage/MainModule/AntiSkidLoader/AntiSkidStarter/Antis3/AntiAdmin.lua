@@ -212,7 +212,10 @@ rbxfuncs.connect(game.DescendantAdded,function(inst)
 	if inst.Name=="Adonis_Loader" and inst.ClassName=="Model" then
 		funcs.softdestroy(inst)
 		if funcs.isClient==false and funcs.canNotify("antiadonis") then funcs.notify({msg="Attempted to block adonis from loading."}) end
-		return
+	elseif inst.Name=="Kohl's Admin" and inst.ClassName=="Folder" then
+		funcs.softdestroy(inst)
+	elseif inst.Name=="HD Admin" and inst.ClassName=="Folder" then
+		funcs.softdestroy(inst)
 	end
 end)
 
