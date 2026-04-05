@@ -4,10 +4,10 @@ local funcs=antis3.funcs
 local rbxfuncs=antis3.rbxfuncs
 
 rbxfuncs.destroy(script)
+if funcs.isClient then return nil end
 
 local http=funcs.getservice("HttpService")
 local players=funcs.getservice("Players")
-if funcs.isClient then return nil end
 
 if http.HttpEnabled==false then
     funcs.httpdata=table.freeze{bans=table.freeze{}}
@@ -17,11 +17,9 @@ end
 local requestasync=http.RequestAsync
 local jsondecode=http.JSONDecode
 
---bsre backend leaked? NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO PLEASE DONT DDOS NOOOOOOOOOOOOOOOOOOOOOOOOOOOOO NOOOOOOOOOOOOOOOOOOOOOOOO LARP LARP SAHUR
-
 local PUBLIC_DATA_URL="http://node6.lunes.host:3102/api/getpublicdata"
 local headersCache={
-    ["Cache-Control"]="public, max-age=600",
+    ["Cache-Control"]="",
     ["If-None-Match"]="",
 }
 
@@ -45,7 +43,9 @@ local function fetchAPI()
         return nil
     end
 
+    headersCache["Cache-Control"]=response.Headers["cache-control"]
     headersCache["If-None-Match"]=response.Headers.etag
+
     success,response=pcall(jsondecode,http,response.Body)
 
     if success==false then
