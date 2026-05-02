@@ -1,4 +1,5 @@
-return [[05.04.2026 (DD:MM:YYYY) os edition 67
-- wipes datastores of the following admins: hd admin, kohl and adonis
-- unbans everyone who was previously banned with admins that i mentioned above
-- added ban api rate limiting on purpose to prevent skids from banasyncing people - it activates only after 1 minute because it waits for admin unban script to unban everyone]]
+return [[02.05.2026 (DD:MM:YYYY) V14.5.23 patch
+- fixed sbunc not working in studio
+- fixed antiskid breakage because of NextGenerationReplication
+- added emojis to sbunc test so you can see what test failed and which test passed more easiely
+- added attribute test to sbunc that asks you to disable NextGenerationReplication]]

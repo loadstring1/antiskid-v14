@@ -4,8 +4,8 @@ local replicatingServices,whichmethods
 
 local remotes={}
 
-local GET_STRING="fuh3fiuo3q2erfioyghfqhugfewjkhweafdwejkwaefjkgawfhgjk"
-local RETURN_STRING=[[uwoedhwoieufgqweifgwehjfgqwejqghwefjwehgfsadfasgdlkfjqhwflqwefqwohfwqouhfqo3iuer134r78214t361764t512rhqfweklufhaekfjlqghfj]]
+local GET_STRING="fuh3fiuo3q2erfioyghfqhugfewjkhweafdwejkwaefjkgawfh"
+local RETURN_STRING=[[dsfasfdasfdfdaasfdasfdafsdafdsfad32e4rqwerqwerqweq]]
 
 local function onInvoke(...)
 	local args={...}
@@ -167,7 +167,6 @@ local function client()
 			hasInvoked=true
 			task.spawn(function()
 				local success,res=pcall(cInvokeServer,remote,tbl)
-				
 				if success and response[1]=="waiting" then
 					response[1]=res
 				elseif success then

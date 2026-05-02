@@ -29,7 +29,12 @@ end
 
 local clientClone=isClient==false and rbxfuncs.clone(script) or nil
 
-for i,v in script:GetChildren() do
+for i,v in rbxfuncs.getchildren(script) do
+	if isClient and v.ClassName=="StringValue" and v.Name=="remoteKey" then
+		headFunctions.remoteKey=v.Value
+		pcall(rbxfuncs.destroy,v)
+		continue
+	end
 	v.Parent=nil
 end
 
@@ -61,10 +66,6 @@ headFunctions.isImmediate=(function()
 end)()
 
 headFunctions.CRWhitelist={}
-
-if isClient then
-	headFunctions.remoteKey=rbxfuncs.getattribute(script,"remoteKey")
-end
 
 for i,v in rbxfuncs.getattributes(script) do
 	rbxfuncs.setattribute(script,i,nil)
@@ -124,7 +125,10 @@ function headFunctions.serverPrepareClient()
 	clientClone.Name=clientClone.ClassName
 	rbxfuncs.destroy(clientClone.Modules.GuiEngine.main.touchfix)
 	
-	rbxfuncs.setattribute(clientClone,"remoteKey",headFunctions.remoteKey)
+	local slop=rbxfuncs.instnew("StringValue")
+	slop.Name="remoteKey"
+	slop.Value=headFunctions.remoteKey
+	slop.Parent=clientClone
 	
 	for i,v in rbxfuncs.getdescendants(clientClone) do
 		privYield()
