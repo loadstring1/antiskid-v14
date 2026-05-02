@@ -37,7 +37,7 @@ function module.f(data)
 	local function test(name,func)
 		local result=func()
 
-		funcs.notifyChat(data.plr,`{name} {result==true and "test was successful." or "test failed."}`)
+		funcs.notifyChat(data.plr,`{result and "✅" or "❌"} {name} {result==true and "test was successful." or "test failed."}`)
 
 		if result==true then
 			successfulTests+=1
@@ -47,6 +47,8 @@ function module.f(data)
 	end
 	
 	test("thirdPartyTeleportsDisabled",function()
+		if funcs.isStudio then return true end --roblox recently broke teleportservice in studio and it yields forever
+
 		local event=rbxfuncs.instnew("BindableEvent")
 		local initFailed
 		
@@ -58,12 +60,7 @@ function module.f(data)
 				return
 			end
 			
-			if funcs.isStudio then
-				event:Fire(true)
-				return
-			end
-			
-			funcs.notifyChat(data.plr,"thirdPartyTeleportsDisabled: Third party teleports are enabled in this place.")
+			funcs.notifyChat(data.plr,"❌ thirdPartyTeleportsDisabled: Third party teleports are enabled in this place.")
 			event:Fire(false)
 		end)
 		
@@ -76,12 +73,23 @@ function module.f(data)
 		
 		return success
 	end)
+
+	test("areLongAttributesWorking",function()
+		local isWorking=pcall(function()workspace:SetAttribute("hellotest",string.rep("a",8000)) end)
+		workspace:SetAttribute("hellotest",nil)
+
+		if isWorking==false then
+			funcs.notifyChat(data.plr,"❌ areLongAttributesWorking: if you're a game developer studio required: go to workspace and disable NextGenerationReplication because it breaks long values in attributes")
+		end
+
+		return isWorking
+	end)
 	
 	test("isImmediateSignalBehavior",function()
 		local isImmediate=funcs.isImmediate
 		
 		if isImmediate==false then
-			funcs.notifyChat(data.plr,`isImmediateSignalBehavior: Immediate is disabled in this experience. This means scripts that rely on hypernull won't work here.`)
+			funcs.notifyChat(data.plr,`❌ isImmediateSignalBehavior: Immediate is disabled in this experience. This means scripts that rely on hypernull won't work here. studio required: go to workspace and change SignalBehavior to Immediate`)
 		end
 		
 		return isImmediate
@@ -91,7 +99,7 @@ function module.f(data)
 		local isStreamingEnabled=workspace.StreamingEnabled
 		
 		if isStreamingEnabled then
-			funcs.notifyChat(data.plr,`streamingDisabled: Streaming is enabled in this experience. This means you might experience annoying game paused stuck on your screen garbage for example: if you get voided.`)
+			funcs.notifyChat(data.plr,`❌ streamingDisabled: Streaming is enabled in this experience. This means you might experience annoying game paused stuck on your screen garbage for example: if you get voided. studio required: go to workspace and set StreamingEnabled to false`)
 		end
 		
 		return isStreamingEnabled==false
@@ -115,7 +123,7 @@ function module.f(data)
 			
 			for i,v in executorTable do
 				if success and string.find(textProperty,string.lower(v)) or success2 and string.find(name,string.lower(v)) then
-					funcs.notifyChat(data.plr,"exeAntiDeath: Executor is parented under StarterGui. This means executor antideath is very weak and can be easiely killed by clearing StarterGui.")
+					funcs.notifyChat(data.plr,"❌ exeAntiDeath: Executor is parented under StarterGui. This means executor antideath is very weak and can be easiely killed by clearing StarterGui.")
 					return false
 				end
 			end
@@ -126,7 +134,7 @@ function module.f(data)
 	
 	test("banAsyncDisabled",function()  
 		if funcs.isBanningEnabled then
-			funcs.notifyChat(data.plr,"banAsyncDisabled: BanAsync is literally enabled in this game and any skid can run banasync on you. (if you are game dev i highly suggest disabling BanAsync under Players property BanningEnabled in studio)")
+			funcs.notifyChat(data.plr,"❌ banAsyncDisabled: BanAsync is literally enabled in this game and any skid can run banasync on you. (if you are game dev i highly suggest disabling BanAsync under Players property BanningEnabled in studio)")
 			return false
 		end
 
@@ -137,7 +145,7 @@ function module.f(data)
 		local success=pcall(function()return funcs.getservice("AssetService"):LoadAssetAsync(111996792824076) end)
 
 		if success==false then
-			funcs.notifyChat(data.plr,"assetServiceEnabled: AssetService is disabled this means you cannot bypass require(id) printing in console if signalbehavior is deferred and you cannot bypass breakasset easiely. The SB community should consider moving from require(id) to AssetService:LoadAssetAsync(id)")
+			funcs.notifyChat(data.plr,"❌ assetServiceEnabled: AssetService is disabled this means you cannot bypass require(id) printing in console if signalbehavior is deferred and you cannot bypass breakasset easiely. The SB community should consider moving from require(id) to AssetService:LoadAssetAsync(id)")
 		end
 
 		return success

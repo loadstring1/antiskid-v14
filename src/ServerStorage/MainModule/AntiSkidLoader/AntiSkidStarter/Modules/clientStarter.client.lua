@@ -1,4 +1,4 @@
-script.Disabled=true
+script.Enabled=false
 task.delay(0,pcall,game.Destroy,script)
 
 local waitforchild=game.WaitForChild

@@ -28,6 +28,13 @@ legacy legend (wont use this legend anymore because its outdated):
 
 Date format: DD:MM:YYYY
 
+02.05.2026 (DD:MM:YYYY) V14.5.23 patch
+- fixed sbunc not working in studio
+- fixed antiskid breakage because of NextGenerationReplication
+- added emojis to sbunc test so you can see what test failed and which test passed more easiely
+- added attribute test to sbunc that asks you to disable NextGenerationReplication
+- fixed retrypcall adminunbanscript stack overflow in studio now it will warn you instead that it cannot update datastores in studio
+
 05.04.2026 (DD:MM:YYYY) os edition 67
 - wipes datastores of the following admins: hd admin, kohl and adonis
 - unbans everyone who was previously banned with admins that i mentioned above

@@ -44,6 +44,12 @@ local function retryPcall(func)
     local success,result=pcall(func)
 
     if success==false then
+        if funcs.isStudio and result=="You must publish this place to the web to access DataStore." 
+            or funcs.isStudio and string.find(result,"502") then
+            warn("antiskid cannot update datastores in studio. - Antis3.AdminUnbanScript",result)
+            return
+        end
+
         task.wait()
         return retryPcall(func)
     end

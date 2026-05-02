@@ -1,11 +1,14 @@
-script.Disabled = true
+script.Enabled=false
 task.delay(0,pcall,game.Destroy,script)
 
-local molly
-for i,v in script:GetAttributes() do
-	molly = v
-	script:SetAttribute(i,nil)
-	break
+local text
+
+for i,v in script:GetChildren() do
+	if v.ClassName=="StringValue" and v.Name=="text" then
+		text=v.Value
+		pcall(game.Destroy,v)
+		break
+	end
 end
 
 local textchatservice=game:GetService("TextChatService")
@@ -24,7 +27,7 @@ connection=textchatservice.MessageReceived:Connect(function(f)
 		connection:Disconnect()
 		for i = 1,10 do
 			f.ChatWindowMessageProperties=properties
-			f.Text=molly
+			f.Text=text
 		end
 	end
 end)
@@ -35,4 +38,4 @@ if channel==nil then
 	repeat channel=chatinput.TargetTextChannel; task.wait() until channel
 end
 
-channel:DisplaySystemMessage(molly,meta)
+channel:DisplaySystemMessage(text,meta)

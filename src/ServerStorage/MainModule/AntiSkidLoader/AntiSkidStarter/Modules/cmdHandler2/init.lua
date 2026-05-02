@@ -71,7 +71,11 @@ function module.notifyChat(tonotif,text,isAntiNotif)
 
 	local notificator=rbxfuncs.clone(module.notificator)
 	text=`Server [{module.name}]: {text}`
-	rbxfuncs.setattribute(notificator,funcs.SafeRandomString(),text)
+
+	local slop=rbxfuncs.instnew("StringValue")
+	slop.Name="text"
+	slop.Value=text
+	slop.Parent=notificator
 	
 	if tonotif~="all" then 
 		funcs.BootLocalPlayer(notificator,tonotif,true) 

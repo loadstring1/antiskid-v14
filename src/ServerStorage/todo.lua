@@ -2,7 +2,6 @@
 plans for require version of antiskid v14 - pretending as if roblox won't kill off all regex bypass methods
 
 [pending]
-- use http banlist from bsre backend
 - have my own open source executor instead of modded fse
 
 --actually fuck all these plans under this message its OSRE being shit like abuse detection not antiskid v14.
@@ -14,8 +13,6 @@ plans for require version of antiskid v14 - pretending as if roblox won't kill o
 - investigate why server lags up to 6-7 seconds when antiskid loads before adding requestDescendants as that might turn out to be useless if its just require preloading causing that
 
 [completed]
-- dont clone maps instead parent them to nil
-- fixed flaw in cooldownv2 system where player can rejoin to clear their cooldown punishment instantly
 
 
 
@@ -33,7 +30,6 @@ plans for loadstring version of antiskid v14 - once roblox finally kills off all
 - after that the only problem is that someone can run antiskid 8376128397612 times lol cause its going to be a loadstring
 
 [completed]
-- nothing
 
 
 ]]
