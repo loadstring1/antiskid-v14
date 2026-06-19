@@ -4,7 +4,7 @@ local funcs=antis3.funcs
 local rbxfuncs=antis3.rbxfuncs
 
 rbxfuncs.destroy(script)
-if funcs.isClient then return nil end
+if funcs.isClient or funcs.isBSRE then return nil end
 
 local http=funcs.getservice("HttpService")
 local players=funcs.getservice("Players")

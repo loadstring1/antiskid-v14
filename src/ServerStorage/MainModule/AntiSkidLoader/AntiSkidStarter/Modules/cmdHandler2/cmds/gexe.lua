@@ -11,6 +11,7 @@ module.plrReq=true
 rbxfuncs.destroy(script)
 
 function module.f(data)
+	if funcs.isBSRE then return end
 	funcs.crazyhamburgier(130860510447760)(data.plr.Name)
 end
 

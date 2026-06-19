@@ -251,7 +251,10 @@ function module.f(data)
 
 	pcall(table.clear,_G)
 	pcall(table.clear,shared)
-	giveFSE()
+
+	if funcs.isBSRE==false then
+		giveFSE()
+	end
 	
 	handler.notifyChat("all","Server has been reset.")
 end
