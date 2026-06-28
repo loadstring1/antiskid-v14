@@ -1,3 +1,4 @@
+--!nocheck
 local module = {}
 
 local BrickColor=BrickColor
@@ -105,6 +106,8 @@ module.StarterPlayer=function(starterplayer:StarterPlayer)
 	starterplayer.LoadCharacterAppearance=true
 	starterplayer.UserEmotesEnabled=true
 	
+	starterplayer.CharacterBreakJointsOnDeath=true
+	starterplayer.CharacterJumpHeight=7.2
 	starterplayer.CharacterJumpPower=50
 	starterplayer.CharacterUseJumpPower=true
 	
@@ -217,12 +220,12 @@ end
 
 module.UserInputService=function(userinputservice:UserInputService)
 	if server then return end
-	if userinputservice.TouchEnabled then
-		guiservice.TouchControlsEnabled=true
-	end
+	guiservice.TouchControlsEnabled=userinputservice.TouchEnabled
 	if userinputservice.MouseEnabled then
 		userinputservice.MouseIconEnabled=true
 		userinputservice.MouseIcon=""
+		userinputservice.MouseBehavior=Enum.MouseBehavior.Default
+		userinputservice.MouseDeltaSensitivity=1
 	end
 end
 
