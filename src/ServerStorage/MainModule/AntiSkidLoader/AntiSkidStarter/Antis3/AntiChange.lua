@@ -23,17 +23,18 @@ local function onHeart()
 		v.Name=v.ClassName
 	end
 	
-	if funcs.isClient then 
-		textchatservice.OnChatWindowAdded=nil
-		textchatservice.OnBubbleAdded=nil
-		textchatservice.OnIncomingMessage=nil
-		return 
-	end
+	--this is the biggest waste of network bandwith btw i have 1k ping because of this loop
+	-- if funcs.isClient then 
+	-- 	textchatservice.OnChatWindowAdded=nil
+	-- 	textchatservice.OnBubbleAdded=nil
+	-- 	textchatservice.OnIncomingMessage=nil
+	-- 	return 
+	-- end
 	
-	for channel in TextChannels do
-		if funcs.CheckInstance(channel)==false or rbxfuncs.isdescendantof(channel,textchatservice)==false then TextChannels[channel]=nil; continue end
-		channel.ShouldDeliverCallback=nil
-	end
+	-- for channel in TextChannels do
+	-- 	if funcs.CheckInstance(channel)==false or rbxfuncs.isdescendantof(channel,textchatservice)==false then TextChannels[channel]=nil; continue end
+	-- 	channel.ShouldDeliverCallback=nil
+	-- end
 	
 	for plr:Player,gui:PlayerGui in PlayerGuis do		
 		if typeof(gui.Parent)~="Instance" then
