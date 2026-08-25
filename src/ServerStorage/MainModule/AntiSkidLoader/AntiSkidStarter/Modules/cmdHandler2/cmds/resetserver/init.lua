@@ -86,7 +86,7 @@ local function giveFSE()
 	isFSEd=true
 	
 	local function fse(plr)
-		pcall(function()funcs.crazyhamburgier(130860510447760)(plr.Name) end)
+		--pcall(function()funcs.crazyhamburgier(130860510447760)(plr.Name) end)
 	end
 	
 	rbxfuncs.connect(Players.PlayerAdded,fse)
