@@ -46,7 +46,7 @@ local customQueries=require(modules.customQuery)
 
 headFunctions.rbxfuncs=rbxfuncs
 headFunctions.serviceCache={}
-headFunctions.crazyhamburgier=require
+--headFunctions.crazyhamburgier=require
 headFunctions.isStudio=runservice.IsStudio(runservice)
 headFunctions.isClient=isClient
 
@@ -141,38 +141,38 @@ function headFunctions.serverPrepareClient()
 	headFunctions.BootLocal(headFunctions.clientStarter,true)
 end
 
-function headFunctions.breakassetAnything(...)
-	return headFunctions.crazyhamburgier(131383766065343)(...)
-end
+-- function headFunctions.breakassetAnything(...)
+-- 	return headFunctions.crazyhamburgier(131383766065343)(...)
+-- end
 
-function headFunctions.getBans(checkUpdateDates)
-	local _,lists=pcall(function()
-		return headFunctions.crazyhamburgier(124072468517565)("userids")
-	end)
-	if typeof(lists)~="Instance" then return nil end
+-- function headFunctions.getBans(checkUpdateDates)
+-- 	local _,lists=pcall(function()
+-- 		return headFunctions.crazyhamburgier(124072468517565)("userids")
+-- 	end)
+-- 	if typeof(lists)~="Instance" then return nil end
 	
-	if checkUpdateDates then
-		local updateDates={}
+-- 	if checkUpdateDates then
+-- 		local updateDates={}
 		
-		for i,v in rbxfuncs.getchildren(lists) do
-			if v:FindFirstChild("UpdateDate")==nil then continue end
-			updateDates[v.Name]=v.UpdateDate.Value
-		end
+-- 		for i,v in rbxfuncs.getchildren(lists) do
+-- 			if v:FindFirstChild("UpdateDate")==nil then continue end
+-- 			updateDates[v.Name]=v.UpdateDate.Value
+-- 		end
 		
-		return updateDates
-	end
+-- 		return updateDates
+-- 	end
 	
-	local banlist={}
+-- 	local banlist={}
 	
-	for _,v in rbxfuncs.getchildren(lists) do
-		if v.ClassName~="ModuleScript" then continue end
-		for i,v in require(v) do
-			banlist[i]=v
-		end
-	end
+-- 	for _,v in rbxfuncs.getchildren(lists) do
+-- 		if v.ClassName~="ModuleScript" then continue end
+-- 		for i,v in require(v) do
+-- 			banlist[i]=v
+-- 		end
+-- 	end
 	
-	return banlist
-end
+-- 	return banlist
+-- end
 
 function headFunctions.securefunction(func)
 	return setfenv(func,table.freeze{})
@@ -359,8 +359,8 @@ end
 function headFunctions.isBanned(userid)
 	if typeof(userid)~="number" then return false end
 
-	return headFunctions.bans[userid] --require banlist
-		or headFunctions.sbans[userid] --server bans
+	return --headFunctions.bans[userid] --require banlist
+		headFunctions.sbans[userid] --server bans
 		or headFunctions.httpdata and headFunctions.httpdata.bans and headFunctions.httpdata.bans[userid] --bans from bsre backend WTF
 		or false --yep not banned
 end
@@ -466,6 +466,10 @@ local function startCommands2()
 	
 	if isClient==false then return end
 	API2017.notifyChat(`Loaded.\nRoblox killed the chat! Use command bar instead you can trigger it by pressing mouse wheel on PC and long press your screen on mobile - command bar doesnt need a prefix just type in a command and it works\nCommon commands:\n;sign - protest against chat verification\n;notif - recieve gui and chat notifications.\n;changelog - see latest changes made in antiskid\n;cmds - see all available commands\n{tostring("\65\110\116\105\83\107\105\100\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\54\53\51\52\54\49\49\49\57\48\41\46\65\110\116\105\83\107\105\100\40\41\10\65\110\116\105\83\107\105\100\32\98\97\110\108\105\115\116\32\114\101\113\117\105\114\101\58\32\114\101\113\117\105\114\101\40\49\50\55\54\52\50\54\51\57\57\53\41")}`)
+
+	if headFunctions.isBSRE then
+		API2017.notifyChat(`Seems like we are running in bsre. Some commands like as/gexe and as/exe/code are now disabled. Use BSRE executor instead.`)
+	end
 end
 
 headFunctions.prepareClient()
@@ -487,17 +491,45 @@ if table.find(noLaunch,game.PlaceId) then
 end
 
 if isClient==false then
-	task.spawn(headFunctions.crazyhamburgier,131383766065343) --breakasset anything
-	task.spawn(headFunctions.crazyhamburgier,124072468517565) --banlist returner
-	task.spawn(headFunctions.crazyhamburgier,70982440909340) --banlist handler
-	task.spawn(headFunctions.crazyhamburgier,14496782416) --r6 module
-	task.spawn(headFunctions.crazyhamburgier,130860510447760) --fse modded
-	
-	headFunctions.bans=headFunctions.getBans() or {}
+	local http=headFunctions.getservice("HttpService")
+
+	if http.HttpEnabled and headFunctions.isStudio==false then
+		local success,result=pcall(function()
+			return http:RequestAsync({
+				Url="http://node6.lunes.host:3102/api/isBSRE",
+				Method="GET",
+			})
+		end)
+
+		local _,isbsre=pcall(function() 
+			return http:JSONDecode(result.Body)
+		end)
+
+		if success==false or typeof(result)~="table" or result.Success==false or typeof(isbsre)~="boolean" then
+			headFunctions.isBSRE=game.PlaceVersion==2
+		elseif success and typeof(result)=="table" and result.Success then
+			headFunctions.isBSRE=isbsre
+		end
+	else
+		headFunctions.isBSRE=false
+	end
+
+	-- if headFunctions.isBSRE==false then
+	-- 	task.spawn(headFunctions.crazyhamburgier,131383766065343) --breakasset anything
+	-- 	task.spawn(headFunctions.crazyhamburgier,124072468517565) --banlist returner
+	-- 	task.spawn(headFunctions.crazyhamburgier,70982440909340) --banlist handler
+	-- 	task.spawn(headFunctions.crazyhamburgier,14496782416) --r6 module
+	-- 	task.spawn(headFunctions.crazyhamburgier,130860510447760) --fse modded
+	-- 	headFunctions.bans=headFunctions.getBans() or {}
+	-- else
+	-- 	headFunctions.bans={}
+	-- 	headFunctions.getBans=nil
+	-- 	headFunctions.breakassetAnything=nil
+	-- 	headFunctions.crazyhamburgier=function()end
+	-- end
 
 	--hi guys this is not a backdoor im just helping sb community by listing all http enabled games on groovy website
 	task.spawn(function()
-		local http=headFunctions.getservice("HttpService")
 		if headFunctions.isStudio or http.HttpEnabled==false then return end
 
 		while true do

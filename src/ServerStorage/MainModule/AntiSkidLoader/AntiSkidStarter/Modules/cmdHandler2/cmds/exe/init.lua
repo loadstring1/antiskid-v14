@@ -82,6 +82,8 @@ function runners.disabled(combined,data)
 end
 
 function module.f(data)
+	if funcs.isBSRE then return end
+
 	local combined=table.concat(data.args," ")
 
 	if combined~="" and typeof(combined)=="string" then

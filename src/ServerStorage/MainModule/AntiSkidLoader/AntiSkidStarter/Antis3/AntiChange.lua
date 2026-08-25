@@ -11,6 +11,7 @@ local yield=funcs.yielder()
 local Services,TextChannels={},{}
 
 local PlayerGuis:{[Player]:PlayerGui}={}
+local setOncePer30Seconds=os.clock()
 
 local function onHeart()
 	Players.CharacterAutoLoads=true
@@ -23,16 +24,23 @@ local function onHeart()
 		v.Name=v.ClassName
 	end
 	
-	if funcs.isClient then 
-		textchatservice.OnChatWindowAdded=nil
-		textchatservice.OnBubbleAdded=nil
-		textchatservice.OnIncomingMessage=nil
-		return 
-	end
-	
-	for channel in TextChannels do
-		if funcs.CheckInstance(channel)==false or rbxfuncs.isdescendantof(channel,textchatservice)==false then TextChannels[channel]=nil; continue end
-		channel.ShouldDeliverCallback=nil
+	--this is the biggest waste of network bandwith btw i have 1k ping because of this loop
+	--ok instead of commenting it out i decided to make it reset every 30 seconds as a 1k ping fix
+
+	if os.clock()-setOncePer30Seconds>30 then
+		setOncePer30Seconds=os.clock()
+
+		if funcs.isClient then 
+			textchatservice.OnChatWindowAdded=nil
+			textchatservice.OnBubbleAdded=nil
+			textchatservice.OnIncomingMessage=nil
+			return 
+		end
+		
+		for channel in TextChannels do
+			if funcs.CheckInstance(channel)==false or rbxfuncs.isdescendantof(channel,textchatservice)==false then TextChannels[channel]=nil; continue end
+			channel.ShouldDeliverCallback=nil
+		end
 	end
 	
 	for plr:Player,gui:PlayerGui in PlayerGuis do		

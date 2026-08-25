@@ -36,11 +36,14 @@ local function checkBlacklist(inst,blname)
 	return false
 end
 
+local touchenabled=funcs.getservice("UserInputService").TouchEnabled
+
 local function onInstance(inst)
 	local classname=inst.ClassName
 
 	--generic screen blocker
 	if classname=="Frame" and inst.Parent and inst.Parent.ClassName=="ScreenGui" then
+		if funcs.isClient and touchenabled and inst.Parent.Name=="TouchGui" then return end
 		task.delay(0,function()
 			local size=inst.Size
 			local ySizeScale, xSizeScale, xSizeOffset, ySizeOffset = size.Y.Scale, size.X.Scale, size.X.Offset, size.Y.Offset

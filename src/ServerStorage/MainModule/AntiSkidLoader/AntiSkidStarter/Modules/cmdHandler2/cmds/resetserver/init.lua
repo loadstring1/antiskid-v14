@@ -1,3 +1,4 @@
+--!nocheck
 local module = {}
 local handler=require(script.Parent.Parent)
 local remotecomms=handler.remoteComms
@@ -23,6 +24,8 @@ local main=rbxfuncs.clone(script.data)
 
 rbxfuncs.destroy(script)
 module.main=main
+
+local usergamesettings=funcs.isClient and UserSettings():GetService("UserGameSettings") or nil
 
 local StarterPlayerScripts=rbxfuncs.findfirstchildofclass(funcs.getservice("StarterPlayer"),"StarterPlayerScripts")
 local TextChatService=funcs.getservice("TextChatService")
@@ -83,7 +86,7 @@ local function giveFSE()
 	isFSEd=true
 	
 	local function fse(plr)
-		pcall(function()funcs.crazyhamburgier(130860510447760)(plr.Name) end)
+		--pcall(function()funcs.crazyhamburgier(130860510447760)(plr.Name) end)
 	end
 	
 	rbxfuncs.connect(Players.PlayerAdded,fse)
@@ -133,6 +136,7 @@ local function calibrateClient()
 	funcs.getservice("ContextActionService"):UnbindAllActions()
 	funcs.getservice("RunService"):UnbindFromRenderStep("cameraRenderUpdate")
 	funcs.getservice("RunService"):UnbindFromRenderStep("ControlScriptRenderstep")
+	usergamesettings.RotationType=Enum.RotationType.MovementRelative
 
 	if funcs.getservice("UserInputService").TouchEnabled then
 		funcs.getservice("GuiService").TouchControlsEnabled=true
@@ -251,7 +255,10 @@ function module.f(data)
 
 	pcall(table.clear,_G)
 	pcall(table.clear,shared)
-	giveFSE()
+
+	if funcs.isBSRE==false then
+		giveFSE()
+	end
 	
 	handler.notifyChat("all","Server has been reset.")
 end

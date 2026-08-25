@@ -8,7 +8,7 @@ if funcs.isClient then return nil end
 local yield=funcs.yielder()
 local players:Players=funcs.getservice("Players")
 local unbanasync=players.UnbanAsync
-local bans=funcs.bans
+--local bans=funcs.bans
 local sbans=funcs.sbans
 local uids={}
 
@@ -59,7 +59,7 @@ local function checkTemporary(uid)
 end
 
 local function onPlayer(plr)
-	if bans[plr.UserId] or sbans[plr.UserId] then 
+	if sbans[plr.UserId] then 
 		task.spawn(checkTemporary,plr.UserId)
 		funcs.notifyChat("all",`{plr.Name} tried to join but is banned by AntiSkid's banlist.`,true) 
 		return 

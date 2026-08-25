@@ -8,7 +8,6 @@ return table.freeze{
 	--well trusted (or just my friends lol)
 	3752146953, --groovy
 	2346663041, --jalon
-	2479604659, --egod
 	6138298377, --vecko
 	8143541330, --unlogged_able
 	3632440858, --water enjoyer
